@@ -1,0 +1,110 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    ADD
+    COMMA
+    DO
+    DOTCOMMA
+    ELSE
+    FLOAT
+    FUNC
+    GREATERTN
+    IF
+    IGNORE
+    INI_STRING
+    INT
+    LEFTBRACK
+    LEFTKEY
+    LEFTPARENT
+    LESS
+    LESSTN
+    LET
+    MAIN
+    MULT_BY
+    NOTSAME
+    PRINTV
+    PROG
+    RIGHTBRACK
+    RIGHTKEY
+    RIGHTPARENT
+    SAME
+    SET
+    SPLIT_BY
+    TWOPOINTS
+    WHILE
+
+Grammar
+
+Rule 0     S' -> d
+Rule 1     d -> INI_INT
+Rule 2     c -> INI_FLOAT
+Rule 3     t -> ID
+
+Terminals, with rules where they appear
+
+ADD                  : 
+COMMA                : 
+DO                   : 
+DOTCOMMA             : 
+ELSE                 : 
+FLOAT                : 
+FUNC                 : 
+GREATERTN            : 
+ID                   : 3
+IF                   : 
+IGNORE               : 
+INI_FLOAT            : 2
+INI_INT              : 1
+INI_STRING           : 
+INT                  : 
+LEFTBRACK            : 
+LEFTKEY              : 
+LEFTPARENT           : 
+LESS                 : 
+LESSTN               : 
+LET                  : 
+MAIN                 : 
+MULT_BY              : 
+NOTSAME              : 
+PRINTV               : 
+PROG                 : 
+RIGHTBRACK           : 
+RIGHTKEY             : 
+RIGHTPARENT          : 
+SAME                 : 
+SET                  : 
+SPLIT_BY             : 
+TWOPOINTS            : 
+WHILE                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+c                    : 
+d                    : 0
+t                    : 
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . d
+    (1) d -> . INI_INT
+
+    INI_INT         shift and go to state 2
+
+    d                              shift and go to state 1
+
+state 1
+
+    (0) S' -> d .
+
+
+
+state 2
+
+    (1) d -> INI_INT .
+
+    $end            reduce using rule 1 (d -> INI_INT .)
+
