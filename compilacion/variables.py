@@ -1,13 +1,17 @@
 
 variables = {
     'progName': '',
-    'actions': [],
+    # Current Status
     'currentFunc': '',
     'currentType': '',
-    'funciones': {},
     'currentLet': '',
-    'currentSign':'',
+    'currentSign': '',
+    'quadCount': 0,
+    # Save Variables
+    'funciones': {},
+    # Quad Generators
     'quads': [],
+    'letTargets': [],
     'operators': [],
     'operands': [],
     'types': [],
