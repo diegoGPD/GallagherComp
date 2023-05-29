@@ -12,6 +12,5 @@ def test():
     print(file)
     parser.parse(file)
 
-
 test()
 

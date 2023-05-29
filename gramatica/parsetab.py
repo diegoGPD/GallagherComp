@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ADD BOOL COMMA DO DOTCOMMA ELSE FLOAT FUNC GREATERTN ID IF IGNORE INI_FLOAT INI_INT INI_STRING INT LEFTBRACK LEFTKEY LEFTPARENT LESS LESSTN LET MAIN MULT_BY NOTSAME PRINTV PROG RIGHTBRACK RIGHTKEY RIGHTPARENT SAME SET SPLIT_BY TWOPOINTS WHILE\n      compile : PROG ID seen_program DOTCOMMA lets\n    seen_program :  lets : LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets\n                | empty\n    seen_lets : \n      type : INT seen_type\n           | FLOAT seen_type\n           | BOOL seen_type\n    seen_type :  seen_ID_let : \n      aux_let : COMMA ID seen_ID_let aux_let\n              |\n    \n      empty :\n    '
+_lr_signature = 'ADD BOOL COMMA DO DOTCOMMA ELSE FLOAT FUNC GREATERTN ID IF IGNORE INI_BOOL INI_FLOAT INI_INT INI_STRING INT LEFTBRACK LEFTKEY LEFTPARENT LESS LESSTN LET MAIN MULT_BY NOTSAME PRINTV PROG RIGHTBRACK RIGHTKEY RIGHTPARENT SAME SET SPLIT_BY TWOPOINTS VOID WHILE\n      compile : PROG ID seen_program DOTCOMMA lets modules\n                |\n    \n        modules : func modules\n                |\n    seen_program :  lets : LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets\n                | empty\n    seen_lets : \n      type : INT seen_type\n           | FLOAT seen_type\n           | BOOL seen_type\n    seen_type :  seen_ID_let : \n      aux_let : COMMA ID seen_ID_let aux_let\n              |\n    \n        func : FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code\n              |\n    \n        seen_func_name :\n    \n        params : LEFTPARENT param_table_init param_declare RIGHTPARENT\n    \n      param_table_init :\n    \n        param_declare : type ID seen_ID_let param_declare\n                | COMMA param_declare\n                | empty\n    \n      return_func_type : type\n                        | VOID void_detect\n    \n        void_detect :\n    \n        func_code : LEFTKEY func_code_aux RIGHTKEY\n    \n        func_code_aux : action func_code_aux\n                        |\n    \n        action : assign\n    \n        assign : call_let add_operand set_appear SET p_set_value\n                |\n    \n        add_operand :\n    \n         set_appear :\n    \n        call_let : ID check_let_exists\n                    |\n    \n        check_let_exists :\n    \n        p_set_value : INI_INT aux_int_check DOTCOMMA\n                    | INI_FLOAT aux_float_check DOTCOMMA\n    \n        aux_int_check :\n    \n        aux_float_check :\n    \n      empty :\n    '
     
-_lr_action_items = {'PROG':([0,],[2,]),'$end':([1,5,6,8,21,23,],[0,-13,-1,-4,-13,-3,]),'ID':([2,10,11,12,13,15,16,17,20,],[3,14,-9,-9,-9,-6,-7,-8,22,]),'DOTCOMMA':([3,4,14,18,19,22,24,25,],[-2,5,-10,-12,21,-10,-12,-11,]),'LET':([5,21,],[7,7,]),'INT':([7,9,],[-5,11,]),'FLOAT':([7,9,],[-5,12,]),'BOOL':([7,9,],[-5,13,]),'COMMA':([14,18,22,24,],[-10,20,-10,20,]),}
+_lr_action_items = {'PROG':([0,],[2,]),'$end':([0,1,5,6,8,9,10,13,38,45,47,57,],[-2,0,-42,-4,-7,-1,-4,-3,-42,-6,-16,-27,]),'ID':([2,11,15,16,17,18,21,22,23,30,35,48,52,53,63,68,69,],[3,14,20,-12,-12,-12,-9,-10,-11,39,43,55,55,-30,-31,-38,-39,]),'DOTCOMMA':([3,4,20,26,29,39,46,50,64,65,66,67,],[-5,5,-13,-15,38,-13,-15,-14,-40,-41,68,69,]),'LET':([5,38,],[7,7,]),'FUNC':([5,6,8,10,38,45,47,57,],[-42,11,-7,11,-42,-6,-16,-27,]),'INT':([7,12,25,27,28,36,43,49,],[-8,16,-20,16,16,16,-13,16,]),'FLOAT':([7,12,25,27,28,36,43,49,],[-8,17,-20,17,17,17,-13,17,]),'BOOL':([7,12,25,27,28,36,43,49,],[-8,18,-20,18,18,18,-13,18,]),'LEFTPARENT':([14,19,],[-18,25,]),'TWOPOINTS':([16,17,18,21,22,23,24,31,32,33,41,42,],[-12,-12,-12,-9,-10,-11,27,40,-24,-26,-25,-19,]),'COMMA':([20,25,26,28,36,39,43,46,49,],[-13,-20,30,36,36,-13,-13,30,36,]),'RIGHTPARENT':([25,28,34,36,37,43,44,49,56,],[-20,-42,42,-42,-23,-13,-22,-42,-21,]),'VOID':([27,],[33,]),'LEFTKEY':([40,],[48,]),'RIGHTKEY':([48,51,52,53,58,63,68,69,],[-29,57,-29,-30,-28,-31,-38,-39,]),'SET':([48,52,53,54,55,59,60,61,63,68,69,],[-32,-32,-30,-33,-37,-34,-35,62,-31,-38,-39,]),'INI_INT':([62,],[64,]),'INI_FLOAT':([62,],[65,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'compile':([0,],[1,]),'seen_program':([3,],[4,]),'lets':([5,21,],[6,23,]),'empty':([5,21,],[8,8,]),'seen_lets':([7,],[9,]),'type':([9,],[10,]),'seen_type':([11,12,13,],[15,16,17,]),'seen_ID_let':([14,22,],[18,24,]),'aux_let':([18,24,],[19,25,]),}
+_lr_goto_items = {'compile':([0,],[1,]),'seen_program':([3,],[4,]),'lets':([5,38,],[6,45,]),'empty':([5,28,36,38,49,],[8,37,37,8,37,]),'modules':([6,10,],[9,13,]),'func':([6,10,],[10,10,]),'seen_lets':([7,],[12,]),'type':([12,27,28,36,49,],[15,32,35,35,35,]),'seen_func_name':([14,],[19,]),'seen_type':([16,17,18,],[21,22,23,]),'params':([19,],[24,]),'seen_ID_let':([20,39,43,],[26,46,49,]),'param_table_init':([25,],[28,]),'aux_let':([26,46,],[29,50,]),'return_func_type':([27,],[31,]),'param_declare':([28,36,49,],[34,44,56,]),'void_detect':([33,],[41,]),'func_code':([40,],[47,]),'func_code_aux':([48,52,],[51,58,]),'action':([48,52,],[52,52,]),'assign':([48,52,],[53,53,]),'call_let':([48,52,],[54,54,]),'add_operand':([54,],[59,]),'check_let_exists':([55,],[60,]),'set_appear':([59,],[61,]),'p_set_value':([62,],[63,]),'aux_int_check':([64,],[66,]),'aux_float_check':([65,],[67,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,17 +27,46 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> compile","S'",1,None,None,None),
-  ('compile -> PROG ID seen_program DOTCOMMA lets','compile',5,'p_compile','reglas.py',9),
-  ('seen_program -> <empty>','seen_program',0,'p_seen_program','reglas.py',13),
-  ('lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets','lets',8,'p_lets','reglas.py',19),
-  ('lets -> empty','lets',1,'p_lets','reglas.py',20),
-  ('seen_lets -> <empty>','seen_lets',0,'p_seen_lets','reglas.py',24),
-  ('type -> INT seen_type','type',2,'p_type','reglas.py',31),
-  ('type -> FLOAT seen_type','type',2,'p_type','reglas.py',32),
-  ('type -> BOOL seen_type','type',2,'p_type','reglas.py',33),
-  ('seen_type -> <empty>','seen_type',0,'p_seen_type','reglas.py',38),
-  ('seen_ID_let -> <empty>','seen_ID_let',0,'p_seen_ID_let','reglas.py',43),
-  ('aux_let -> COMMA ID seen_ID_let aux_let','aux_let',4,'p_aux_let','reglas.py',57),
-  ('aux_let -> <empty>','aux_let',0,'p_aux_let','reglas.py',58),
-  ('empty -> <empty>','empty',0,'p_empty','reglas.py',63),
+  ('compile -> PROG ID seen_program DOTCOMMA lets modules','compile',6,'p_compile','reglas.py',10),
+  ('compile -> <empty>','compile',0,'p_compile','reglas.py',11),
+  ('modules -> func modules','modules',2,'p_modules','reglas.py',16),
+  ('modules -> <empty>','modules',0,'p_modules','reglas.py',17),
+  ('seen_program -> <empty>','seen_program',0,'p_seen_program','reglas.py',21),
+  ('lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets','lets',8,'p_lets','reglas.py',27),
+  ('lets -> empty','lets',1,'p_lets','reglas.py',28),
+  ('seen_lets -> <empty>','seen_lets',0,'p_seen_lets','reglas.py',32),
+  ('type -> INT seen_type','type',2,'p_type','reglas.py',39),
+  ('type -> FLOAT seen_type','type',2,'p_type','reglas.py',40),
+  ('type -> BOOL seen_type','type',2,'p_type','reglas.py',41),
+  ('seen_type -> <empty>','seen_type',0,'p_seen_type','reglas.py',46),
+  ('seen_ID_let -> <empty>','seen_ID_let',0,'p_seen_ID_let','reglas.py',51),
+  ('aux_let -> COMMA ID seen_ID_let aux_let','aux_let',4,'p_aux_let','reglas.py',65),
+  ('aux_let -> <empty>','aux_let',0,'p_aux_let','reglas.py',66),
+  ('func -> FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code','func',8,'p_func','reglas.py',71),
+  ('func -> <empty>','func',0,'p_func','reglas.py',72),
+  ('seen_func_name -> <empty>','seen_func_name',0,'p_seen_func_name','reglas.py',77),
+  ('params -> LEFTPARENT param_table_init param_declare RIGHTPARENT','params',4,'p_params','reglas.py',84),
+  ('param_table_init -> <empty>','param_table_init',0,'p_param_table_init','reglas.py',89),
+  ('param_declare -> type ID seen_ID_let param_declare','param_declare',4,'p_param_declare','reglas.py',96),
+  ('param_declare -> COMMA param_declare','param_declare',2,'p_param_declare','reglas.py',97),
+  ('param_declare -> empty','param_declare',1,'p_param_declare','reglas.py',98),
+  ('return_func_type -> type','return_func_type',1,'p_return_func_type','reglas.py',103),
+  ('return_func_type -> VOID void_detect','return_func_type',2,'p_return_func_type','reglas.py',104),
+  ('void_detect -> <empty>','void_detect',0,'p_void_detect','reglas.py',112),
+  ('func_code -> LEFTKEY func_code_aux RIGHTKEY','func_code',3,'p_func_code','reglas.py',120),
+  ('func_code_aux -> action func_code_aux','func_code_aux',2,'p_func_code_aux','reglas.py',125),
+  ('func_code_aux -> <empty>','func_code_aux',0,'p_func_code_aux','reglas.py',126),
+  ('action -> assign','action',1,'p_action','reglas.py',131),
+  ('assign -> call_let add_operand set_appear SET p_set_value','assign',5,'p_assign','reglas.py',136),
+  ('assign -> <empty>','assign',0,'p_assign','reglas.py',137),
+  ('add_operand -> <empty>','add_operand',0,'p_add_operand','reglas.py',142),
+  ('set_appear -> <empty>','set_appear',0,'p_set_appear','reglas.py',148),
+  ('call_let -> ID check_let_exists','call_let',2,'p_call_let','reglas.py',153),
+  ('call_let -> <empty>','call_let',0,'p_call_let','reglas.py',154),
+  ('check_let_exists -> <empty>','check_let_exists',0,'p_check_let_exists','reglas.py',168),
+  ('p_set_value -> INI_INT aux_int_check DOTCOMMA','p_set_value',3,'p_set_value','reglas.py',178),
+  ('p_set_value -> INI_FLOAT aux_float_check DOTCOMMA','p_set_value',3,'p_set_value','reglas.py',179),
+  ('aux_int_check -> <empty>','aux_int_check',0,'p_aux_int_check','reglas.py',185),
+  ('aux_float_check -> <empty>','aux_float_check',0,'p_aux_float_check','reglas.py',194),
+  ('empty -> <empty>','empty',0,'p_empty','reglas.py',203),
 ]

@@ -5,16 +5,12 @@ Unused terminals:
     ADD
     DO
     ELSE
-    FUNC
     GREATERTN
     IF
     IGNORE
-    INI_FLOAT
-    INI_INT
+    INI_BOOL
     INI_STRING
     LEFTBRACK
-    LEFTKEY
-    LEFTPARENT
     LESS
     LESSTN
     MAIN
@@ -22,90 +18,138 @@ Unused terminals:
     NOTSAME
     PRINTV
     RIGHTBRACK
-    RIGHTKEY
-    RIGHTPARENT
     SAME
-    SET
     SPLIT_BY
-    TWOPOINTS
     WHILE
 
 Grammar
 
 Rule 0     S' -> compile
-Rule 1     compile -> PROG ID seen_program DOTCOMMA lets
-Rule 2     seen_program -> <empty>
-Rule 3     lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
-Rule 4     lets -> empty
-Rule 5     seen_lets -> <empty>
-Rule 6     type -> INT seen_type
-Rule 7     type -> FLOAT seen_type
-Rule 8     type -> BOOL seen_type
-Rule 9     seen_type -> <empty>
-Rule 10    seen_ID_let -> <empty>
-Rule 11    aux_let -> COMMA ID seen_ID_let aux_let
-Rule 12    aux_let -> <empty>
-Rule 13    empty -> <empty>
+Rule 1     compile -> PROG ID seen_program DOTCOMMA lets modules
+Rule 2     compile -> <empty>
+Rule 3     modules -> func modules
+Rule 4     modules -> <empty>
+Rule 5     seen_program -> <empty>
+Rule 6     lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
+Rule 7     lets -> empty
+Rule 8     seen_lets -> <empty>
+Rule 9     type -> INT seen_type
+Rule 10    type -> FLOAT seen_type
+Rule 11    type -> BOOL seen_type
+Rule 12    seen_type -> <empty>
+Rule 13    seen_ID_let -> <empty>
+Rule 14    aux_let -> COMMA ID seen_ID_let aux_let
+Rule 15    aux_let -> <empty>
+Rule 16    func -> FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code
+Rule 17    func -> <empty>
+Rule 18    seen_func_name -> <empty>
+Rule 19    params -> LEFTPARENT param_table_init param_declare RIGHTPARENT
+Rule 20    param_table_init -> <empty>
+Rule 21    param_declare -> type ID seen_ID_let param_declare
+Rule 22    param_declare -> COMMA param_declare
+Rule 23    param_declare -> empty
+Rule 24    return_func_type -> type
+Rule 25    return_func_type -> VOID void_detect
+Rule 26    void_detect -> <empty>
+Rule 27    func_code -> LEFTKEY func_code_aux RIGHTKEY
+Rule 28    func_code_aux -> action func_code_aux
+Rule 29    func_code_aux -> <empty>
+Rule 30    action -> assign
+Rule 31    assign -> call_let add_operand set_appear SET p_set_value
+Rule 32    assign -> <empty>
+Rule 33    add_operand -> <empty>
+Rule 34    set_appear -> <empty>
+Rule 35    call_let -> ID check_let_exists
+Rule 36    call_let -> <empty>
+Rule 37    check_let_exists -> <empty>
+Rule 38    p_set_value -> INI_INT aux_int_check DOTCOMMA
+Rule 39    p_set_value -> INI_FLOAT aux_float_check DOTCOMMA
+Rule 40    aux_int_check -> <empty>
+Rule 41    aux_float_check -> <empty>
+Rule 42    empty -> <empty>
 
 Terminals, with rules where they appear
 
 ADD                  : 
-BOOL                 : 8
-COMMA                : 11
+BOOL                 : 11
+COMMA                : 14 22
 DO                   : 
-DOTCOMMA             : 1 3
+DOTCOMMA             : 1 6 38 39
 ELSE                 : 
-FLOAT                : 7
-FUNC                 : 
+FLOAT                : 10
+FUNC                 : 16
 GREATERTN            : 
-ID                   : 1 3 11
+ID                   : 1 6 14 16 21 35
 IF                   : 
 IGNORE               : 
-INI_FLOAT            : 
-INI_INT              : 
+INI_BOOL             : 
+INI_FLOAT            : 39
+INI_INT              : 38
 INI_STRING           : 
-INT                  : 6
+INT                  : 9
 LEFTBRACK            : 
-LEFTKEY              : 
-LEFTPARENT           : 
+LEFTKEY              : 27
+LEFTPARENT           : 19
 LESS                 : 
 LESSTN               : 
-LET                  : 3
+LET                  : 6
 MAIN                 : 
 MULT_BY              : 
 NOTSAME              : 
 PRINTV               : 
 PROG                 : 1
 RIGHTBRACK           : 
-RIGHTKEY             : 
-RIGHTPARENT          : 
+RIGHTKEY             : 27
+RIGHTPARENT          : 19
 SAME                 : 
-SET                  : 
+SET                  : 31
 SPLIT_BY             : 
-TWOPOINTS            : 
+TWOPOINTS            : 16 16
+VOID                 : 25
 WHILE                : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-aux_let              : 3 11
+action               : 28
+add_operand          : 31
+assign               : 30
+aux_float_check      : 39
+aux_int_check        : 38
+aux_let              : 6 14
+call_let             : 31
+check_let_exists     : 35
 compile              : 0
-empty                : 4
-lets                 : 1 3
-seen_ID_let          : 3 11
-seen_lets            : 3
+empty                : 7 23
+func                 : 3
+func_code            : 16
+func_code_aux        : 27 28
+lets                 : 1 6
+modules              : 1 3
+p_set_value          : 31
+param_declare        : 19 21 22
+param_table_init     : 19
+params               : 16
+return_func_type     : 16
+seen_ID_let          : 6 14 21
+seen_func_name       : 16
+seen_lets            : 6
 seen_program         : 1
-seen_type            : 6 7 8
-type                 : 3
+seen_type            : 9 10 11
+set_appear           : 31
+type                 : 6 21 24
+void_detect          : 25
 
 Parsing method: LALR
 
 state 0
 
     (0) S' -> . compile
-    (1) compile -> . PROG ID seen_program DOTCOMMA lets
+    (1) compile -> . PROG ID seen_program DOTCOMMA lets modules
+    (2) compile -> .
 
     PROG            shift and go to state 2
+    $end            reduce using rule 2 (compile -> .)
 
     compile                        shift and go to state 1
 
@@ -117,212 +161,711 @@ state 1
 
 state 2
 
-    (1) compile -> PROG . ID seen_program DOTCOMMA lets
+    (1) compile -> PROG . ID seen_program DOTCOMMA lets modules
 
     ID              shift and go to state 3
 
 
 state 3
 
-    (1) compile -> PROG ID . seen_program DOTCOMMA lets
-    (2) seen_program -> .
+    (1) compile -> PROG ID . seen_program DOTCOMMA lets modules
+    (5) seen_program -> .
 
-    DOTCOMMA        reduce using rule 2 (seen_program -> .)
+    DOTCOMMA        reduce using rule 5 (seen_program -> .)
 
     seen_program                   shift and go to state 4
 
 state 4
 
-    (1) compile -> PROG ID seen_program . DOTCOMMA lets
+    (1) compile -> PROG ID seen_program . DOTCOMMA lets modules
 
     DOTCOMMA        shift and go to state 5
 
 
 state 5
 
-    (1) compile -> PROG ID seen_program DOTCOMMA . lets
-    (3) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
-    (4) lets -> . empty
-    (13) empty -> .
+    (1) compile -> PROG ID seen_program DOTCOMMA . lets modules
+    (6) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
+    (7) lets -> . empty
+    (42) empty -> .
 
     LET             shift and go to state 7
-    $end            reduce using rule 13 (empty -> .)
+    FUNC            reduce using rule 42 (empty -> .)
+    $end            reduce using rule 42 (empty -> .)
 
     lets                           shift and go to state 6
     empty                          shift and go to state 8
 
 state 6
 
-    (1) compile -> PROG ID seen_program DOTCOMMA lets .
+    (1) compile -> PROG ID seen_program DOTCOMMA lets . modules
+    (3) modules -> . func modules
+    (4) modules -> .
+    (16) func -> . FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code
+    (17) func -> .
 
-    $end            reduce using rule 1 (compile -> PROG ID seen_program DOTCOMMA lets .)
+  ! shift/reduce conflict for FUNC resolved as shift
+  ! reduce/reduce conflict for $end resolved using rule 4 (modules -> .)
+    $end            reduce using rule 4 (modules -> .)
+    FUNC            shift and go to state 11
 
+  ! FUNC            [ reduce using rule 17 (func -> .) ]
+  ! $end            [ reduce using rule 17 (func -> .) ]
+
+    modules                        shift and go to state 9
+    func                           shift and go to state 10
 
 state 7
 
-    (3) lets -> LET . seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
-    (5) seen_lets -> .
+    (6) lets -> LET . seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
+    (8) seen_lets -> .
 
-    INT             reduce using rule 5 (seen_lets -> .)
-    FLOAT           reduce using rule 5 (seen_lets -> .)
-    BOOL            reduce using rule 5 (seen_lets -> .)
+    INT             reduce using rule 8 (seen_lets -> .)
+    FLOAT           reduce using rule 8 (seen_lets -> .)
+    BOOL            reduce using rule 8 (seen_lets -> .)
 
-    seen_lets                      shift and go to state 9
+    seen_lets                      shift and go to state 12
 
 state 8
 
-    (4) lets -> empty .
+    (7) lets -> empty .
 
-    $end            reduce using rule 4 (lets -> empty .)
+    FUNC            reduce using rule 7 (lets -> empty .)
+    $end            reduce using rule 7 (lets -> empty .)
 
 
 state 9
 
-    (3) lets -> LET seen_lets . type ID seen_ID_let aux_let DOTCOMMA lets
-    (6) type -> . INT seen_type
-    (7) type -> . FLOAT seen_type
-    (8) type -> . BOOL seen_type
+    (1) compile -> PROG ID seen_program DOTCOMMA lets modules .
 
-    INT             shift and go to state 11
-    FLOAT           shift and go to state 12
-    BOOL            shift and go to state 13
+    $end            reduce using rule 1 (compile -> PROG ID seen_program DOTCOMMA lets modules .)
 
-    type                           shift and go to state 10
 
 state 10
 
-    (3) lets -> LET seen_lets type . ID seen_ID_let aux_let DOTCOMMA lets
+    (3) modules -> func . modules
+    (3) modules -> . func modules
+    (4) modules -> .
+    (16) func -> . FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code
+    (17) func -> .
+
+  ! shift/reduce conflict for FUNC resolved as shift
+  ! reduce/reduce conflict for $end resolved using rule 4 (modules -> .)
+    $end            reduce using rule 4 (modules -> .)
+    FUNC            shift and go to state 11
+
+  ! FUNC            [ reduce using rule 17 (func -> .) ]
+  ! $end            [ reduce using rule 17 (func -> .) ]
+
+    func                           shift and go to state 10
+    modules                        shift and go to state 13
+
+state 11
+
+    (16) func -> FUNC . ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code
 
     ID              shift and go to state 14
 
 
-state 11
-
-    (6) type -> INT . seen_type
-    (9) seen_type -> .
-
-    ID              reduce using rule 9 (seen_type -> .)
-
-    seen_type                      shift and go to state 15
-
 state 12
 
-    (7) type -> FLOAT . seen_type
-    (9) seen_type -> .
+    (6) lets -> LET seen_lets . type ID seen_ID_let aux_let DOTCOMMA lets
+    (9) type -> . INT seen_type
+    (10) type -> . FLOAT seen_type
+    (11) type -> . BOOL seen_type
 
-    ID              reduce using rule 9 (seen_type -> .)
+    INT             shift and go to state 16
+    FLOAT           shift and go to state 17
+    BOOL            shift and go to state 18
 
-    seen_type                      shift and go to state 16
+    type                           shift and go to state 15
 
 state 13
 
-    (8) type -> BOOL . seen_type
-    (9) seen_type -> .
+    (3) modules -> func modules .
 
-    ID              reduce using rule 9 (seen_type -> .)
+    $end            reduce using rule 3 (modules -> func modules .)
 
-    seen_type                      shift and go to state 17
 
 state 14
 
-    (3) lets -> LET seen_lets type ID . seen_ID_let aux_let DOTCOMMA lets
-    (10) seen_ID_let -> .
+    (16) func -> FUNC ID . seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code
+    (18) seen_func_name -> .
 
-    COMMA           reduce using rule 10 (seen_ID_let -> .)
-    DOTCOMMA        reduce using rule 10 (seen_ID_let -> .)
+    LEFTPARENT      reduce using rule 18 (seen_func_name -> .)
 
-    seen_ID_let                    shift and go to state 18
+    seen_func_name                 shift and go to state 19
 
 state 15
 
-    (6) type -> INT seen_type .
+    (6) lets -> LET seen_lets type . ID seen_ID_let aux_let DOTCOMMA lets
 
-    ID              reduce using rule 6 (type -> INT seen_type .)
+    ID              shift and go to state 20
 
 
 state 16
 
-    (7) type -> FLOAT seen_type .
+    (9) type -> INT . seen_type
+    (12) seen_type -> .
 
-    ID              reduce using rule 7 (type -> FLOAT seen_type .)
+    ID              reduce using rule 12 (seen_type -> .)
+    TWOPOINTS       reduce using rule 12 (seen_type -> .)
 
+    seen_type                      shift and go to state 21
 
 state 17
 
-    (8) type -> BOOL seen_type .
+    (10) type -> FLOAT . seen_type
+    (12) seen_type -> .
 
-    ID              reduce using rule 8 (type -> BOOL seen_type .)
+    ID              reduce using rule 12 (seen_type -> .)
+    TWOPOINTS       reduce using rule 12 (seen_type -> .)
 
+    seen_type                      shift and go to state 22
 
 state 18
 
-    (3) lets -> LET seen_lets type ID seen_ID_let . aux_let DOTCOMMA lets
-    (11) aux_let -> . COMMA ID seen_ID_let aux_let
-    (12) aux_let -> .
+    (11) type -> BOOL . seen_type
+    (12) seen_type -> .
 
-    COMMA           shift and go to state 20
-    DOTCOMMA        reduce using rule 12 (aux_let -> .)
+    ID              reduce using rule 12 (seen_type -> .)
+    TWOPOINTS       reduce using rule 12 (seen_type -> .)
 
-    aux_let                        shift and go to state 19
+    seen_type                      shift and go to state 23
 
 state 19
 
-    (3) lets -> LET seen_lets type ID seen_ID_let aux_let . DOTCOMMA lets
+    (16) func -> FUNC ID seen_func_name . params TWOPOINTS return_func_type TWOPOINTS func_code
+    (19) params -> . LEFTPARENT param_table_init param_declare RIGHTPARENT
 
-    DOTCOMMA        shift and go to state 21
+    LEFTPARENT      shift and go to state 25
 
+    params                         shift and go to state 24
 
 state 20
 
-    (11) aux_let -> COMMA . ID seen_ID_let aux_let
+    (6) lets -> LET seen_lets type ID . seen_ID_let aux_let DOTCOMMA lets
+    (13) seen_ID_let -> .
 
-    ID              shift and go to state 22
+    COMMA           reduce using rule 13 (seen_ID_let -> .)
+    DOTCOMMA        reduce using rule 13 (seen_ID_let -> .)
 
+    seen_ID_let                    shift and go to state 26
 
 state 21
 
-    (3) lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA . lets
-    (3) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
-    (4) lets -> . empty
-    (13) empty -> .
+    (9) type -> INT seen_type .
 
-    LET             shift and go to state 7
-    $end            reduce using rule 13 (empty -> .)
+    ID              reduce using rule 9 (type -> INT seen_type .)
+    TWOPOINTS       reduce using rule 9 (type -> INT seen_type .)
 
-    lets                           shift and go to state 23
-    empty                          shift and go to state 8
 
 state 22
 
-    (11) aux_let -> COMMA ID . seen_ID_let aux_let
-    (10) seen_ID_let -> .
+    (10) type -> FLOAT seen_type .
 
-    COMMA           reduce using rule 10 (seen_ID_let -> .)
-    DOTCOMMA        reduce using rule 10 (seen_ID_let -> .)
+    ID              reduce using rule 10 (type -> FLOAT seen_type .)
+    TWOPOINTS       reduce using rule 10 (type -> FLOAT seen_type .)
 
-    seen_ID_let                    shift and go to state 24
 
 state 23
 
-    (3) lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .
+    (11) type -> BOOL seen_type .
 
-    $end            reduce using rule 3 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
+    ID              reduce using rule 11 (type -> BOOL seen_type .)
+    TWOPOINTS       reduce using rule 11 (type -> BOOL seen_type .)
 
 
 state 24
 
-    (11) aux_let -> COMMA ID seen_ID_let . aux_let
-    (11) aux_let -> . COMMA ID seen_ID_let aux_let
-    (12) aux_let -> .
+    (16) func -> FUNC ID seen_func_name params . TWOPOINTS return_func_type TWOPOINTS func_code
 
-    COMMA           shift and go to state 20
-    DOTCOMMA        reduce using rule 12 (aux_let -> .)
+    TWOPOINTS       shift and go to state 27
 
-    aux_let                        shift and go to state 25
 
 state 25
 
-    (11) aux_let -> COMMA ID seen_ID_let aux_let .
+    (19) params -> LEFTPARENT . param_table_init param_declare RIGHTPARENT
+    (20) param_table_init -> .
 
-    DOTCOMMA        reduce using rule 11 (aux_let -> COMMA ID seen_ID_let aux_let .)
+    COMMA           reduce using rule 20 (param_table_init -> .)
+    INT             reduce using rule 20 (param_table_init -> .)
+    FLOAT           reduce using rule 20 (param_table_init -> .)
+    BOOL            reduce using rule 20 (param_table_init -> .)
+    RIGHTPARENT     reduce using rule 20 (param_table_init -> .)
 
+    param_table_init               shift and go to state 28
+
+state 26
+
+    (6) lets -> LET seen_lets type ID seen_ID_let . aux_let DOTCOMMA lets
+    (14) aux_let -> . COMMA ID seen_ID_let aux_let
+    (15) aux_let -> .
+
+    COMMA           shift and go to state 30
+    DOTCOMMA        reduce using rule 15 (aux_let -> .)
+
+    aux_let                        shift and go to state 29
+
+state 27
+
+    (16) func -> FUNC ID seen_func_name params TWOPOINTS . return_func_type TWOPOINTS func_code
+    (24) return_func_type -> . type
+    (25) return_func_type -> . VOID void_detect
+    (9) type -> . INT seen_type
+    (10) type -> . FLOAT seen_type
+    (11) type -> . BOOL seen_type
+
+    VOID            shift and go to state 33
+    INT             shift and go to state 16
+    FLOAT           shift and go to state 17
+    BOOL            shift and go to state 18
+
+    return_func_type               shift and go to state 31
+    type                           shift and go to state 32
+
+state 28
+
+    (19) params -> LEFTPARENT param_table_init . param_declare RIGHTPARENT
+    (21) param_declare -> . type ID seen_ID_let param_declare
+    (22) param_declare -> . COMMA param_declare
+    (23) param_declare -> . empty
+    (9) type -> . INT seen_type
+    (10) type -> . FLOAT seen_type
+    (11) type -> . BOOL seen_type
+    (42) empty -> .
+
+    COMMA           shift and go to state 36
+    INT             shift and go to state 16
+    FLOAT           shift and go to state 17
+    BOOL            shift and go to state 18
+    RIGHTPARENT     reduce using rule 42 (empty -> .)
+
+    param_declare                  shift and go to state 34
+    type                           shift and go to state 35
+    empty                          shift and go to state 37
+
+state 29
+
+    (6) lets -> LET seen_lets type ID seen_ID_let aux_let . DOTCOMMA lets
+
+    DOTCOMMA        shift and go to state 38
+
+
+state 30
+
+    (14) aux_let -> COMMA . ID seen_ID_let aux_let
+
+    ID              shift and go to state 39
+
+
+state 31
+
+    (16) func -> FUNC ID seen_func_name params TWOPOINTS return_func_type . TWOPOINTS func_code
+
+    TWOPOINTS       shift and go to state 40
+
+
+state 32
+
+    (24) return_func_type -> type .
+
+    TWOPOINTS       reduce using rule 24 (return_func_type -> type .)
+
+
+state 33
+
+    (25) return_func_type -> VOID . void_detect
+    (26) void_detect -> .
+
+    TWOPOINTS       reduce using rule 26 (void_detect -> .)
+
+    void_detect                    shift and go to state 41
+
+state 34
+
+    (19) params -> LEFTPARENT param_table_init param_declare . RIGHTPARENT
+
+    RIGHTPARENT     shift and go to state 42
+
+
+state 35
+
+    (21) param_declare -> type . ID seen_ID_let param_declare
+
+    ID              shift and go to state 43
+
+
+state 36
+
+    (22) param_declare -> COMMA . param_declare
+    (21) param_declare -> . type ID seen_ID_let param_declare
+    (22) param_declare -> . COMMA param_declare
+    (23) param_declare -> . empty
+    (9) type -> . INT seen_type
+    (10) type -> . FLOAT seen_type
+    (11) type -> . BOOL seen_type
+    (42) empty -> .
+
+    COMMA           shift and go to state 36
+    INT             shift and go to state 16
+    FLOAT           shift and go to state 17
+    BOOL            shift and go to state 18
+    RIGHTPARENT     reduce using rule 42 (empty -> .)
+
+    param_declare                  shift and go to state 44
+    type                           shift and go to state 35
+    empty                          shift and go to state 37
+
+state 37
+
+    (23) param_declare -> empty .
+
+    RIGHTPARENT     reduce using rule 23 (param_declare -> empty .)
+
+
+state 38
+
+    (6) lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA . lets
+    (6) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
+    (7) lets -> . empty
+    (42) empty -> .
+
+    LET             shift and go to state 7
+    FUNC            reduce using rule 42 (empty -> .)
+    $end            reduce using rule 42 (empty -> .)
+
+    lets                           shift and go to state 45
+    empty                          shift and go to state 8
+
+state 39
+
+    (14) aux_let -> COMMA ID . seen_ID_let aux_let
+    (13) seen_ID_let -> .
+
+    COMMA           reduce using rule 13 (seen_ID_let -> .)
+    DOTCOMMA        reduce using rule 13 (seen_ID_let -> .)
+
+    seen_ID_let                    shift and go to state 46
+
+state 40
+
+    (16) func -> FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS . func_code
+    (27) func_code -> . LEFTKEY func_code_aux RIGHTKEY
+
+    LEFTKEY         shift and go to state 48
+
+    func_code                      shift and go to state 47
+
+state 41
+
+    (25) return_func_type -> VOID void_detect .
+
+    TWOPOINTS       reduce using rule 25 (return_func_type -> VOID void_detect .)
+
+
+state 42
+
+    (19) params -> LEFTPARENT param_table_init param_declare RIGHTPARENT .
+
+    TWOPOINTS       reduce using rule 19 (params -> LEFTPARENT param_table_init param_declare RIGHTPARENT .)
+
+
+state 43
+
+    (21) param_declare -> type ID . seen_ID_let param_declare
+    (13) seen_ID_let -> .
+
+    COMMA           reduce using rule 13 (seen_ID_let -> .)
+    INT             reduce using rule 13 (seen_ID_let -> .)
+    FLOAT           reduce using rule 13 (seen_ID_let -> .)
+    BOOL            reduce using rule 13 (seen_ID_let -> .)
+    RIGHTPARENT     reduce using rule 13 (seen_ID_let -> .)
+
+    seen_ID_let                    shift and go to state 49
+
+state 44
+
+    (22) param_declare -> COMMA param_declare .
+
+    RIGHTPARENT     reduce using rule 22 (param_declare -> COMMA param_declare .)
+
+
+state 45
+
+    (6) lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .
+
+    FUNC            reduce using rule 6 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
+    $end            reduce using rule 6 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
+
+
+state 46
+
+    (14) aux_let -> COMMA ID seen_ID_let . aux_let
+    (14) aux_let -> . COMMA ID seen_ID_let aux_let
+    (15) aux_let -> .
+
+    COMMA           shift and go to state 30
+    DOTCOMMA        reduce using rule 15 (aux_let -> .)
+
+    aux_let                        shift and go to state 50
+
+state 47
+
+    (16) func -> FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code .
+
+    FUNC            reduce using rule 16 (func -> FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code .)
+    $end            reduce using rule 16 (func -> FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code .)
+
+
+state 48
+
+    (27) func_code -> LEFTKEY . func_code_aux RIGHTKEY
+    (28) func_code_aux -> . action func_code_aux
+    (29) func_code_aux -> .
+    (30) action -> . assign
+    (31) assign -> . call_let add_operand set_appear SET p_set_value
+    (32) assign -> .
+    (35) call_let -> . ID check_let_exists
+    (36) call_let -> .
+
+  ! reduce/reduce conflict for RIGHTKEY resolved using rule 29 (func_code_aux -> .)
+  ! shift/reduce conflict for ID resolved as shift
+  ! reduce/reduce conflict for SET resolved using rule 32 (assign -> .)
+    RIGHTKEY        reduce using rule 29 (func_code_aux -> .)
+    SET             reduce using rule 32 (assign -> .)
+    ID              shift and go to state 55
+
+  ! ID              [ reduce using rule 32 (assign -> .) ]
+  ! RIGHTKEY        [ reduce using rule 32 (assign -> .) ]
+  ! SET             [ reduce using rule 36 (call_let -> .) ]
+
+    func_code_aux                  shift and go to state 51
+    action                         shift and go to state 52
+    assign                         shift and go to state 53
+    call_let                       shift and go to state 54
+
+state 49
+
+    (21) param_declare -> type ID seen_ID_let . param_declare
+    (21) param_declare -> . type ID seen_ID_let param_declare
+    (22) param_declare -> . COMMA param_declare
+    (23) param_declare -> . empty
+    (9) type -> . INT seen_type
+    (10) type -> . FLOAT seen_type
+    (11) type -> . BOOL seen_type
+    (42) empty -> .
+
+    COMMA           shift and go to state 36
+    INT             shift and go to state 16
+    FLOAT           shift and go to state 17
+    BOOL            shift and go to state 18
+    RIGHTPARENT     reduce using rule 42 (empty -> .)
+
+    type                           shift and go to state 35
+    param_declare                  shift and go to state 56
+    empty                          shift and go to state 37
+
+state 50
+
+    (14) aux_let -> COMMA ID seen_ID_let aux_let .
+
+    DOTCOMMA        reduce using rule 14 (aux_let -> COMMA ID seen_ID_let aux_let .)
+
+
+state 51
+
+    (27) func_code -> LEFTKEY func_code_aux . RIGHTKEY
+
+    RIGHTKEY        shift and go to state 57
+
+
+state 52
+
+    (28) func_code_aux -> action . func_code_aux
+    (28) func_code_aux -> . action func_code_aux
+    (29) func_code_aux -> .
+    (30) action -> . assign
+    (31) assign -> . call_let add_operand set_appear SET p_set_value
+    (32) assign -> .
+    (35) call_let -> . ID check_let_exists
+    (36) call_let -> .
+
+  ! reduce/reduce conflict for RIGHTKEY resolved using rule 29 (func_code_aux -> .)
+  ! shift/reduce conflict for ID resolved as shift
+  ! reduce/reduce conflict for SET resolved using rule 32 (assign -> .)
+    RIGHTKEY        reduce using rule 29 (func_code_aux -> .)
+    SET             reduce using rule 32 (assign -> .)
+    ID              shift and go to state 55
+
+  ! ID              [ reduce using rule 32 (assign -> .) ]
+  ! RIGHTKEY        [ reduce using rule 32 (assign -> .) ]
+  ! SET             [ reduce using rule 36 (call_let -> .) ]
+
+    action                         shift and go to state 52
+    func_code_aux                  shift and go to state 58
+    assign                         shift and go to state 53
+    call_let                       shift and go to state 54
+
+state 53
+
+    (30) action -> assign .
+
+    ID              reduce using rule 30 (action -> assign .)
+    SET             reduce using rule 30 (action -> assign .)
+    RIGHTKEY        reduce using rule 30 (action -> assign .)
+
+
+state 54
+
+    (31) assign -> call_let . add_operand set_appear SET p_set_value
+    (33) add_operand -> .
+
+    SET             reduce using rule 33 (add_operand -> .)
+
+    add_operand                    shift and go to state 59
+
+state 55
+
+    (35) call_let -> ID . check_let_exists
+    (37) check_let_exists -> .
+
+    SET             reduce using rule 37 (check_let_exists -> .)
+
+    check_let_exists               shift and go to state 60
+
+state 56
+
+    (21) param_declare -> type ID seen_ID_let param_declare .
+
+    RIGHTPARENT     reduce using rule 21 (param_declare -> type ID seen_ID_let param_declare .)
+
+
+state 57
+
+    (27) func_code -> LEFTKEY func_code_aux RIGHTKEY .
+
+    FUNC            reduce using rule 27 (func_code -> LEFTKEY func_code_aux RIGHTKEY .)
+    $end            reduce using rule 27 (func_code -> LEFTKEY func_code_aux RIGHTKEY .)
+
+
+state 58
+
+    (28) func_code_aux -> action func_code_aux .
+
+    RIGHTKEY        reduce using rule 28 (func_code_aux -> action func_code_aux .)
+
+
+state 59
+
+    (31) assign -> call_let add_operand . set_appear SET p_set_value
+    (34) set_appear -> .
+
+    SET             reduce using rule 34 (set_appear -> .)
+
+    set_appear                     shift and go to state 61
+
+state 60
+
+    (35) call_let -> ID check_let_exists .
+
+    SET             reduce using rule 35 (call_let -> ID check_let_exists .)
+
+
+state 61
+
+    (31) assign -> call_let add_operand set_appear . SET p_set_value
+
+    SET             shift and go to state 62
+
+
+state 62
+
+    (31) assign -> call_let add_operand set_appear SET . p_set_value
+    (38) p_set_value -> . INI_INT aux_int_check DOTCOMMA
+    (39) p_set_value -> . INI_FLOAT aux_float_check DOTCOMMA
+
+    INI_INT         shift and go to state 64
+    INI_FLOAT       shift and go to state 65
+
+    p_set_value                    shift and go to state 63
+
+state 63
+
+    (31) assign -> call_let add_operand set_appear SET p_set_value .
+
+    ID              reduce using rule 31 (assign -> call_let add_operand set_appear SET p_set_value .)
+    SET             reduce using rule 31 (assign -> call_let add_operand set_appear SET p_set_value .)
+    RIGHTKEY        reduce using rule 31 (assign -> call_let add_operand set_appear SET p_set_value .)
+
+
+state 64
+
+    (38) p_set_value -> INI_INT . aux_int_check DOTCOMMA
+    (40) aux_int_check -> .
+
+    DOTCOMMA        reduce using rule 40 (aux_int_check -> .)
+
+    aux_int_check                  shift and go to state 66
+
+state 65
+
+    (39) p_set_value -> INI_FLOAT . aux_float_check DOTCOMMA
+    (41) aux_float_check -> .
+
+    DOTCOMMA        reduce using rule 41 (aux_float_check -> .)
+
+    aux_float_check                shift and go to state 67
+
+state 66
+
+    (38) p_set_value -> INI_INT aux_int_check . DOTCOMMA
+
+    DOTCOMMA        shift and go to state 68
+
+
+state 67
+
+    (39) p_set_value -> INI_FLOAT aux_float_check . DOTCOMMA
+
+    DOTCOMMA        shift and go to state 69
+
+
+state 68
+
+    (38) p_set_value -> INI_INT aux_int_check DOTCOMMA .
+
+    ID              reduce using rule 38 (p_set_value -> INI_INT aux_int_check DOTCOMMA .)
+    SET             reduce using rule 38 (p_set_value -> INI_INT aux_int_check DOTCOMMA .)
+    RIGHTKEY        reduce using rule 38 (p_set_value -> INI_INT aux_int_check DOTCOMMA .)
+
+
+state 69
+
+    (39) p_set_value -> INI_FLOAT aux_float_check DOTCOMMA .
+
+    ID              reduce using rule 39 (p_set_value -> INI_FLOAT aux_float_check DOTCOMMA .)
+    SET             reduce using rule 39 (p_set_value -> INI_FLOAT aux_float_check DOTCOMMA .)
+    RIGHTKEY        reduce using rule 39 (p_set_value -> INI_FLOAT aux_float_check DOTCOMMA .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for FUNC in state 6 resolved as shift
+WARNING: shift/reduce conflict for FUNC in state 10 resolved as shift
+WARNING: shift/reduce conflict for ID in state 48 resolved as shift
+WARNING: shift/reduce conflict for ID in state 52 resolved as shift
+WARNING: reduce/reduce conflict in state 6 resolved using rule (modules -> <empty>)
+WARNING: rejected rule (func -> <empty>) in state 6
+WARNING: reduce/reduce conflict in state 10 resolved using rule (modules -> <empty>)
+WARNING: rejected rule (func -> <empty>) in state 10
+WARNING: reduce/reduce conflict in state 48 resolved using rule (func_code_aux -> <empty>)
+WARNING: rejected rule (assign -> <empty>) in state 48
+WARNING: reduce/reduce conflict in state 48 resolved using rule (assign -> <empty>)
+WARNING: rejected rule (call_let -> <empty>) in state 48
+WARNING: reduce/reduce conflict in state 52 resolved using rule (func_code_aux -> <empty>)
+WARNING: rejected rule (assign -> <empty>) in state 52
+WARNING: reduce/reduce conflict in state 52 resolved using rule (assign -> <empty>)
+WARNING: rejected rule (call_let -> <empty>) in state 52
+WARNING: Rule (func -> <empty>) is never reduced
+WARNING: Rule (call_let -> <empty>) is never reduced

@@ -1,12 +1,20 @@
 ####### REGLAS GRAMATICALES ############
 import compilacion.variables
 from semantica import regex
+from semantica.utils import validate_set_type
 
 tokens = regex.tokens
 
 def p_compile(p):
     """
-      compile : PROG ID seen_program DOTCOMMA lets
+      compile : PROG ID seen_program DOTCOMMA lets modules
+                |
+    """
+
+def p_modules(p):
+    """
+        modules : func modules
+                |
     """
 
 def p_seen_program(p):
@@ -50,13 +58,144 @@ def p_seen_ID_let(p):
         pass
     compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][newLet] = {
         'type': compilacion.variables.variables['currentType']}
-    print('Nueva variable', newLet)
 
 def p_aux_let(p):
     """
       aux_let : COMMA ID seen_ID_let aux_let
               |
     """
+
+def p_func(p):
+    """
+        func : FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code
+              |
+    """
+
+def p_seen_func_name(p):
+    """
+        seen_func_name :
+    """
+    compilacion.variables.variables['currentFunc'] = p[-1]
+    compilacion.variables.variables['funciones'][p[-1]] = {'type': ''}
+
+def p_params(p):
+    '''
+        params : LEFTPARENT param_table_init param_declare RIGHTPARENT
+    '''
+
+def p_param_table_init(p):
+    '''
+      param_table_init :
+    '''
+    if not ('letsTable' in compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]):
+        compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'] = {}
+
+def p_param_declare(p):
+    '''
+        param_declare : type ID seen_ID_let param_declare
+                | COMMA param_declare
+                | empty
+    '''
+
+def p_return_func_type(p):
+    '''
+      return_func_type : type
+                        | VOID void_detect
+    '''
+
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]["type"] = compilacion.variables.variables['currentType']
+
+
+def p_void_detect(p):
+    '''
+        void_detect :
+    '''
+
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]["type"] = "void"
+
+
+def p_func_code(p):
+    """
+        func_code : LEFTKEY func_code_aux RIGHTKEY
+    """
+
+def p_func_code_aux(p):
+    """
+        func_code_aux : action func_code_aux
+                        |
+    """
+
+def p_action(p):
+    """
+        action : assign
+    """
+
+def p_assign(p):
+    """
+        assign : call_let add_operand set_appear SET p_set_value
+                |
+    """
+
+def p_add_operand(p):
+    """
+        add_operand :
+    """
+    compilacion.variables.variables['operands'].append(p[-1])
+def p_set_appear(p):
+    """
+         set_appear :
+    """
+    compilacion.variables.variables['currentSign'] = '='
+    compilacion.variables.variables['operators'].append('=')
+def p_call_let(p):
+    """
+        call_let : ID check_let_exists
+                    |
+    """
+
+    var = compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'].get(p[1])
+    if var is None:
+        var = compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'].get(p[1])
+        compilacion.variables.variables['currentType'] = compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'][p[1]]['type']
+    else:
+        compilacion.variables.variables['currentType'] = compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][p[1]]['type']
+
+    p[0] = p[1]
+
+def p_check_let_exists(p):
+    """
+        check_let_exists :
+    """
+
+    compilacion.variables.variables['currentLet'] = p[-1]
+
+    if compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'].get(p[-1]) is None and compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'].get(p[-1]) is None:
+        print("Error: Variable '%s' does not exist in scope '%s' nor in global" % (p[-1], compilacion.variables.variables['currentFunc']))
+
+def p_set_value(p):
+    """
+        p_set_value : INI_INT aux_int_check DOTCOMMA
+                    | INI_FLOAT aux_float_check DOTCOMMA
+    """
+    compilacion.variables.variables['operands'].append(p[1])
+
+def p_aux_int_check(p):
+    """
+        aux_int_check :
+    """
+    valid = validate_set_type(compilacion.variables.variables['currentSign'], compilacion.variables.variables['currentType'], 'int')
+    if valid == 'error':
+        print('ERROR')
+        p_error(-2)
+
+def p_aux_float_check(p):
+    """
+        aux_float_check :
+    """
+    valid = validate_set_type(compilacion.variables.variables['currentSign'], compilacion.variables.variables['currentType'], 'float')
+    if valid == 'error':
+        print('ERROR')
+        p_error(-2)
 
 def p_empty(p):
     """

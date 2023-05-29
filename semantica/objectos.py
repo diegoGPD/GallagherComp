@@ -106,7 +106,33 @@ cuboSemantico = {
             'string': 'int',
             'bool': 'bool'
         },
-    }
+    },
+    '=': {
+            'int': {
+                'int': 'int',
+                'float': 'error',
+                'string': 'error',
+                'bool': 'error'
+            },
+            'float': {
+                'int': 'error',
+                'float': 'float',
+                'string': 'error',
+                'bool': 'error'
+            },
+            'string': {
+                'int': 'error',
+                'float': 'error',
+                'string': 'string',
+                'bool': 'error'
+            },
+            'bool': {
+                'int': 'error',
+                'float': 'error',
+                'string': 'error',
+                'bool': 'bool'
+            },
+        }
 }
 
 ########## Tokens ###################
@@ -115,6 +141,7 @@ tokens = [
     'INI_INT',
     'INI_FLOAT',
     'INI_STRING',
+    'INI_BOOL',
     'ID',
     'ADD',
     'LESS',
@@ -149,6 +176,7 @@ palabrasReservadas = {
     'int': 'INT',
     'float': 'FLOAT',
     'bool': 'BOOL',
+    'void': 'VOID',
     'printV' : 'PRINTV',
     'do' : 'DO',
     'while': 'WHILE',
