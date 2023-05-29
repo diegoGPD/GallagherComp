@@ -22,8 +22,6 @@ def p_lets(p):
 
 def p_seen_lets(p):
     """seen_lets : """
-    print('asdfasdfadsfadsf')
-
     if not ('letsTable' in compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]):
         compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'] = {}
 
@@ -39,7 +37,6 @@ def p_type(p):
 def p_seen_type(p):
     """seen_type : """
     compilacion.variables.variables['currentType'] = p[-1]
-    print(compilacion.variables.variables['currentType'])
 
 
 def p_seen_ID_let(p):
@@ -53,6 +50,7 @@ def p_seen_ID_let(p):
         pass
     compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][newLet] = {
         'type': compilacion.variables.variables['currentType']}
+    print('Nueva variable', newLet)
 
 def p_aux_let(p):
     """

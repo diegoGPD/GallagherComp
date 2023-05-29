@@ -1,3 +1,5 @@
 Programa Diego;
 
-let ab;
+let int uno, dos;
+
+let bool tres;
