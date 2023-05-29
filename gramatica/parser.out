@@ -3,28 +3,24 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     ADD
-    COMMA
     DO
-    DOTCOMMA
     ELSE
-    FLOAT
     FUNC
     GREATERTN
     IF
     IGNORE
+    INI_FLOAT
+    INI_INT
     INI_STRING
-    INT
     LEFTBRACK
     LEFTKEY
     LEFTPARENT
     LESS
     LESSTN
-    LET
     MAIN
     MULT_BY
     NOTSAME
     PRINTV
-    PROG
     RIGHTBRACK
     RIGHTKEY
     RIGHTPARENT
@@ -36,39 +32,50 @@ Unused terminals:
 
 Grammar
 
-Rule 0     S' -> d
-Rule 1     d -> INI_INT
-Rule 2     c -> INI_FLOAT
-Rule 3     t -> ID
+Rule 0     S' -> compile
+Rule 1     compile -> PROG ID seen_program DOTCOMMA lets
+Rule 2     seen_program -> <empty>
+Rule 3     lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
+Rule 4     lets -> empty
+Rule 5     seen_lets -> <empty>
+Rule 6     type -> INT seen_type
+Rule 7     type -> FLOAT seen_type
+Rule 8     type -> BOOL seen_type
+Rule 9     seen_type -> <empty>
+Rule 10    seen_ID_let -> <empty>
+Rule 11    aux_let -> COMMA ID seen_ID_let aux_let
+Rule 12    aux_let -> <empty>
+Rule 13    empty -> <empty>
 
 Terminals, with rules where they appear
 
 ADD                  : 
-COMMA                : 
+BOOL                 : 8
+COMMA                : 11
 DO                   : 
-DOTCOMMA             : 
+DOTCOMMA             : 1 3
 ELSE                 : 
-FLOAT                : 
+FLOAT                : 7
 FUNC                 : 
 GREATERTN            : 
-ID                   : 3
+ID                   : 1 3 11
 IF                   : 
 IGNORE               : 
-INI_FLOAT            : 2
-INI_INT              : 1
+INI_FLOAT            : 
+INI_INT              : 
 INI_STRING           : 
-INT                  : 
+INT                  : 6
 LEFTBRACK            : 
 LEFTKEY              : 
 LEFTPARENT           : 
 LESS                 : 
 LESSTN               : 
-LET                  : 
+LET                  : 3
 MAIN                 : 
 MULT_BY              : 
 NOTSAME              : 
 PRINTV               : 
-PROG                 : 
+PROG                 : 1
 RIGHTBRACK           : 
 RIGHTKEY             : 
 RIGHTPARENT          : 
@@ -81,30 +88,241 @@ error                :
 
 Nonterminals, with rules where they appear
 
-c                    : 
-d                    : 0
-t                    : 
+aux_let              : 3 11
+compile              : 0
+empty                : 4
+lets                 : 1 3
+seen_ID_let          : 3 11
+seen_lets            : 3
+seen_program         : 1
+seen_type            : 6 7 8
+type                 : 3
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . d
-    (1) d -> . INI_INT
+    (0) S' -> . compile
+    (1) compile -> . PROG ID seen_program DOTCOMMA lets
 
-    INI_INT         shift and go to state 2
+    PROG            shift and go to state 2
 
-    d                              shift and go to state 1
+    compile                        shift and go to state 1
 
 state 1
 
-    (0) S' -> d .
+    (0) S' -> compile .
 
 
 
 state 2
 
-    (1) d -> INI_INT .
+    (1) compile -> PROG . ID seen_program DOTCOMMA lets
 
-    $end            reduce using rule 1 (d -> INI_INT .)
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) compile -> PROG ID . seen_program DOTCOMMA lets
+    (2) seen_program -> .
+
+    DOTCOMMA        reduce using rule 2 (seen_program -> .)
+
+    seen_program                   shift and go to state 4
+
+state 4
+
+    (1) compile -> PROG ID seen_program . DOTCOMMA lets
+
+    DOTCOMMA        shift and go to state 5
+
+
+state 5
+
+    (1) compile -> PROG ID seen_program DOTCOMMA . lets
+    (3) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
+    (4) lets -> . empty
+    (13) empty -> .
+
+    LET             shift and go to state 7
+    $end            reduce using rule 13 (empty -> .)
+
+    lets                           shift and go to state 6
+    empty                          shift and go to state 8
+
+state 6
+
+    (1) compile -> PROG ID seen_program DOTCOMMA lets .
+
+    $end            reduce using rule 1 (compile -> PROG ID seen_program DOTCOMMA lets .)
+
+
+state 7
+
+    (3) lets -> LET . seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
+    (5) seen_lets -> .
+
+    INT             reduce using rule 5 (seen_lets -> .)
+    FLOAT           reduce using rule 5 (seen_lets -> .)
+    BOOL            reduce using rule 5 (seen_lets -> .)
+
+    seen_lets                      shift and go to state 9
+
+state 8
+
+    (4) lets -> empty .
+
+    $end            reduce using rule 4 (lets -> empty .)
+
+
+state 9
+
+    (3) lets -> LET seen_lets . type ID seen_ID_let aux_let DOTCOMMA lets
+    (6) type -> . INT seen_type
+    (7) type -> . FLOAT seen_type
+    (8) type -> . BOOL seen_type
+
+    INT             shift and go to state 11
+    FLOAT           shift and go to state 12
+    BOOL            shift and go to state 13
+
+    type                           shift and go to state 10
+
+state 10
+
+    (3) lets -> LET seen_lets type . ID seen_ID_let aux_let DOTCOMMA lets
+
+    ID              shift and go to state 14
+
+
+state 11
+
+    (6) type -> INT . seen_type
+    (9) seen_type -> .
+
+    ID              reduce using rule 9 (seen_type -> .)
+
+    seen_type                      shift and go to state 15
+
+state 12
+
+    (7) type -> FLOAT . seen_type
+    (9) seen_type -> .
+
+    ID              reduce using rule 9 (seen_type -> .)
+
+    seen_type                      shift and go to state 16
+
+state 13
+
+    (8) type -> BOOL . seen_type
+    (9) seen_type -> .
+
+    ID              reduce using rule 9 (seen_type -> .)
+
+    seen_type                      shift and go to state 17
+
+state 14
+
+    (3) lets -> LET seen_lets type ID . seen_ID_let aux_let DOTCOMMA lets
+    (10) seen_ID_let -> .
+
+    COMMA           reduce using rule 10 (seen_ID_let -> .)
+    DOTCOMMA        reduce using rule 10 (seen_ID_let -> .)
+
+    seen_ID_let                    shift and go to state 18
+
+state 15
+
+    (6) type -> INT seen_type .
+
+    ID              reduce using rule 6 (type -> INT seen_type .)
+
+
+state 16
+
+    (7) type -> FLOAT seen_type .
+
+    ID              reduce using rule 7 (type -> FLOAT seen_type .)
+
+
+state 17
+
+    (8) type -> BOOL seen_type .
+
+    ID              reduce using rule 8 (type -> BOOL seen_type .)
+
+
+state 18
+
+    (3) lets -> LET seen_lets type ID seen_ID_let . aux_let DOTCOMMA lets
+    (11) aux_let -> . COMMA ID seen_ID_let aux_let
+    (12) aux_let -> .
+
+    COMMA           shift and go to state 20
+    DOTCOMMA        reduce using rule 12 (aux_let -> .)
+
+    aux_let                        shift and go to state 19
+
+state 19
+
+    (3) lets -> LET seen_lets type ID seen_ID_let aux_let . DOTCOMMA lets
+
+    DOTCOMMA        shift and go to state 21
+
+
+state 20
+
+    (11) aux_let -> COMMA . ID seen_ID_let aux_let
+
+    ID              shift and go to state 22
+
+
+state 21
+
+    (3) lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA . lets
+    (3) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
+    (4) lets -> . empty
+    (13) empty -> .
+
+    LET             shift and go to state 7
+    $end            reduce using rule 13 (empty -> .)
+
+    lets                           shift and go to state 23
+    empty                          shift and go to state 8
+
+state 22
+
+    (11) aux_let -> COMMA ID . seen_ID_let aux_let
+    (10) seen_ID_let -> .
+
+    COMMA           reduce using rule 10 (seen_ID_let -> .)
+    DOTCOMMA        reduce using rule 10 (seen_ID_let -> .)
+
+    seen_ID_let                    shift and go to state 24
+
+state 23
+
+    (3) lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .
+
+    $end            reduce using rule 3 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
+
+
+state 24
+
+    (11) aux_let -> COMMA ID seen_ID_let . aux_let
+    (11) aux_let -> . COMMA ID seen_ID_let aux_let
+    (12) aux_let -> .
+
+    COMMA           shift and go to state 20
+    DOTCOMMA        reduce using rule 12 (aux_let -> .)
+
+    aux_let                        shift and go to state 25
+
+state 25
+
+    (11) aux_let -> COMMA ID seen_ID_let aux_let .
+
+    DOTCOMMA        reduce using rule 11 (aux_let -> COMMA ID seen_ID_let aux_let .)
 

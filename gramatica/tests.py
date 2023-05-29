@@ -8,17 +8,9 @@ lexer = lex.lex(module=regex)
 parser = yacc.yacc(module=reglas)
 
 def test():
-    while True:
-        try:
-            s = raw_input('')
-        except EOFError:
-            break
-        if not s: continue
-        lexer.input(s)
-        tok = lexer.token()
-        print(tok)
-        result = parser.parse(s)
-        print(result)
+    file = open("/Users/chuca/PycharmProjects/compiladorSL/gramatica/test1.txt").read()
+    print(file)
+    parser.parse(file)
 
 
 test()

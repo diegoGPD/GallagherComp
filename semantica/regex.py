@@ -43,7 +43,7 @@ def t_IGNORE(t):
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.value = objectos.palabrasReservadas.get(t.value, 'ID')
+    t.type = objectos.palabrasReservadas.get(t.value, 'ID')
     return t
 
 def t_INI_STRING(t):

@@ -148,6 +148,7 @@ palabrasReservadas = {
     'else': 'ELSE',
     'int': 'INT',
     'float': 'FLOAT',
+    'bool': 'BOOL',
     'printV' : 'PRINTV',
     'do' : 'DO',
     'while': 'WHILE',
