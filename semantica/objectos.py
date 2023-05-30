@@ -147,6 +147,7 @@ tokens = [
     'LESS',
     'SPLIT_BY',
     'MULT_BY',
+    'TIMES_BY_SAME',
     'SAME',
     'SET',
     'COMMA',

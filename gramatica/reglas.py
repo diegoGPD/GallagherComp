@@ -182,7 +182,18 @@ def p_aux_term(p):
 
 def p_fact(p):
     """
-        fact : call_lets
+        fact : expo expo_appear
+              | expo expo_appear aux_expo
+    """
+
+def p_expo(p):
+    """
+        expo : call_lets
+    """
+
+def p_aux_expo(p):
+    """
+        aux_expo : TIMES_BY_SAME add_operator fact
     """
 
 
@@ -246,6 +257,22 @@ def p_factor_appear(p):
     """
     if len(compilacion.variables.variables['operators']) > 0 and (
             compilacion.variables.variables['operators'][-1] == '*' or compilacion.variables.variables['operators'][-1] == '/'):
+        right = compilacion.variables.variables['operands'].pop()
+        left = compilacion.variables.variables['operands'].pop()
+        sign = compilacion.variables.variables['operators'].pop()
+        quad = generateQuad(sign, left, right, 'temp' + str(compilacion.variables.variables['tempCount']))
+        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
+        compilacion.variables.variables['tempCount'] += 1
+        compilacion.variables.variables['quads'].append(quad)
+        print(compilacion.variables.variables['quads'])
+    else:
+        return
+
+def p_expo_appear(p):
+    """
+        expo_appear :
+    """
+    if len(compilacion.variables.variables['operators']) > 0 and compilacion.variables.variables['operators'][-1] == '^':
         right = compilacion.variables.variables['operands'].pop()
         left = compilacion.variables.variables['operands'].pop()
         sign = compilacion.variables.variables['operators'].pop()
