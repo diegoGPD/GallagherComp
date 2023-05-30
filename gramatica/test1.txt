@@ -8,5 +8,5 @@ func TestFunction(int testIntParam1, float testIntParam2): int : {
 
     testIntParam1 = 1123;
     testIntParam2 = 1.4;
-
+    5 + 5 + 3 - 2 + 5 - 2
 }

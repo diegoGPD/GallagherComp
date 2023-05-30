@@ -121,7 +121,7 @@ def p_return_func_type(p):
     '''
 
     compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]["type"] = \
-    compilacion.variables.variables['currentType']
+        compilacion.variables.variables['currentType']
 
 
 def p_void_detect(p):
@@ -148,6 +148,42 @@ def p_func_code_aux(p):
 def p_action(p):
     """
         action : assign
+                | expresion
+    """
+
+
+def p_expresion(p):
+    """
+        expresion : term
+                    | term aux_expresion
+    """
+
+
+def p_aux_expresion(p):
+    """
+        aux_expresion : ADD add_operator expresion
+                      | LESS add_operator expresion
+                      |
+    """
+
+
+def p_term(p):
+    """
+       term : fact
+    """
+
+
+def p_aux_term(p):
+    """
+        aux_term : SPLIT_BY add_operator term
+                  | MULT_BY add_operator term
+    """
+
+
+def p_fact(p):
+    """
+        fact : call_lets
+               |
     """
 
 
@@ -162,7 +198,10 @@ def p_add_operand(p):
     """
         add_operand :
     """
+
     compilacion.variables.variables['operands'].append(p[-1])
+    print(compilacion.variables.variables['operands'])
+    print(compilacion.variables.variables['operators'])
 
 
 def p_add_let_target(p):
@@ -170,6 +209,14 @@ def p_add_let_target(p):
         add_let_target :
     """
     compilacion.variables.variables['letTargets'].append(p[-1])
+
+
+def p_add_operator(p):
+    """
+        add_operator :
+    """
+
+    compilacion.variables.variables['operators'].append(p[-1])
 
 
 def p_set_appear(p):
@@ -191,15 +238,36 @@ def p_call_let(p):
     if var is None:
         var = compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']][
             'letsTable'].get(p[1])
+        # probar si falla sin esto al
         compilacion.variables.variables['currentType'] = \
-        compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'][p[1]][
-            'type']
+            compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'][
+                p[1]][
+                'type']
     else:
         compilacion.variables.variables['currentType'] = \
-        compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][p[1]][
-            'type']
+            compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
+                p[1]][
+                'type']
 
-    p[0] = p[1]
+
+def p_call_lets(p):
+    """
+       call_lets : INI_INT check_global_const_exists
+                    | INI_FLOAT check_global_const_exists
+    """
+
+
+def p_check_global_const_exists(p):
+    """
+        check_global_const_exists : add_operand
+    """
+    if compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'].get(
+            p[-1]) is None:
+        compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'][
+            p[-1]] = {
+            'type': 'pruebaa'}
+
+    p[0] = p[-1]
 
 
 def p_check_let_exists(p):
@@ -212,9 +280,9 @@ def p_check_let_exists(p):
     if compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'].get(
             p[-1]) is None and \
             compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'].get(
-                    p[-1]) is None:
+                p[-1]) is None:
         print("Error: Variable '%s' does not exist in scope '%s' nor in global" % (
-        p[-1], compilacion.variables.variables['currentFunc']))
+            p[-1], compilacion.variables.variables['currentFunc']))
 
 
 def p_set_value(p):

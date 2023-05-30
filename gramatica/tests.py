@@ -9,7 +9,6 @@ parser = yacc.yacc(module=reglas)
 
 def test():
     file = open("/Users/chuca/PycharmProjects/compiladorSL/gramatica/test1.txt").read()
-    print(file)
     parser.parse(file)
 
 test()
