@@ -188,14 +188,36 @@ def p_fact(p):
 
 def p_expo(p):
     """
-        expo : call_lets
+        expo :  parent_aux
+               | call_lets
     """
+
+def p_parenth_aux(p):
+    """
+        parent_aux : LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
+    """
+
+def p_found_init_parent(p):
+    """
+        found_init_parent :
+    """
+
+    compilacion.variables.variables['operators'].append('(')
+
+def p_found_end_parent(p):
+    """
+        found_end_parent :
+    """
+
+    if len(compilacion.variables.variables['operators']) > 0 and compilacion.variables.variables['operators'][-1] == '(':
+        compilacion.variables.variables['operators'].pop()
+    else :
+        print('Alto ahi vaquero no tienes omp')
 
 def p_aux_expo(p):
     """
         aux_expo : TIMES_BY_SAME add_operator fact
     """
-
 
 def p_assign(p):
     """
