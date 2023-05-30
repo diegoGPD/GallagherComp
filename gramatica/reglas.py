@@ -154,8 +154,8 @@ def p_action(p):
 
 def p_expresion(p):
     """
-        expresion : term
-                    | term aux_expresion
+        expresion : term term_appear
+                    | term term_appear aux_expresion
     """
 
 
@@ -163,13 +163,13 @@ def p_aux_expresion(p):
     """
         aux_expresion : ADD add_operator expresion
                       | LESS add_operator expresion
-                      |
     """
 
 
 def p_term(p):
     """
-       term : fact
+       term : fact factor_appear
+              | fact factor_appear aux_term
     """
 
 
@@ -183,14 +183,12 @@ def p_aux_term(p):
 def p_fact(p):
     """
         fact : call_lets
-               |
     """
 
 
 def p_assign(p):
     """
         assign : call_let add_let_target set_appear SET set_value
-                |
     """
 
 
@@ -200,8 +198,6 @@ def p_add_operand(p):
     """
 
     compilacion.variables.variables['operands'].append(p[-1])
-    print(compilacion.variables.variables['operands'])
-    print(compilacion.variables.variables['operators'])
 
 
 def p_add_let_target(p):
@@ -227,10 +223,44 @@ def p_set_appear(p):
     compilacion.variables.variables['operators'].append('=')
 
 
+def p_term_appear(p):
+    """
+        term_appear :
+    """
+    if len(compilacion.variables.variables['operators']) > 0 and (
+            compilacion.variables.variables['operators'][-1] == '+' or compilacion.variables.variables['operators'][-1] == '-'):
+        right = compilacion.variables.variables['operands'].pop()
+        left = compilacion.variables.variables['operands'].pop()
+        sign = compilacion.variables.variables['operators'].pop()
+        quad = generateQuad(sign, left, right, 'temp' + str(compilacion.variables.variables['tempCount']))
+        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
+        compilacion.variables.variables['tempCount'] += 1
+        compilacion.variables.variables['quads'].append(quad)
+        print(compilacion.variables.variables['quads'])
+    else:
+        return
+
+def p_factor_appear(p):
+    """
+        factor_appear :
+    """
+    if len(compilacion.variables.variables['operators']) > 0 and (
+            compilacion.variables.variables['operators'][-1] == '*' or compilacion.variables.variables['operators'][-1] == '/'):
+        right = compilacion.variables.variables['operands'].pop()
+        left = compilacion.variables.variables['operands'].pop()
+        sign = compilacion.variables.variables['operators'].pop()
+        quad = generateQuad(sign, left, right, 'temp' + str(compilacion.variables.variables['tempCount']))
+        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
+        compilacion.variables.variables['tempCount'] += 1
+        compilacion.variables.variables['quads'].append(quad)
+        print(compilacion.variables.variables['quads'])
+    else:
+        return
+
+
 def p_call_let(p):
     """
         call_let : ID check_let_exists
-                    |
     """
 
     var = compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'].get(

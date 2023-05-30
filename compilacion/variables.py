@@ -7,6 +7,7 @@ variables = {
     'currentLet': '',
     'currentSign': '',
     'quadCount': 0,
+    'tempCount': 1,
     # Save Variables
     'funciones': {},
     # Quad Generators
