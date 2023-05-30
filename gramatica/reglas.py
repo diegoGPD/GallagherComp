@@ -134,7 +134,7 @@ def p_void_detect(p):
 
 def p_func_code(p):
     """
-        func_code : LEFTKEY func_code_aux RIGHTKEY
+        func_code : LEFTKEY lets func_code_aux RIGHTKEY
     """
 
 
@@ -221,9 +221,20 @@ def p_aux_expo(p):
 
 def p_assign(p):
     """
-        assign : call_let add_let_target set_appear SET set_value
+        assign : call_let set_appear SET set_value
+                | call_let set_appear SET expresion seen_final_asignacion DOTCOMMA
     """
 
+def p_seen_final_asignacion(p):
+    """
+       seen_final_asignacion :
+    """
+    right = compilacion.variables.variables['letTargets'].pop()
+    left = compilacion.variables.variables['operands'].pop()
+    sign = compilacion.variables.variables['operators'].pop()
+    quad = generateQuad(sign, right, '', left)
+    compilacion.variables.variables['quads'].append(quad)
+    print(compilacion.variables.variables['quads'])
 
 def p_add_operand(p):
     """
@@ -233,11 +244,6 @@ def p_add_operand(p):
     compilacion.variables.variables['operands'].append(p[-1])
 
 
-def p_add_let_target(p):
-    """
-        add_let_target :
-    """
-    compilacion.variables.variables['letTargets'].append(p[-1])
 
 
 def p_add_operator(p):
@@ -314,6 +320,7 @@ def p_call_let(p):
 
     var = compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'].get(
         p[1])
+
     if var is None:
         var = compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']][
             'letsTable'].get(p[1])
@@ -327,6 +334,8 @@ def p_call_let(p):
             compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
                 p[1]][
                 'type']
+
+    compilacion.variables.variables['letTargets'].append(p[1])
 
 
 def p_call_lets(p):
