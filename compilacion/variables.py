@@ -11,7 +11,7 @@ variables = {
     # Save Variables
     'funciones': {},
     # Quad Generators
-    'quads': [],
+    'quads': [[]],
     'letTargets': [],
     'operators': [],
     'operands': [],

@@ -1,6 +1,7 @@
 ####### REGLAS GRAMATICALES ############
 import compilacion.variables
-from gramatica.utils import generateQuad
+from gramatica.utils import generateQuad, generateAssignQuad, generateOperationQuad, generateJumpQuad, \
+    completeJumpQuadruple
 from semantica import regex
 from semantica.utils import validate_set_type
 
@@ -23,6 +24,7 @@ def p_modules(p):
 
 def p_seen_program(p):
     """seen_program : """
+
     compilacion.variables.variables['funciones'][p[-1]] = {'type': 'Programa'}
     compilacion.variables.variables['progName'] = p[-1]
     compilacion.variables.variables['currentFunc'] = p[-1]
@@ -148,21 +150,77 @@ def p_func_code_aux(p):
 def p_action(p):
     """
         action : assign
-                | expresion
+                | expresion_line
+                | condition
+                |
     """
 
 
-def p_expresion(p):
+def p_condition(p):
     """
-        expresion : term term_appear
+        condition : IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT  func_code  end_if condition_end_check
+    """
+
+
+def p_condtion_appear(p):
+    """
+        condtion_appear :
+    """
+
+    if len(compilacion.variables.variables['operators']) and (compilacion.variables.variables['operators'][-1] == '>' or compilacion.variables.variables['operators'][-1] == '<' or compilacion.variables.variables['operators'][-1] == '==' or compilacion.variables.variables['operators'][-1] == '!='):
+        generateOperationQuad(True)
+
+def p_condition_end_check(p):
+    """
+        condition_end_check : ELSE func_code end_condition
+                              |
+    """
+
+def p_end_condition(p):
+    """
+        end_condition :
+    """
+
+    completeJumpQuadruple()
+
+
+def p_end_if(p):
+    """
+        end_if :
+    """
+
+    generateJumpQuad('GOTO')
+    completeJumpQuadruple()
+
+
+def p_condition_signs(p):
+    """
+        condition_signs : GREATERTN add_operator
+                        | LESSTN add_operator
+                        | SAME add_operator
+                        | NOTSAME add_operator
+                        |
+    """
+
+def p_condition_expresion(p):
+    """
+        condition_expresion : expresion_line condtion_appear
+                    | expresion_line condition_signs expresion_line condtion_appear
+
+    """
+
+
+def p_expresion_line(p):
+    """
+        expresion_line : term term_appear
                     | term term_appear aux_expresion
     """
 
 
 def p_aux_expresion(p):
     """
-        aux_expresion : ADD add_operator expresion
-                      | LESS add_operator expresion
+        aux_expresion : ADD add_operator expresion_line
+                      | LESS add_operator expresion_line
     """
 
 
@@ -186,16 +244,27 @@ def p_fact(p):
               | expo expo_appear aux_expo
     """
 
+
 def p_expo(p):
     """
         expo :  parent_aux
                | call_lets
+               | call_let
     """
+
 
 def p_parenth_aux(p):
     """
-        parent_aux : LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
+        parent_aux : LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
     """
+
+
+def p_right_parent_condition(p):
+    """
+        right_parent_condition :
+    """
+
+    generateJumpQuad('GOTOF')
 
 def p_found_init_parent(p):
     """
@@ -204,37 +273,38 @@ def p_found_init_parent(p):
 
     compilacion.variables.variables['operators'].append('(')
 
+
 def p_found_end_parent(p):
     """
         found_end_parent :
     """
 
-    if len(compilacion.variables.variables['operators']) > 0 and compilacion.variables.variables['operators'][-1] == '(':
+    if len(compilacion.variables.variables['operators']) > 0 and compilacion.variables.variables['operators'][
+        -1] == '(':
         compilacion.variables.variables['operators'].pop()
-    else :
+    else:
         print('Alto ahi vaquero no tienes omp')
+
 
 def p_aux_expo(p):
     """
         aux_expo : TIMES_BY_SAME add_operator fact
     """
 
+
 def p_assign(p):
     """
         assign : call_let set_appear SET set_value
-                | call_let set_appear SET expresion seen_final_asignacion DOTCOMMA
+                | call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA
     """
+
 
 def p_seen_final_asignacion(p):
     """
        seen_final_asignacion :
     """
-    right = compilacion.variables.variables['letTargets'].pop()
-    left = compilacion.variables.variables['operands'].pop()
-    sign = compilacion.variables.variables['operators'].pop()
-    quad = generateQuad(sign, right, '', left)
-    compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
+
+    generateAssignQuad()
 
 def p_add_operand(p):
     """
@@ -242,8 +312,6 @@ def p_add_operand(p):
     """
 
     compilacion.variables.variables['operands'].append(p[-1])
-
-
 
 
 def p_add_operator(p):
@@ -267,48 +335,32 @@ def p_term_appear(p):
         term_appear :
     """
     if len(compilacion.variables.variables['operators']) > 0 and (
-            compilacion.variables.variables['operators'][-1] == '+' or compilacion.variables.variables['operators'][-1] == '-'):
-        right = compilacion.variables.variables['operands'].pop()
-        left = compilacion.variables.variables['operands'].pop()
-        sign = compilacion.variables.variables['operators'].pop()
-        quad = generateQuad(sign, left, right, 'temp' + str(compilacion.variables.variables['tempCount']))
-        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
-        compilacion.variables.variables['tempCount'] += 1
-        compilacion.variables.variables['quads'].append(quad)
-        print(compilacion.variables.variables['quads'])
+            compilacion.variables.variables['operators'][-1] == '+' or compilacion.variables.variables['operators'][
+        -1] == '-'):
+        generateOperationQuad()
     else:
         return
+
 
 def p_factor_appear(p):
     """
         factor_appear :
     """
     if len(compilacion.variables.variables['operators']) > 0 and (
-            compilacion.variables.variables['operators'][-1] == '*' or compilacion.variables.variables['operators'][-1] == '/'):
-        right = compilacion.variables.variables['operands'].pop()
-        left = compilacion.variables.variables['operands'].pop()
-        sign = compilacion.variables.variables['operators'].pop()
-        quad = generateQuad(sign, left, right, 'temp' + str(compilacion.variables.variables['tempCount']))
-        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
-        compilacion.variables.variables['tempCount'] += 1
-        compilacion.variables.variables['quads'].append(quad)
-        print(compilacion.variables.variables['quads'])
+            compilacion.variables.variables['operators'][-1] == '*' or compilacion.variables.variables['operators'][
+        -1] == '/'):
+        generateOperationQuad()
     else:
         return
+
 
 def p_expo_appear(p):
     """
         expo_appear :
     """
-    if len(compilacion.variables.variables['operators']) > 0 and compilacion.variables.variables['operators'][-1] == '^':
-        right = compilacion.variables.variables['operands'].pop()
-        left = compilacion.variables.variables['operands'].pop()
-        sign = compilacion.variables.variables['operators'].pop()
-        quad = generateQuad(sign, left, right, 'temp' + str(compilacion.variables.variables['tempCount']))
-        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
-        compilacion.variables.variables['tempCount'] += 1
-        compilacion.variables.variables['quads'].append(quad)
-        print(compilacion.variables.variables['quads'])
+    if len(compilacion.variables.variables['operators']) > 0 and compilacion.variables.variables['operators'][
+        -1] == '^':
+        generateOperationQuad()
     else:
         return
 
@@ -375,35 +427,18 @@ def p_check_let_exists(p):
 
 def p_set_value(p):
     """
-        set_value : INI_INT aux_int_check append_operand DOTCOMMA generate_quad
-                    | INI_FLOAT aux_float_check append_operand DOTCOMMA generate_quad
+        set_value : INI_INT aux_int_check append_operand DOTCOMMA
+                    | INI_FLOAT aux_float_check append_operand DOTCOMMA
     """
 
+    generateAssignQuad()
 
 def p_append_operand(p):
     """
         append_operand :
     """
+
     compilacion.variables.variables['operands'].append(p[-2])
-
-
-def p_generate_quad(p):
-    """
-        generate_quad :
-    """
-    if compilacion.variables.variables['currentSign'] != '=':
-        quad = generateQuad(compilacion.variables.variables['operators'].pop(),
-                            compilacion.variables.variables['operands'].pop(),
-                            compilacion.variables.variables['operands'].pop(),
-                            compilacion.variables.variables['letTargets'].pop())
-    else:
-        quad = generateQuad(compilacion.variables.variables['operators'].pop(),
-                            compilacion.variables.variables['operands'].pop(),
-                            '',
-                            compilacion.variables.variables['letTargets'].pop())
-    compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
-
 
 def p_aux_int_check(p):
     """

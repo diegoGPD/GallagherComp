@@ -5,8 +5,15 @@ let int uno, dos;
 let bool tres;
 
 func TestFunction(int testIntParam1, float testIntParam2): int : {
-    let int goku;
+    let int goku, gohan;
     testIntParam1 = 1123;
     testIntParam2 = 1.4;
     goku = 1 ^ 2 * 3 * 4 ^ ( 5 - 32 );
+    gohan = 3 - 2;
+    if ( goku > 5 + 3 ) {
+        goku = 6;
+    } else {
+        let int gotenks;
+        gotenks = 29;
+    }
 }

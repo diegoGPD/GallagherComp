@@ -163,6 +163,10 @@ tokens = [
     'GREATERTN',
     'NOTSAME',
     'IGNORE'
+    'GOTOFUNC',
+    'GOTO',
+    'GOTOT',
+    'GOTOF'
 ]
 
 ######### PALABRAS RESERVADAS #############

@@ -3,19 +3,16 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     DO
-    ELSE
-    GREATERTN
-    IF
-    IGNORE
+    GOTO
+    GOTOF
+    GOTOT
+    IGNOREGOTOFUNC
     INI_BOOL
     INI_STRING
     LEFTBRACK
-    LESSTN
     MAIN
-    NOTSAME
     PRINTV
     RIGHTBRACK
-    SAME
     WHILE
 
 Grammar
@@ -51,82 +48,101 @@ Rule 27    func_code -> LEFTKEY lets func_code_aux RIGHTKEY
 Rule 28    func_code_aux -> action func_code_aux
 Rule 29    func_code_aux -> <empty>
 Rule 30    action -> assign
-Rule 31    action -> expresion
-Rule 32    expresion -> term term_appear
-Rule 33    expresion -> term term_appear aux_expresion
-Rule 34    aux_expresion -> ADD add_operator expresion
-Rule 35    aux_expresion -> LESS add_operator expresion
-Rule 36    term -> fact factor_appear
-Rule 37    term -> fact factor_appear aux_term
-Rule 38    aux_term -> SPLIT_BY add_operator term
-Rule 39    aux_term -> MULT_BY add_operator term
-Rule 40    fact -> expo expo_appear
-Rule 41    fact -> expo expo_appear aux_expo
-Rule 42    expo -> parent_aux
-Rule 43    expo -> call_lets
-Rule 44    parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-Rule 45    found_init_parent -> <empty>
-Rule 46    found_end_parent -> <empty>
-Rule 47    aux_expo -> TIMES_BY_SAME add_operator fact
-Rule 48    assign -> call_let set_appear SET set_value
-Rule 49    assign -> call_let set_appear SET expresion seen_final_asignacion DOTCOMMA
-Rule 50    seen_final_asignacion -> <empty>
-Rule 51    add_operand -> <empty>
-Rule 52    add_operator -> <empty>
-Rule 53    set_appear -> <empty>
-Rule 54    term_appear -> <empty>
-Rule 55    factor_appear -> <empty>
-Rule 56    expo_appear -> <empty>
-Rule 57    call_let -> ID check_let_exists
-Rule 58    call_lets -> INI_INT check_global_const_exists
-Rule 59    call_lets -> INI_FLOAT check_global_const_exists
-Rule 60    check_global_const_exists -> add_operand
-Rule 61    check_let_exists -> <empty>
-Rule 62    set_value -> INI_INT aux_int_check append_operand DOTCOMMA generate_quad
-Rule 63    set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA generate_quad
-Rule 64    append_operand -> <empty>
-Rule 65    generate_quad -> <empty>
-Rule 66    aux_int_check -> <empty>
-Rule 67    aux_float_check -> <empty>
-Rule 68    empty -> <empty>
+Rule 31    action -> expresion_line
+Rule 32    action -> condition
+Rule 33    action -> <empty>
+Rule 34    condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check
+Rule 35    condtion_appear -> <empty>
+Rule 36    condition_end_check -> ELSE func_code end_condition
+Rule 37    condition_end_check -> <empty>
+Rule 38    end_condition -> <empty>
+Rule 39    end_if -> <empty>
+Rule 40    condition_signs -> GREATERTN add_operator
+Rule 41    condition_signs -> LESSTN add_operator
+Rule 42    condition_signs -> SAME add_operator
+Rule 43    condition_signs -> NOTSAME add_operator
+Rule 44    condition_signs -> <empty>
+Rule 45    condition_expresion -> expresion_line condtion_appear
+Rule 46    condition_expresion -> expresion_line condition_signs expresion_line condtion_appear
+Rule 47    expresion_line -> term term_appear
+Rule 48    expresion_line -> term term_appear aux_expresion
+Rule 49    aux_expresion -> ADD add_operator expresion_line
+Rule 50    aux_expresion -> LESS add_operator expresion_line
+Rule 51    term -> fact factor_appear
+Rule 52    term -> fact factor_appear aux_term
+Rule 53    aux_term -> SPLIT_BY add_operator term
+Rule 54    aux_term -> MULT_BY add_operator term
+Rule 55    fact -> expo expo_appear
+Rule 56    fact -> expo expo_appear aux_expo
+Rule 57    expo -> parent_aux
+Rule 58    expo -> call_lets
+Rule 59    expo -> call_let
+Rule 60    parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+Rule 61    right_parent_condition -> <empty>
+Rule 62    found_init_parent -> <empty>
+Rule 63    found_end_parent -> <empty>
+Rule 64    aux_expo -> TIMES_BY_SAME add_operator fact
+Rule 65    assign -> call_let set_appear SET set_value
+Rule 66    assign -> call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA
+Rule 67    seen_final_asignacion -> <empty>
+Rule 68    add_operand -> <empty>
+Rule 69    add_operator -> <empty>
+Rule 70    set_appear -> <empty>
+Rule 71    term_appear -> <empty>
+Rule 72    factor_appear -> <empty>
+Rule 73    expo_appear -> <empty>
+Rule 74    call_let -> ID check_let_exists
+Rule 75    call_lets -> INI_INT check_global_const_exists
+Rule 76    call_lets -> INI_FLOAT check_global_const_exists
+Rule 77    check_global_const_exists -> add_operand
+Rule 78    check_let_exists -> <empty>
+Rule 79    set_value -> INI_INT aux_int_check append_operand DOTCOMMA
+Rule 80    set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA
+Rule 81    append_operand -> <empty>
+Rule 82    aux_int_check -> <empty>
+Rule 83    aux_float_check -> <empty>
+Rule 84    empty -> <empty>
 
 Terminals, with rules where they appear
 
-ADD                  : 34
+ADD                  : 49
 BOOL                 : 11
 COMMA                : 14 22
 DO                   : 
-DOTCOMMA             : 1 6 49 62 63
-ELSE                 : 
+DOTCOMMA             : 1 6 66 79 80
+ELSE                 : 36
 FLOAT                : 10
 FUNC                 : 16
-GREATERTN            : 
-ID                   : 1 6 14 16 21 57
-IF                   : 
-IGNORE               : 
+GOTO                 : 
+GOTOF                : 
+GOTOT                : 
+GREATERTN            : 40
+ID                   : 1 6 14 16 21 74
+IF                   : 34
+IGNOREGOTOFUNC       : 
 INI_BOOL             : 
-INI_FLOAT            : 59 63
-INI_INT              : 58 62
+INI_FLOAT            : 76 80
+INI_INT              : 75 79
 INI_STRING           : 
 INT                  : 9
 LEFTBRACK            : 
 LEFTKEY              : 27
-LEFTPARENT           : 19 44
-LESS                 : 35
-LESSTN               : 
+LEFTPARENT           : 19 34 60
+LESS                 : 50
+LESSTN               : 41
 LET                  : 6
 MAIN                 : 
-MULT_BY              : 39
-NOTSAME              : 
+MULT_BY              : 54
+NOTSAME              : 43
 PRINTV               : 
 PROG                 : 1
 RIGHTBRACK           : 
 RIGHTKEY             : 27
-RIGHTPARENT          : 19 44
-SAME                 : 
-SET                  : 48 49
-SPLIT_BY             : 38
-TIMES_BY_SAME        : 47
+RIGHTPARENT          : 19 34 60
+SAME                 : 42
+SET                  : 65 66
+SPLIT_BY             : 53
+TIMES_BY_SAME        : 64
 TWOPOINTS            : 16 16
 VOID                 : 25
 WHILE                : 
@@ -135,50 +151,57 @@ error                :
 Nonterminals, with rules where they appear
 
 action               : 28
-add_operand          : 60
-add_operator         : 34 35 38 39 47
-append_operand       : 62 63
+add_operand          : 77
+add_operator         : 40 41 42 43 49 50 53 54 64
+append_operand       : 79 80
 assign               : 30
-aux_expo             : 41
-aux_expresion        : 33
-aux_float_check      : 63
-aux_int_check        : 62
+aux_expo             : 56
+aux_expresion        : 48
+aux_float_check      : 80
+aux_int_check        : 79
 aux_let              : 6 14
-aux_term             : 37
-call_let             : 48 49
-call_lets            : 43
-check_global_const_exists : 58 59
-check_let_exists     : 57
+aux_term             : 52
+call_let             : 59 65 66
+call_lets            : 58
+check_global_const_exists : 75 76
+check_let_exists     : 74
 compile              : 0
+condition            : 32
+condition_end_check  : 34
+condition_expresion  : 34
+condition_signs      : 46
+condtion_appear      : 45 46
 empty                : 7 23
-expo                 : 40 41
-expo_appear          : 40 41
-expresion            : 31 34 35 44 49
-fact                 : 36 37 47
-factor_appear        : 36 37
-found_end_parent     : 44
-found_init_parent    : 44
+end_condition        : 36
+end_if               : 34
+expo                 : 55 56
+expo_appear          : 55 56
+expresion_line       : 31 45 46 46 49 50 60 66
+fact                 : 51 52 64
+factor_appear        : 51 52
+found_end_parent     : 60
+found_init_parent    : 34 60
 func                 : 3
-func_code            : 16
+func_code            : 16 34 36
 func_code_aux        : 27 28
-generate_quad        : 62 63
 lets                 : 1 6 27
 modules              : 1 3
 param_declare        : 19 21 22
 param_table_init     : 19
 params               : 16
-parent_aux           : 42
+parent_aux           : 57
 return_func_type     : 16
+right_parent_condition : 34
 seen_ID_let          : 6 14 21
-seen_final_asignacion : 49
+seen_final_asignacion : 66
 seen_func_name       : 16
 seen_lets            : 6
 seen_program         : 1
 seen_type            : 9 10 11
-set_appear           : 48 49
-set_value            : 48
-term                 : 32 33 38 39
-term_appear          : 32 33
+set_appear           : 65 66
+set_value            : 65
+term                 : 47 48 53 54
+term_appear          : 47 48
 type                 : 6 21 24
 void_detect          : 25
 
@@ -229,11 +252,11 @@ state 5
     (1) compile -> PROG ID seen_program DOTCOMMA . lets modules
     (6) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
     (7) lets -> . empty
-    (68) empty -> .
+    (84) empty -> .
 
     LET             shift and go to state 7
-    FUNC            reduce using rule 68 (empty -> .)
-    $end            reduce using rule 68 (empty -> .)
+    FUNC            reduce using rule 84 (empty -> .)
+    $end            reduce using rule 84 (empty -> .)
 
     lets                           shift and go to state 6
     empty                          shift and go to state 8
@@ -274,6 +297,7 @@ state 8
 
     FUNC            reduce using rule 7 (lets -> empty .)
     $end            reduce using rule 7 (lets -> empty .)
+    IF              reduce using rule 7 (lets -> empty .)
     ID              reduce using rule 7 (lets -> empty .)
     LEFTPARENT      reduce using rule 7 (lets -> empty .)
     INI_INT         reduce using rule 7 (lets -> empty .)
@@ -480,13 +504,13 @@ state 28
     (9) type -> . INT seen_type
     (10) type -> . FLOAT seen_type
     (11) type -> . BOOL seen_type
-    (68) empty -> .
+    (84) empty -> .
 
     COMMA           shift and go to state 36
     INT             shift and go to state 16
     FLOAT           shift and go to state 17
     BOOL            shift and go to state 18
-    RIGHTPARENT     reduce using rule 68 (empty -> .)
+    RIGHTPARENT     reduce using rule 84 (empty -> .)
 
     param_declare                  shift and go to state 34
     type                           shift and go to state 35
@@ -552,13 +576,13 @@ state 36
     (9) type -> . INT seen_type
     (10) type -> . FLOAT seen_type
     (11) type -> . BOOL seen_type
-    (68) empty -> .
+    (84) empty -> .
 
     COMMA           shift and go to state 36
     INT             shift and go to state 16
     FLOAT           shift and go to state 17
     BOOL            shift and go to state 18
-    RIGHTPARENT     reduce using rule 68 (empty -> .)
+    RIGHTPARENT     reduce using rule 84 (empty -> .)
 
     param_declare                  shift and go to state 44
     type                           shift and go to state 35
@@ -576,16 +600,17 @@ state 38
     (6) lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA . lets
     (6) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
     (7) lets -> . empty
-    (68) empty -> .
+    (84) empty -> .
 
     LET             shift and go to state 7
-    FUNC            reduce using rule 68 (empty -> .)
-    $end            reduce using rule 68 (empty -> .)
-    ID              reduce using rule 68 (empty -> .)
-    LEFTPARENT      reduce using rule 68 (empty -> .)
-    INI_INT         reduce using rule 68 (empty -> .)
-    INI_FLOAT       reduce using rule 68 (empty -> .)
-    RIGHTKEY        reduce using rule 68 (empty -> .)
+    FUNC            reduce using rule 84 (empty -> .)
+    $end            reduce using rule 84 (empty -> .)
+    IF              reduce using rule 84 (empty -> .)
+    ID              reduce using rule 84 (empty -> .)
+    LEFTPARENT      reduce using rule 84 (empty -> .)
+    INI_INT         reduce using rule 84 (empty -> .)
+    INI_FLOAT       reduce using rule 84 (empty -> .)
+    RIGHTKEY        reduce using rule 84 (empty -> .)
 
     lets                           shift and go to state 45
     empty                          shift and go to state 8
@@ -649,6 +674,7 @@ state 45
 
     FUNC            reduce using rule 6 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
     $end            reduce using rule 6 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
+    IF              reduce using rule 6 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
     ID              reduce using rule 6 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
     LEFTPARENT      reduce using rule 6 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
     INI_INT         reduce using rule 6 (lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets .)
@@ -680,14 +706,15 @@ state 48
     (27) func_code -> LEFTKEY . lets func_code_aux RIGHTKEY
     (6) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
     (7) lets -> . empty
-    (68) empty -> .
+    (84) empty -> .
 
     LET             shift and go to state 7
-    ID              reduce using rule 68 (empty -> .)
-    LEFTPARENT      reduce using rule 68 (empty -> .)
-    INI_INT         reduce using rule 68 (empty -> .)
-    INI_FLOAT       reduce using rule 68 (empty -> .)
-    RIGHTKEY        reduce using rule 68 (empty -> .)
+    IF              reduce using rule 84 (empty -> .)
+    ID              reduce using rule 84 (empty -> .)
+    LEFTPARENT      reduce using rule 84 (empty -> .)
+    INI_INT         reduce using rule 84 (empty -> .)
+    INI_FLOAT       reduce using rule 84 (empty -> .)
+    RIGHTKEY        reduce using rule 84 (empty -> .)
 
     lets                           shift and go to state 51
     empty                          shift and go to state 8
@@ -701,13 +728,13 @@ state 49
     (9) type -> . INT seen_type
     (10) type -> . FLOAT seen_type
     (11) type -> . BOOL seen_type
-    (68) empty -> .
+    (84) empty -> .
 
     COMMA           shift and go to state 36
     INT             shift and go to state 16
     FLOAT           shift and go to state 17
     BOOL            shift and go to state 18
-    RIGHTPARENT     reduce using rule 68 (empty -> .)
+    RIGHTPARENT     reduce using rule 84 (empty -> .)
 
     type                           shift and go to state 35
     param_declare                  shift and go to state 52
@@ -726,38 +753,57 @@ state 51
     (28) func_code_aux -> . action func_code_aux
     (29) func_code_aux -> .
     (30) action -> . assign
-    (31) action -> . expresion
-    (48) assign -> . call_let set_appear SET set_value
-    (49) assign -> . call_let set_appear SET expresion seen_final_asignacion DOTCOMMA
-    (32) expresion -> . term term_appear
-    (33) expresion -> . term term_appear aux_expresion
-    (57) call_let -> . ID check_let_exists
-    (36) term -> . fact factor_appear
-    (37) term -> . fact factor_appear aux_term
-    (40) fact -> . expo expo_appear
-    (41) fact -> . expo expo_appear aux_expo
-    (42) expo -> . parent_aux
-    (43) expo -> . call_lets
-    (44) parent_aux -> . LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-    (58) call_lets -> . INI_INT check_global_const_exists
-    (59) call_lets -> . INI_FLOAT check_global_const_exists
+    (31) action -> . expresion_line
+    (32) action -> . condition
+    (33) action -> .
+    (65) assign -> . call_let set_appear SET set_value
+    (66) assign -> . call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA
+    (47) expresion_line -> . term term_appear
+    (48) expresion_line -> . term term_appear aux_expresion
+    (34) condition -> . IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check
+    (74) call_let -> . ID check_let_exists
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
 
+  ! reduce/reduce conflict for RIGHTKEY resolved using rule 29 (func_code_aux -> .)
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for LEFTPARENT resolved as shift
+  ! shift/reduce conflict for INI_INT resolved as shift
+  ! shift/reduce conflict for INI_FLOAT resolved as shift
     RIGHTKEY        reduce using rule 29 (func_code_aux -> .)
-    ID              shift and go to state 59
-    LEFTPARENT      shift and go to state 64
-    INI_INT         shift and go to state 65
-    INI_FLOAT       shift and go to state 66
+    IF              shift and go to state 60
+    ID              shift and go to state 62
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+
+  ! IF              [ reduce using rule 33 (action -> .) ]
+  ! ID              [ reduce using rule 33 (action -> .) ]
+  ! LEFTPARENT      [ reduce using rule 33 (action -> .) ]
+  ! INI_INT         [ reduce using rule 33 (action -> .) ]
+  ! INI_FLOAT       [ reduce using rule 33 (action -> .) ]
+  ! RIGHTKEY        [ reduce using rule 33 (action -> .) ]
 
     func_code_aux                  shift and go to state 53
     action                         shift and go to state 54
     assign                         shift and go to state 55
-    expresion                      shift and go to state 56
-    call_let                       shift and go to state 57
-    term                           shift and go to state 58
-    fact                           shift and go to state 60
-    expo                           shift and go to state 61
-    parent_aux                     shift and go to state 62
-    call_lets                      shift and go to state 63
+    expresion_line                 shift and go to state 56
+    condition                      shift and go to state 57
+    call_let                       shift and go to state 58
+    term                           shift and go to state 59
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
 
 state 52
 
@@ -770,7 +816,7 @@ state 53
 
     (27) func_code -> LEFTKEY lets func_code_aux . RIGHTKEY
 
-    RIGHTKEY        shift and go to state 67
+    RIGHTKEY        shift and go to state 69
 
 
 state 54
@@ -779,43 +825,63 @@ state 54
     (28) func_code_aux -> . action func_code_aux
     (29) func_code_aux -> .
     (30) action -> . assign
-    (31) action -> . expresion
-    (48) assign -> . call_let set_appear SET set_value
-    (49) assign -> . call_let set_appear SET expresion seen_final_asignacion DOTCOMMA
-    (32) expresion -> . term term_appear
-    (33) expresion -> . term term_appear aux_expresion
-    (57) call_let -> . ID check_let_exists
-    (36) term -> . fact factor_appear
-    (37) term -> . fact factor_appear aux_term
-    (40) fact -> . expo expo_appear
-    (41) fact -> . expo expo_appear aux_expo
-    (42) expo -> . parent_aux
-    (43) expo -> . call_lets
-    (44) parent_aux -> . LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-    (58) call_lets -> . INI_INT check_global_const_exists
-    (59) call_lets -> . INI_FLOAT check_global_const_exists
+    (31) action -> . expresion_line
+    (32) action -> . condition
+    (33) action -> .
+    (65) assign -> . call_let set_appear SET set_value
+    (66) assign -> . call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA
+    (47) expresion_line -> . term term_appear
+    (48) expresion_line -> . term term_appear aux_expresion
+    (34) condition -> . IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check
+    (74) call_let -> . ID check_let_exists
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
 
+  ! reduce/reduce conflict for RIGHTKEY resolved using rule 29 (func_code_aux -> .)
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for LEFTPARENT resolved as shift
+  ! shift/reduce conflict for INI_INT resolved as shift
+  ! shift/reduce conflict for INI_FLOAT resolved as shift
     RIGHTKEY        reduce using rule 29 (func_code_aux -> .)
-    ID              shift and go to state 59
-    LEFTPARENT      shift and go to state 64
-    INI_INT         shift and go to state 65
-    INI_FLOAT       shift and go to state 66
+    IF              shift and go to state 60
+    ID              shift and go to state 62
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+
+  ! IF              [ reduce using rule 33 (action -> .) ]
+  ! ID              [ reduce using rule 33 (action -> .) ]
+  ! LEFTPARENT      [ reduce using rule 33 (action -> .) ]
+  ! INI_INT         [ reduce using rule 33 (action -> .) ]
+  ! INI_FLOAT       [ reduce using rule 33 (action -> .) ]
+  ! RIGHTKEY        [ reduce using rule 33 (action -> .) ]
 
     action                         shift and go to state 54
-    func_code_aux                  shift and go to state 68
+    func_code_aux                  shift and go to state 70
     assign                         shift and go to state 55
-    expresion                      shift and go to state 56
-    call_let                       shift and go to state 57
-    term                           shift and go to state 58
-    fact                           shift and go to state 60
-    expo                           shift and go to state 61
-    parent_aux                     shift and go to state 62
-    call_lets                      shift and go to state 63
+    expresion_line                 shift and go to state 56
+    condition                      shift and go to state 57
+    call_let                       shift and go to state 58
+    term                           shift and go to state 59
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
 
 state 55
 
     (30) action -> assign .
 
+    IF              reduce using rule 30 (action -> assign .)
     ID              reduce using rule 30 (action -> assign .)
     LEFTPARENT      reduce using rule 30 (action -> assign .)
     INI_INT         reduce using rule 30 (action -> assign .)
@@ -825,895 +891,1446 @@ state 55
 
 state 56
 
-    (31) action -> expresion .
+    (31) action -> expresion_line .
 
-    ID              reduce using rule 31 (action -> expresion .)
-    LEFTPARENT      reduce using rule 31 (action -> expresion .)
-    INI_INT         reduce using rule 31 (action -> expresion .)
-    INI_FLOAT       reduce using rule 31 (action -> expresion .)
-    RIGHTKEY        reduce using rule 31 (action -> expresion .)
+    IF              reduce using rule 31 (action -> expresion_line .)
+    ID              reduce using rule 31 (action -> expresion_line .)
+    LEFTPARENT      reduce using rule 31 (action -> expresion_line .)
+    INI_INT         reduce using rule 31 (action -> expresion_line .)
+    INI_FLOAT       reduce using rule 31 (action -> expresion_line .)
+    RIGHTKEY        reduce using rule 31 (action -> expresion_line .)
 
 
 state 57
 
-    (48) assign -> call_let . set_appear SET set_value
-    (49) assign -> call_let . set_appear SET expresion seen_final_asignacion DOTCOMMA
-    (53) set_appear -> .
+    (32) action -> condition .
 
-    SET             reduce using rule 53 (set_appear -> .)
+    IF              reduce using rule 32 (action -> condition .)
+    ID              reduce using rule 32 (action -> condition .)
+    LEFTPARENT      reduce using rule 32 (action -> condition .)
+    INI_INT         reduce using rule 32 (action -> condition .)
+    INI_FLOAT       reduce using rule 32 (action -> condition .)
+    RIGHTKEY        reduce using rule 32 (action -> condition .)
 
-    set_appear                     shift and go to state 69
 
 state 58
 
-    (32) expresion -> term . term_appear
-    (33) expresion -> term . term_appear aux_expresion
-    (54) term_appear -> .
+    (65) assign -> call_let . set_appear SET set_value
+    (66) assign -> call_let . set_appear SET expresion_line seen_final_asignacion DOTCOMMA
+    (59) expo -> call_let .
+    (70) set_appear -> .
 
-    ADD             reduce using rule 54 (term_appear -> .)
-    LESS            reduce using rule 54 (term_appear -> .)
-    ID              reduce using rule 54 (term_appear -> .)
-    LEFTPARENT      reduce using rule 54 (term_appear -> .)
-    INI_INT         reduce using rule 54 (term_appear -> .)
-    INI_FLOAT       reduce using rule 54 (term_appear -> .)
-    RIGHTKEY        reduce using rule 54 (term_appear -> .)
-    RIGHTPARENT     reduce using rule 54 (term_appear -> .)
-    DOTCOMMA        reduce using rule 54 (term_appear -> .)
+    TIMES_BY_SAME   reduce using rule 59 (expo -> call_let .)
+    SPLIT_BY        reduce using rule 59 (expo -> call_let .)
+    MULT_BY         reduce using rule 59 (expo -> call_let .)
+    ADD             reduce using rule 59 (expo -> call_let .)
+    LESS            reduce using rule 59 (expo -> call_let .)
+    IF              reduce using rule 59 (expo -> call_let .)
+    ID              reduce using rule 59 (expo -> call_let .)
+    LEFTPARENT      reduce using rule 59 (expo -> call_let .)
+    INI_INT         reduce using rule 59 (expo -> call_let .)
+    INI_FLOAT       reduce using rule 59 (expo -> call_let .)
+    RIGHTKEY        reduce using rule 59 (expo -> call_let .)
+    SET             reduce using rule 70 (set_appear -> .)
 
-    term_appear                    shift and go to state 70
+    set_appear                     shift and go to state 71
 
 state 59
 
-    (57) call_let -> ID . check_let_exists
-    (61) check_let_exists -> .
+    (47) expresion_line -> term . term_appear
+    (48) expresion_line -> term . term_appear aux_expresion
+    (71) term_appear -> .
 
-    SET             reduce using rule 61 (check_let_exists -> .)
+    ADD             reduce using rule 71 (term_appear -> .)
+    LESS            reduce using rule 71 (term_appear -> .)
+    IF              reduce using rule 71 (term_appear -> .)
+    ID              reduce using rule 71 (term_appear -> .)
+    LEFTPARENT      reduce using rule 71 (term_appear -> .)
+    INI_INT         reduce using rule 71 (term_appear -> .)
+    INI_FLOAT       reduce using rule 71 (term_appear -> .)
+    RIGHTKEY        reduce using rule 71 (term_appear -> .)
+    RIGHTPARENT     reduce using rule 71 (term_appear -> .)
+    DOTCOMMA        reduce using rule 71 (term_appear -> .)
+    GREATERTN       reduce using rule 71 (term_appear -> .)
+    LESSTN          reduce using rule 71 (term_appear -> .)
+    SAME            reduce using rule 71 (term_appear -> .)
+    NOTSAME         reduce using rule 71 (term_appear -> .)
 
-    check_let_exists               shift and go to state 71
+    term_appear                    shift and go to state 72
 
 state 60
 
-    (36) term -> fact . factor_appear
-    (37) term -> fact . factor_appear aux_term
-    (55) factor_appear -> .
+    (34) condition -> IF . LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check
 
-    SPLIT_BY        reduce using rule 55 (factor_appear -> .)
-    MULT_BY         reduce using rule 55 (factor_appear -> .)
-    ADD             reduce using rule 55 (factor_appear -> .)
-    LESS            reduce using rule 55 (factor_appear -> .)
-    ID              reduce using rule 55 (factor_appear -> .)
-    LEFTPARENT      reduce using rule 55 (factor_appear -> .)
-    INI_INT         reduce using rule 55 (factor_appear -> .)
-    INI_FLOAT       reduce using rule 55 (factor_appear -> .)
-    RIGHTKEY        reduce using rule 55 (factor_appear -> .)
-    RIGHTPARENT     reduce using rule 55 (factor_appear -> .)
-    DOTCOMMA        reduce using rule 55 (factor_appear -> .)
+    LEFTPARENT      shift and go to state 73
 
-    factor_appear                  shift and go to state 72
 
 state 61
 
-    (40) fact -> expo . expo_appear
-    (41) fact -> expo . expo_appear aux_expo
-    (56) expo_appear -> .
+    (60) parent_aux -> LEFTPARENT . found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (62) found_init_parent -> .
 
-    TIMES_BY_SAME   reduce using rule 56 (expo_appear -> .)
-    SPLIT_BY        reduce using rule 56 (expo_appear -> .)
-    MULT_BY         reduce using rule 56 (expo_appear -> .)
-    ADD             reduce using rule 56 (expo_appear -> .)
-    LESS            reduce using rule 56 (expo_appear -> .)
-    ID              reduce using rule 56 (expo_appear -> .)
-    LEFTPARENT      reduce using rule 56 (expo_appear -> .)
-    INI_INT         reduce using rule 56 (expo_appear -> .)
-    INI_FLOAT       reduce using rule 56 (expo_appear -> .)
-    RIGHTKEY        reduce using rule 56 (expo_appear -> .)
-    RIGHTPARENT     reduce using rule 56 (expo_appear -> .)
-    DOTCOMMA        reduce using rule 56 (expo_appear -> .)
-
-    expo_appear                    shift and go to state 73
-
-state 62
-
-    (42) expo -> parent_aux .
-
-    TIMES_BY_SAME   reduce using rule 42 (expo -> parent_aux .)
-    SPLIT_BY        reduce using rule 42 (expo -> parent_aux .)
-    MULT_BY         reduce using rule 42 (expo -> parent_aux .)
-    ADD             reduce using rule 42 (expo -> parent_aux .)
-    LESS            reduce using rule 42 (expo -> parent_aux .)
-    ID              reduce using rule 42 (expo -> parent_aux .)
-    LEFTPARENT      reduce using rule 42 (expo -> parent_aux .)
-    INI_INT         reduce using rule 42 (expo -> parent_aux .)
-    INI_FLOAT       reduce using rule 42 (expo -> parent_aux .)
-    RIGHTKEY        reduce using rule 42 (expo -> parent_aux .)
-    RIGHTPARENT     reduce using rule 42 (expo -> parent_aux .)
-    DOTCOMMA        reduce using rule 42 (expo -> parent_aux .)
-
-
-state 63
-
-    (43) expo -> call_lets .
-
-    TIMES_BY_SAME   reduce using rule 43 (expo -> call_lets .)
-    SPLIT_BY        reduce using rule 43 (expo -> call_lets .)
-    MULT_BY         reduce using rule 43 (expo -> call_lets .)
-    ADD             reduce using rule 43 (expo -> call_lets .)
-    LESS            reduce using rule 43 (expo -> call_lets .)
-    ID              reduce using rule 43 (expo -> call_lets .)
-    LEFTPARENT      reduce using rule 43 (expo -> call_lets .)
-    INI_INT         reduce using rule 43 (expo -> call_lets .)
-    INI_FLOAT       reduce using rule 43 (expo -> call_lets .)
-    RIGHTKEY        reduce using rule 43 (expo -> call_lets .)
-    RIGHTPARENT     reduce using rule 43 (expo -> call_lets .)
-    DOTCOMMA        reduce using rule 43 (expo -> call_lets .)
-
-
-state 64
-
-    (44) parent_aux -> LEFTPARENT . found_init_parent expresion RIGHTPARENT found_end_parent
-    (45) found_init_parent -> .
-
-    LEFTPARENT      reduce using rule 45 (found_init_parent -> .)
-    INI_INT         reduce using rule 45 (found_init_parent -> .)
-    INI_FLOAT       reduce using rule 45 (found_init_parent -> .)
+    LEFTPARENT      reduce using rule 62 (found_init_parent -> .)
+    INI_INT         reduce using rule 62 (found_init_parent -> .)
+    INI_FLOAT       reduce using rule 62 (found_init_parent -> .)
+    ID              reduce using rule 62 (found_init_parent -> .)
 
     found_init_parent              shift and go to state 74
 
+state 62
+
+    (74) call_let -> ID . check_let_exists
+    (78) check_let_exists -> .
+
+    SET             reduce using rule 78 (check_let_exists -> .)
+    TIMES_BY_SAME   reduce using rule 78 (check_let_exists -> .)
+    SPLIT_BY        reduce using rule 78 (check_let_exists -> .)
+    MULT_BY         reduce using rule 78 (check_let_exists -> .)
+    ADD             reduce using rule 78 (check_let_exists -> .)
+    LESS            reduce using rule 78 (check_let_exists -> .)
+    IF              reduce using rule 78 (check_let_exists -> .)
+    ID              reduce using rule 78 (check_let_exists -> .)
+    LEFTPARENT      reduce using rule 78 (check_let_exists -> .)
+    INI_INT         reduce using rule 78 (check_let_exists -> .)
+    INI_FLOAT       reduce using rule 78 (check_let_exists -> .)
+    RIGHTKEY        reduce using rule 78 (check_let_exists -> .)
+    RIGHTPARENT     reduce using rule 78 (check_let_exists -> .)
+    DOTCOMMA        reduce using rule 78 (check_let_exists -> .)
+    GREATERTN       reduce using rule 78 (check_let_exists -> .)
+    LESSTN          reduce using rule 78 (check_let_exists -> .)
+    SAME            reduce using rule 78 (check_let_exists -> .)
+    NOTSAME         reduce using rule 78 (check_let_exists -> .)
+
+    check_let_exists               shift and go to state 75
+
+state 63
+
+    (51) term -> fact . factor_appear
+    (52) term -> fact . factor_appear aux_term
+    (72) factor_appear -> .
+
+    SPLIT_BY        reduce using rule 72 (factor_appear -> .)
+    MULT_BY         reduce using rule 72 (factor_appear -> .)
+    ADD             reduce using rule 72 (factor_appear -> .)
+    LESS            reduce using rule 72 (factor_appear -> .)
+    IF              reduce using rule 72 (factor_appear -> .)
+    ID              reduce using rule 72 (factor_appear -> .)
+    LEFTPARENT      reduce using rule 72 (factor_appear -> .)
+    INI_INT         reduce using rule 72 (factor_appear -> .)
+    INI_FLOAT       reduce using rule 72 (factor_appear -> .)
+    RIGHTKEY        reduce using rule 72 (factor_appear -> .)
+    RIGHTPARENT     reduce using rule 72 (factor_appear -> .)
+    DOTCOMMA        reduce using rule 72 (factor_appear -> .)
+    GREATERTN       reduce using rule 72 (factor_appear -> .)
+    LESSTN          reduce using rule 72 (factor_appear -> .)
+    SAME            reduce using rule 72 (factor_appear -> .)
+    NOTSAME         reduce using rule 72 (factor_appear -> .)
+
+    factor_appear                  shift and go to state 76
+
+state 64
+
+    (55) fact -> expo . expo_appear
+    (56) fact -> expo . expo_appear aux_expo
+    (73) expo_appear -> .
+
+    TIMES_BY_SAME   reduce using rule 73 (expo_appear -> .)
+    SPLIT_BY        reduce using rule 73 (expo_appear -> .)
+    MULT_BY         reduce using rule 73 (expo_appear -> .)
+    ADD             reduce using rule 73 (expo_appear -> .)
+    LESS            reduce using rule 73 (expo_appear -> .)
+    IF              reduce using rule 73 (expo_appear -> .)
+    ID              reduce using rule 73 (expo_appear -> .)
+    LEFTPARENT      reduce using rule 73 (expo_appear -> .)
+    INI_INT         reduce using rule 73 (expo_appear -> .)
+    INI_FLOAT       reduce using rule 73 (expo_appear -> .)
+    RIGHTKEY        reduce using rule 73 (expo_appear -> .)
+    RIGHTPARENT     reduce using rule 73 (expo_appear -> .)
+    DOTCOMMA        reduce using rule 73 (expo_appear -> .)
+    GREATERTN       reduce using rule 73 (expo_appear -> .)
+    LESSTN          reduce using rule 73 (expo_appear -> .)
+    SAME            reduce using rule 73 (expo_appear -> .)
+    NOTSAME         reduce using rule 73 (expo_appear -> .)
+
+    expo_appear                    shift and go to state 77
+
 state 65
 
-    (58) call_lets -> INI_INT . check_global_const_exists
-    (60) check_global_const_exists -> . add_operand
-    (51) add_operand -> .
+    (57) expo -> parent_aux .
 
-    TIMES_BY_SAME   reduce using rule 51 (add_operand -> .)
-    SPLIT_BY        reduce using rule 51 (add_operand -> .)
-    MULT_BY         reduce using rule 51 (add_operand -> .)
-    ADD             reduce using rule 51 (add_operand -> .)
-    LESS            reduce using rule 51 (add_operand -> .)
-    ID              reduce using rule 51 (add_operand -> .)
-    LEFTPARENT      reduce using rule 51 (add_operand -> .)
-    INI_INT         reduce using rule 51 (add_operand -> .)
-    INI_FLOAT       reduce using rule 51 (add_operand -> .)
-    RIGHTKEY        reduce using rule 51 (add_operand -> .)
-    RIGHTPARENT     reduce using rule 51 (add_operand -> .)
-    DOTCOMMA        reduce using rule 51 (add_operand -> .)
+    TIMES_BY_SAME   reduce using rule 57 (expo -> parent_aux .)
+    SPLIT_BY        reduce using rule 57 (expo -> parent_aux .)
+    MULT_BY         reduce using rule 57 (expo -> parent_aux .)
+    ADD             reduce using rule 57 (expo -> parent_aux .)
+    LESS            reduce using rule 57 (expo -> parent_aux .)
+    IF              reduce using rule 57 (expo -> parent_aux .)
+    ID              reduce using rule 57 (expo -> parent_aux .)
+    LEFTPARENT      reduce using rule 57 (expo -> parent_aux .)
+    INI_INT         reduce using rule 57 (expo -> parent_aux .)
+    INI_FLOAT       reduce using rule 57 (expo -> parent_aux .)
+    RIGHTKEY        reduce using rule 57 (expo -> parent_aux .)
+    RIGHTPARENT     reduce using rule 57 (expo -> parent_aux .)
+    DOTCOMMA        reduce using rule 57 (expo -> parent_aux .)
+    GREATERTN       reduce using rule 57 (expo -> parent_aux .)
+    LESSTN          reduce using rule 57 (expo -> parent_aux .)
+    SAME            reduce using rule 57 (expo -> parent_aux .)
+    NOTSAME         reduce using rule 57 (expo -> parent_aux .)
 
-    check_global_const_exists      shift and go to state 75
-    add_operand                    shift and go to state 76
 
 state 66
 
-    (59) call_lets -> INI_FLOAT . check_global_const_exists
-    (60) check_global_const_exists -> . add_operand
-    (51) add_operand -> .
+    (58) expo -> call_lets .
 
-    TIMES_BY_SAME   reduce using rule 51 (add_operand -> .)
-    SPLIT_BY        reduce using rule 51 (add_operand -> .)
-    MULT_BY         reduce using rule 51 (add_operand -> .)
-    ADD             reduce using rule 51 (add_operand -> .)
-    LESS            reduce using rule 51 (add_operand -> .)
-    ID              reduce using rule 51 (add_operand -> .)
-    LEFTPARENT      reduce using rule 51 (add_operand -> .)
-    INI_INT         reduce using rule 51 (add_operand -> .)
-    INI_FLOAT       reduce using rule 51 (add_operand -> .)
-    RIGHTKEY        reduce using rule 51 (add_operand -> .)
-    RIGHTPARENT     reduce using rule 51 (add_operand -> .)
-    DOTCOMMA        reduce using rule 51 (add_operand -> .)
+    TIMES_BY_SAME   reduce using rule 58 (expo -> call_lets .)
+    SPLIT_BY        reduce using rule 58 (expo -> call_lets .)
+    MULT_BY         reduce using rule 58 (expo -> call_lets .)
+    ADD             reduce using rule 58 (expo -> call_lets .)
+    LESS            reduce using rule 58 (expo -> call_lets .)
+    IF              reduce using rule 58 (expo -> call_lets .)
+    ID              reduce using rule 58 (expo -> call_lets .)
+    LEFTPARENT      reduce using rule 58 (expo -> call_lets .)
+    INI_INT         reduce using rule 58 (expo -> call_lets .)
+    INI_FLOAT       reduce using rule 58 (expo -> call_lets .)
+    RIGHTKEY        reduce using rule 58 (expo -> call_lets .)
+    RIGHTPARENT     reduce using rule 58 (expo -> call_lets .)
+    DOTCOMMA        reduce using rule 58 (expo -> call_lets .)
+    GREATERTN       reduce using rule 58 (expo -> call_lets .)
+    LESSTN          reduce using rule 58 (expo -> call_lets .)
+    SAME            reduce using rule 58 (expo -> call_lets .)
+    NOTSAME         reduce using rule 58 (expo -> call_lets .)
 
-    check_global_const_exists      shift and go to state 77
-    add_operand                    shift and go to state 76
 
 state 67
+
+    (75) call_lets -> INI_INT . check_global_const_exists
+    (77) check_global_const_exists -> . add_operand
+    (68) add_operand -> .
+
+    TIMES_BY_SAME   reduce using rule 68 (add_operand -> .)
+    SPLIT_BY        reduce using rule 68 (add_operand -> .)
+    MULT_BY         reduce using rule 68 (add_operand -> .)
+    ADD             reduce using rule 68 (add_operand -> .)
+    LESS            reduce using rule 68 (add_operand -> .)
+    IF              reduce using rule 68 (add_operand -> .)
+    ID              reduce using rule 68 (add_operand -> .)
+    LEFTPARENT      reduce using rule 68 (add_operand -> .)
+    INI_INT         reduce using rule 68 (add_operand -> .)
+    INI_FLOAT       reduce using rule 68 (add_operand -> .)
+    RIGHTKEY        reduce using rule 68 (add_operand -> .)
+    RIGHTPARENT     reduce using rule 68 (add_operand -> .)
+    GREATERTN       reduce using rule 68 (add_operand -> .)
+    LESSTN          reduce using rule 68 (add_operand -> .)
+    SAME            reduce using rule 68 (add_operand -> .)
+    NOTSAME         reduce using rule 68 (add_operand -> .)
+    DOTCOMMA        reduce using rule 68 (add_operand -> .)
+
+    check_global_const_exists      shift and go to state 78
+    add_operand                    shift and go to state 79
+
+state 68
+
+    (76) call_lets -> INI_FLOAT . check_global_const_exists
+    (77) check_global_const_exists -> . add_operand
+    (68) add_operand -> .
+
+    TIMES_BY_SAME   reduce using rule 68 (add_operand -> .)
+    SPLIT_BY        reduce using rule 68 (add_operand -> .)
+    MULT_BY         reduce using rule 68 (add_operand -> .)
+    ADD             reduce using rule 68 (add_operand -> .)
+    LESS            reduce using rule 68 (add_operand -> .)
+    IF              reduce using rule 68 (add_operand -> .)
+    ID              reduce using rule 68 (add_operand -> .)
+    LEFTPARENT      reduce using rule 68 (add_operand -> .)
+    INI_INT         reduce using rule 68 (add_operand -> .)
+    INI_FLOAT       reduce using rule 68 (add_operand -> .)
+    RIGHTKEY        reduce using rule 68 (add_operand -> .)
+    RIGHTPARENT     reduce using rule 68 (add_operand -> .)
+    GREATERTN       reduce using rule 68 (add_operand -> .)
+    LESSTN          reduce using rule 68 (add_operand -> .)
+    SAME            reduce using rule 68 (add_operand -> .)
+    NOTSAME         reduce using rule 68 (add_operand -> .)
+    DOTCOMMA        reduce using rule 68 (add_operand -> .)
+
+    check_global_const_exists      shift and go to state 80
+    add_operand                    shift and go to state 79
+
+state 69
 
     (27) func_code -> LEFTKEY lets func_code_aux RIGHTKEY .
 
     FUNC            reduce using rule 27 (func_code -> LEFTKEY lets func_code_aux RIGHTKEY .)
     $end            reduce using rule 27 (func_code -> LEFTKEY lets func_code_aux RIGHTKEY .)
+    ELSE            reduce using rule 27 (func_code -> LEFTKEY lets func_code_aux RIGHTKEY .)
+    IF              reduce using rule 27 (func_code -> LEFTKEY lets func_code_aux RIGHTKEY .)
+    ID              reduce using rule 27 (func_code -> LEFTKEY lets func_code_aux RIGHTKEY .)
+    LEFTPARENT      reduce using rule 27 (func_code -> LEFTKEY lets func_code_aux RIGHTKEY .)
+    INI_INT         reduce using rule 27 (func_code -> LEFTKEY lets func_code_aux RIGHTKEY .)
+    INI_FLOAT       reduce using rule 27 (func_code -> LEFTKEY lets func_code_aux RIGHTKEY .)
+    RIGHTKEY        reduce using rule 27 (func_code -> LEFTKEY lets func_code_aux RIGHTKEY .)
 
 
-state 68
+state 70
 
     (28) func_code_aux -> action func_code_aux .
 
     RIGHTKEY        reduce using rule 28 (func_code_aux -> action func_code_aux .)
 
 
-state 69
-
-    (48) assign -> call_let set_appear . SET set_value
-    (49) assign -> call_let set_appear . SET expresion seen_final_asignacion DOTCOMMA
-
-    SET             shift and go to state 78
-
-
-state 70
-
-    (32) expresion -> term term_appear .
-    (33) expresion -> term term_appear . aux_expresion
-    (34) aux_expresion -> . ADD add_operator expresion
-    (35) aux_expresion -> . LESS add_operator expresion
-
-    ID              reduce using rule 32 (expresion -> term term_appear .)
-    LEFTPARENT      reduce using rule 32 (expresion -> term term_appear .)
-    INI_INT         reduce using rule 32 (expresion -> term term_appear .)
-    INI_FLOAT       reduce using rule 32 (expresion -> term term_appear .)
-    RIGHTKEY        reduce using rule 32 (expresion -> term term_appear .)
-    RIGHTPARENT     reduce using rule 32 (expresion -> term term_appear .)
-    DOTCOMMA        reduce using rule 32 (expresion -> term term_appear .)
-    ADD             shift and go to state 80
-    LESS            shift and go to state 81
-
-    aux_expresion                  shift and go to state 79
-
 state 71
 
-    (57) call_let -> ID check_let_exists .
+    (65) assign -> call_let set_appear . SET set_value
+    (66) assign -> call_let set_appear . SET expresion_line seen_final_asignacion DOTCOMMA
 
-    SET             reduce using rule 57 (call_let -> ID check_let_exists .)
+    SET             shift and go to state 81
 
 
 state 72
 
-    (36) term -> fact factor_appear .
-    (37) term -> fact factor_appear . aux_term
-    (38) aux_term -> . SPLIT_BY add_operator term
-    (39) aux_term -> . MULT_BY add_operator term
+    (47) expresion_line -> term term_appear .
+    (48) expresion_line -> term term_appear . aux_expresion
+    (49) aux_expresion -> . ADD add_operator expresion_line
+    (50) aux_expresion -> . LESS add_operator expresion_line
 
-    ADD             reduce using rule 36 (term -> fact factor_appear .)
-    LESS            reduce using rule 36 (term -> fact factor_appear .)
-    ID              reduce using rule 36 (term -> fact factor_appear .)
-    LEFTPARENT      reduce using rule 36 (term -> fact factor_appear .)
-    INI_INT         reduce using rule 36 (term -> fact factor_appear .)
-    INI_FLOAT       reduce using rule 36 (term -> fact factor_appear .)
-    RIGHTKEY        reduce using rule 36 (term -> fact factor_appear .)
-    RIGHTPARENT     reduce using rule 36 (term -> fact factor_appear .)
-    DOTCOMMA        reduce using rule 36 (term -> fact factor_appear .)
-    SPLIT_BY        shift and go to state 83
-    MULT_BY         shift and go to state 84
+    IF              reduce using rule 47 (expresion_line -> term term_appear .)
+    ID              reduce using rule 47 (expresion_line -> term term_appear .)
+    LEFTPARENT      reduce using rule 47 (expresion_line -> term term_appear .)
+    INI_INT         reduce using rule 47 (expresion_line -> term term_appear .)
+    INI_FLOAT       reduce using rule 47 (expresion_line -> term term_appear .)
+    RIGHTKEY        reduce using rule 47 (expresion_line -> term term_appear .)
+    RIGHTPARENT     reduce using rule 47 (expresion_line -> term term_appear .)
+    DOTCOMMA        reduce using rule 47 (expresion_line -> term term_appear .)
+    GREATERTN       reduce using rule 47 (expresion_line -> term term_appear .)
+    LESSTN          reduce using rule 47 (expresion_line -> term term_appear .)
+    SAME            reduce using rule 47 (expresion_line -> term term_appear .)
+    NOTSAME         reduce using rule 47 (expresion_line -> term term_appear .)
+    ADD             shift and go to state 83
+    LESS            shift and go to state 84
 
-    aux_term                       shift and go to state 82
+    aux_expresion                  shift and go to state 82
 
 state 73
 
-    (40) fact -> expo expo_appear .
-    (41) fact -> expo expo_appear . aux_expo
-    (47) aux_expo -> . TIMES_BY_SAME add_operator fact
+    (34) condition -> IF LEFTPARENT . found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check
+    (62) found_init_parent -> .
 
-    SPLIT_BY        reduce using rule 40 (fact -> expo expo_appear .)
-    MULT_BY         reduce using rule 40 (fact -> expo expo_appear .)
-    ADD             reduce using rule 40 (fact -> expo expo_appear .)
-    LESS            reduce using rule 40 (fact -> expo expo_appear .)
-    ID              reduce using rule 40 (fact -> expo expo_appear .)
-    LEFTPARENT      reduce using rule 40 (fact -> expo expo_appear .)
-    INI_INT         reduce using rule 40 (fact -> expo expo_appear .)
-    INI_FLOAT       reduce using rule 40 (fact -> expo expo_appear .)
-    RIGHTKEY        reduce using rule 40 (fact -> expo expo_appear .)
-    RIGHTPARENT     reduce using rule 40 (fact -> expo expo_appear .)
-    DOTCOMMA        reduce using rule 40 (fact -> expo expo_appear .)
-    TIMES_BY_SAME   shift and go to state 86
+    LEFTPARENT      reduce using rule 62 (found_init_parent -> .)
+    INI_INT         reduce using rule 62 (found_init_parent -> .)
+    INI_FLOAT       reduce using rule 62 (found_init_parent -> .)
+    ID              reduce using rule 62 (found_init_parent -> .)
 
-    aux_expo                       shift and go to state 85
+    found_init_parent              shift and go to state 85
 
 state 74
 
-    (44) parent_aux -> LEFTPARENT found_init_parent . expresion RIGHTPARENT found_end_parent
-    (32) expresion -> . term term_appear
-    (33) expresion -> . term term_appear aux_expresion
-    (36) term -> . fact factor_appear
-    (37) term -> . fact factor_appear aux_term
-    (40) fact -> . expo expo_appear
-    (41) fact -> . expo expo_appear aux_expo
-    (42) expo -> . parent_aux
-    (43) expo -> . call_lets
-    (44) parent_aux -> . LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-    (58) call_lets -> . INI_INT check_global_const_exists
-    (59) call_lets -> . INI_FLOAT check_global_const_exists
+    (60) parent_aux -> LEFTPARENT found_init_parent . expresion_line RIGHTPARENT found_end_parent
+    (47) expresion_line -> . term term_appear
+    (48) expresion_line -> . term term_appear aux_expresion
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
+    (74) call_let -> . ID check_let_exists
 
-    LEFTPARENT      shift and go to state 64
-    INI_INT         shift and go to state 65
-    INI_FLOAT       shift and go to state 66
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+    ID              shift and go to state 62
 
-    expresion                      shift and go to state 87
-    term                           shift and go to state 58
-    fact                           shift and go to state 60
-    expo                           shift and go to state 61
-    parent_aux                     shift and go to state 62
-    call_lets                      shift and go to state 63
+    expresion_line                 shift and go to state 86
+    term                           shift and go to state 59
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
+    call_let                       shift and go to state 87
 
 state 75
 
-    (58) call_lets -> INI_INT check_global_const_exists .
+    (74) call_let -> ID check_let_exists .
 
-    TIMES_BY_SAME   reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    SPLIT_BY        reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    MULT_BY         reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    ADD             reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    LESS            reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    ID              reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    LEFTPARENT      reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    INI_INT         reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    INI_FLOAT       reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    RIGHTKEY        reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    RIGHTPARENT     reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
-    DOTCOMMA        reduce using rule 58 (call_lets -> INI_INT check_global_const_exists .)
+    SET             reduce using rule 74 (call_let -> ID check_let_exists .)
+    TIMES_BY_SAME   reduce using rule 74 (call_let -> ID check_let_exists .)
+    SPLIT_BY        reduce using rule 74 (call_let -> ID check_let_exists .)
+    MULT_BY         reduce using rule 74 (call_let -> ID check_let_exists .)
+    ADD             reduce using rule 74 (call_let -> ID check_let_exists .)
+    LESS            reduce using rule 74 (call_let -> ID check_let_exists .)
+    IF              reduce using rule 74 (call_let -> ID check_let_exists .)
+    ID              reduce using rule 74 (call_let -> ID check_let_exists .)
+    LEFTPARENT      reduce using rule 74 (call_let -> ID check_let_exists .)
+    INI_INT         reduce using rule 74 (call_let -> ID check_let_exists .)
+    INI_FLOAT       reduce using rule 74 (call_let -> ID check_let_exists .)
+    RIGHTKEY        reduce using rule 74 (call_let -> ID check_let_exists .)
+    RIGHTPARENT     reduce using rule 74 (call_let -> ID check_let_exists .)
+    DOTCOMMA        reduce using rule 74 (call_let -> ID check_let_exists .)
+    GREATERTN       reduce using rule 74 (call_let -> ID check_let_exists .)
+    LESSTN          reduce using rule 74 (call_let -> ID check_let_exists .)
+    SAME            reduce using rule 74 (call_let -> ID check_let_exists .)
+    NOTSAME         reduce using rule 74 (call_let -> ID check_let_exists .)
 
 
 state 76
 
-    (60) check_global_const_exists -> add_operand .
+    (51) term -> fact factor_appear .
+    (52) term -> fact factor_appear . aux_term
+    (53) aux_term -> . SPLIT_BY add_operator term
+    (54) aux_term -> . MULT_BY add_operator term
 
-    TIMES_BY_SAME   reduce using rule 60 (check_global_const_exists -> add_operand .)
-    SPLIT_BY        reduce using rule 60 (check_global_const_exists -> add_operand .)
-    MULT_BY         reduce using rule 60 (check_global_const_exists -> add_operand .)
-    ADD             reduce using rule 60 (check_global_const_exists -> add_operand .)
-    LESS            reduce using rule 60 (check_global_const_exists -> add_operand .)
-    ID              reduce using rule 60 (check_global_const_exists -> add_operand .)
-    LEFTPARENT      reduce using rule 60 (check_global_const_exists -> add_operand .)
-    INI_INT         reduce using rule 60 (check_global_const_exists -> add_operand .)
-    INI_FLOAT       reduce using rule 60 (check_global_const_exists -> add_operand .)
-    RIGHTKEY        reduce using rule 60 (check_global_const_exists -> add_operand .)
-    RIGHTPARENT     reduce using rule 60 (check_global_const_exists -> add_operand .)
-    DOTCOMMA        reduce using rule 60 (check_global_const_exists -> add_operand .)
+    ADD             reduce using rule 51 (term -> fact factor_appear .)
+    LESS            reduce using rule 51 (term -> fact factor_appear .)
+    IF              reduce using rule 51 (term -> fact factor_appear .)
+    ID              reduce using rule 51 (term -> fact factor_appear .)
+    LEFTPARENT      reduce using rule 51 (term -> fact factor_appear .)
+    INI_INT         reduce using rule 51 (term -> fact factor_appear .)
+    INI_FLOAT       reduce using rule 51 (term -> fact factor_appear .)
+    RIGHTKEY        reduce using rule 51 (term -> fact factor_appear .)
+    RIGHTPARENT     reduce using rule 51 (term -> fact factor_appear .)
+    DOTCOMMA        reduce using rule 51 (term -> fact factor_appear .)
+    GREATERTN       reduce using rule 51 (term -> fact factor_appear .)
+    LESSTN          reduce using rule 51 (term -> fact factor_appear .)
+    SAME            reduce using rule 51 (term -> fact factor_appear .)
+    NOTSAME         reduce using rule 51 (term -> fact factor_appear .)
+    SPLIT_BY        shift and go to state 89
+    MULT_BY         shift and go to state 90
 
+    aux_term                       shift and go to state 88
 
 state 77
 
-    (59) call_lets -> INI_FLOAT check_global_const_exists .
+    (55) fact -> expo expo_appear .
+    (56) fact -> expo expo_appear . aux_expo
+    (64) aux_expo -> . TIMES_BY_SAME add_operator fact
 
-    TIMES_BY_SAME   reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    SPLIT_BY        reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    MULT_BY         reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    ADD             reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    LESS            reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    ID              reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    LEFTPARENT      reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    INI_INT         reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    INI_FLOAT       reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    RIGHTKEY        reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    RIGHTPARENT     reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
-    DOTCOMMA        reduce using rule 59 (call_lets -> INI_FLOAT check_global_const_exists .)
+    SPLIT_BY        reduce using rule 55 (fact -> expo expo_appear .)
+    MULT_BY         reduce using rule 55 (fact -> expo expo_appear .)
+    ADD             reduce using rule 55 (fact -> expo expo_appear .)
+    LESS            reduce using rule 55 (fact -> expo expo_appear .)
+    IF              reduce using rule 55 (fact -> expo expo_appear .)
+    ID              reduce using rule 55 (fact -> expo expo_appear .)
+    LEFTPARENT      reduce using rule 55 (fact -> expo expo_appear .)
+    INI_INT         reduce using rule 55 (fact -> expo expo_appear .)
+    INI_FLOAT       reduce using rule 55 (fact -> expo expo_appear .)
+    RIGHTKEY        reduce using rule 55 (fact -> expo expo_appear .)
+    RIGHTPARENT     reduce using rule 55 (fact -> expo expo_appear .)
+    DOTCOMMA        reduce using rule 55 (fact -> expo expo_appear .)
+    GREATERTN       reduce using rule 55 (fact -> expo expo_appear .)
+    LESSTN          reduce using rule 55 (fact -> expo expo_appear .)
+    SAME            reduce using rule 55 (fact -> expo expo_appear .)
+    NOTSAME         reduce using rule 55 (fact -> expo expo_appear .)
+    TIMES_BY_SAME   shift and go to state 92
 
+    aux_expo                       shift and go to state 91
 
 state 78
 
-    (48) assign -> call_let set_appear SET . set_value
-    (49) assign -> call_let set_appear SET . expresion seen_final_asignacion DOTCOMMA
-    (62) set_value -> . INI_INT aux_int_check append_operand DOTCOMMA generate_quad
-    (63) set_value -> . INI_FLOAT aux_float_check append_operand DOTCOMMA generate_quad
-    (32) expresion -> . term term_appear
-    (33) expresion -> . term term_appear aux_expresion
-    (36) term -> . fact factor_appear
-    (37) term -> . fact factor_appear aux_term
-    (40) fact -> . expo expo_appear
-    (41) fact -> . expo expo_appear aux_expo
-    (42) expo -> . parent_aux
-    (43) expo -> . call_lets
-    (44) parent_aux -> . LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-    (58) call_lets -> . INI_INT check_global_const_exists
-    (59) call_lets -> . INI_FLOAT check_global_const_exists
+    (75) call_lets -> INI_INT check_global_const_exists .
 
-    INI_INT         shift and go to state 90
-    INI_FLOAT       shift and go to state 91
-    LEFTPARENT      shift and go to state 64
+    TIMES_BY_SAME   reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    SPLIT_BY        reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    MULT_BY         reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    ADD             reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    LESS            reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    IF              reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    ID              reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    LEFTPARENT      reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    INI_INT         reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    INI_FLOAT       reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    RIGHTKEY        reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    RIGHTPARENT     reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    DOTCOMMA        reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    GREATERTN       reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    LESSTN          reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    SAME            reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
+    NOTSAME         reduce using rule 75 (call_lets -> INI_INT check_global_const_exists .)
 
-    set_value                      shift and go to state 88
-    expresion                      shift and go to state 89
-    term                           shift and go to state 58
-    fact                           shift and go to state 60
-    expo                           shift and go to state 61
-    parent_aux                     shift and go to state 62
-    call_lets                      shift and go to state 63
 
 state 79
 
-    (33) expresion -> term term_appear aux_expresion .
+    (77) check_global_const_exists -> add_operand .
 
-    ID              reduce using rule 33 (expresion -> term term_appear aux_expresion .)
-    LEFTPARENT      reduce using rule 33 (expresion -> term term_appear aux_expresion .)
-    INI_INT         reduce using rule 33 (expresion -> term term_appear aux_expresion .)
-    INI_FLOAT       reduce using rule 33 (expresion -> term term_appear aux_expresion .)
-    RIGHTKEY        reduce using rule 33 (expresion -> term term_appear aux_expresion .)
-    RIGHTPARENT     reduce using rule 33 (expresion -> term term_appear aux_expresion .)
-    DOTCOMMA        reduce using rule 33 (expresion -> term term_appear aux_expresion .)
+    TIMES_BY_SAME   reduce using rule 77 (check_global_const_exists -> add_operand .)
+    SPLIT_BY        reduce using rule 77 (check_global_const_exists -> add_operand .)
+    MULT_BY         reduce using rule 77 (check_global_const_exists -> add_operand .)
+    ADD             reduce using rule 77 (check_global_const_exists -> add_operand .)
+    LESS            reduce using rule 77 (check_global_const_exists -> add_operand .)
+    IF              reduce using rule 77 (check_global_const_exists -> add_operand .)
+    ID              reduce using rule 77 (check_global_const_exists -> add_operand .)
+    LEFTPARENT      reduce using rule 77 (check_global_const_exists -> add_operand .)
+    INI_INT         reduce using rule 77 (check_global_const_exists -> add_operand .)
+    INI_FLOAT       reduce using rule 77 (check_global_const_exists -> add_operand .)
+    RIGHTKEY        reduce using rule 77 (check_global_const_exists -> add_operand .)
+    RIGHTPARENT     reduce using rule 77 (check_global_const_exists -> add_operand .)
+    GREATERTN       reduce using rule 77 (check_global_const_exists -> add_operand .)
+    LESSTN          reduce using rule 77 (check_global_const_exists -> add_operand .)
+    SAME            reduce using rule 77 (check_global_const_exists -> add_operand .)
+    NOTSAME         reduce using rule 77 (check_global_const_exists -> add_operand .)
+    DOTCOMMA        reduce using rule 77 (check_global_const_exists -> add_operand .)
 
 
 state 80
 
-    (34) aux_expresion -> ADD . add_operator expresion
-    (52) add_operator -> .
+    (76) call_lets -> INI_FLOAT check_global_const_exists .
 
-    LEFTPARENT      reduce using rule 52 (add_operator -> .)
-    INI_INT         reduce using rule 52 (add_operator -> .)
-    INI_FLOAT       reduce using rule 52 (add_operator -> .)
+    TIMES_BY_SAME   reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    SPLIT_BY        reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    MULT_BY         reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    ADD             reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    LESS            reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    IF              reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    ID              reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    LEFTPARENT      reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    INI_INT         reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    INI_FLOAT       reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    RIGHTKEY        reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    RIGHTPARENT     reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    DOTCOMMA        reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    GREATERTN       reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    LESSTN          reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    SAME            reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
+    NOTSAME         reduce using rule 76 (call_lets -> INI_FLOAT check_global_const_exists .)
 
-    add_operator                   shift and go to state 92
 
 state 81
 
-    (35) aux_expresion -> LESS . add_operator expresion
-    (52) add_operator -> .
+    (65) assign -> call_let set_appear SET . set_value
+    (66) assign -> call_let set_appear SET . expresion_line seen_final_asignacion DOTCOMMA
+    (79) set_value -> . INI_INT aux_int_check append_operand DOTCOMMA
+    (80) set_value -> . INI_FLOAT aux_float_check append_operand DOTCOMMA
+    (47) expresion_line -> . term term_appear
+    (48) expresion_line -> . term term_appear aux_expresion
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
+    (74) call_let -> . ID check_let_exists
 
-    LEFTPARENT      reduce using rule 52 (add_operator -> .)
-    INI_INT         reduce using rule 52 (add_operator -> .)
-    INI_FLOAT       reduce using rule 52 (add_operator -> .)
+    INI_INT         shift and go to state 95
+    INI_FLOAT       shift and go to state 96
+    LEFTPARENT      shift and go to state 61
+    ID              shift and go to state 62
 
-    add_operator                   shift and go to state 93
+    call_let                       shift and go to state 87
+    set_value                      shift and go to state 93
+    expresion_line                 shift and go to state 94
+    term                           shift and go to state 59
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
 
 state 82
 
-    (37) term -> fact factor_appear aux_term .
+    (48) expresion_line -> term term_appear aux_expresion .
 
-    ADD             reduce using rule 37 (term -> fact factor_appear aux_term .)
-    LESS            reduce using rule 37 (term -> fact factor_appear aux_term .)
-    ID              reduce using rule 37 (term -> fact factor_appear aux_term .)
-    LEFTPARENT      reduce using rule 37 (term -> fact factor_appear aux_term .)
-    INI_INT         reduce using rule 37 (term -> fact factor_appear aux_term .)
-    INI_FLOAT       reduce using rule 37 (term -> fact factor_appear aux_term .)
-    RIGHTKEY        reduce using rule 37 (term -> fact factor_appear aux_term .)
-    RIGHTPARENT     reduce using rule 37 (term -> fact factor_appear aux_term .)
-    DOTCOMMA        reduce using rule 37 (term -> fact factor_appear aux_term .)
+    IF              reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    ID              reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    LEFTPARENT      reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    INI_INT         reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    INI_FLOAT       reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    RIGHTKEY        reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    RIGHTPARENT     reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    DOTCOMMA        reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    GREATERTN       reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    LESSTN          reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    SAME            reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
+    NOTSAME         reduce using rule 48 (expresion_line -> term term_appear aux_expresion .)
 
 
 state 83
 
-    (38) aux_term -> SPLIT_BY . add_operator term
-    (52) add_operator -> .
+    (49) aux_expresion -> ADD . add_operator expresion_line
+    (69) add_operator -> .
 
-    LEFTPARENT      reduce using rule 52 (add_operator -> .)
-    INI_INT         reduce using rule 52 (add_operator -> .)
-    INI_FLOAT       reduce using rule 52 (add_operator -> .)
+    LEFTPARENT      reduce using rule 69 (add_operator -> .)
+    INI_INT         reduce using rule 69 (add_operator -> .)
+    INI_FLOAT       reduce using rule 69 (add_operator -> .)
+    ID              reduce using rule 69 (add_operator -> .)
 
-    add_operator                   shift and go to state 94
+    add_operator                   shift and go to state 97
 
 state 84
 
-    (39) aux_term -> MULT_BY . add_operator term
-    (52) add_operator -> .
+    (50) aux_expresion -> LESS . add_operator expresion_line
+    (69) add_operator -> .
 
-    LEFTPARENT      reduce using rule 52 (add_operator -> .)
-    INI_INT         reduce using rule 52 (add_operator -> .)
-    INI_FLOAT       reduce using rule 52 (add_operator -> .)
+    LEFTPARENT      reduce using rule 69 (add_operator -> .)
+    INI_INT         reduce using rule 69 (add_operator -> .)
+    INI_FLOAT       reduce using rule 69 (add_operator -> .)
+    ID              reduce using rule 69 (add_operator -> .)
 
-    add_operator                   shift and go to state 95
+    add_operator                   shift and go to state 98
 
 state 85
 
-    (41) fact -> expo expo_appear aux_expo .
+    (34) condition -> IF LEFTPARENT found_init_parent . condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check
+    (45) condition_expresion -> . expresion_line condtion_appear
+    (46) condition_expresion -> . expresion_line condition_signs expresion_line condtion_appear
+    (47) expresion_line -> . term term_appear
+    (48) expresion_line -> . term term_appear aux_expresion
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
+    (74) call_let -> . ID check_let_exists
 
-    SPLIT_BY        reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    MULT_BY         reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    ADD             reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    LESS            reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    ID              reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    LEFTPARENT      reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    INI_INT         reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    INI_FLOAT       reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    RIGHTKEY        reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    RIGHTPARENT     reduce using rule 41 (fact -> expo expo_appear aux_expo .)
-    DOTCOMMA        reduce using rule 41 (fact -> expo expo_appear aux_expo .)
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+    ID              shift and go to state 62
 
+    condition_expresion            shift and go to state 99
+    expresion_line                 shift and go to state 100
+    term                           shift and go to state 59
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
+    call_let                       shift and go to state 87
 
 state 86
 
-    (47) aux_expo -> TIMES_BY_SAME . add_operator fact
-    (52) add_operator -> .
+    (60) parent_aux -> LEFTPARENT found_init_parent expresion_line . RIGHTPARENT found_end_parent
 
-    LEFTPARENT      reduce using rule 52 (add_operator -> .)
-    INI_INT         reduce using rule 52 (add_operator -> .)
-    INI_FLOAT       reduce using rule 52 (add_operator -> .)
+    RIGHTPARENT     shift and go to state 101
 
-    add_operator                   shift and go to state 96
 
 state 87
 
-    (44) parent_aux -> LEFTPARENT found_init_parent expresion . RIGHTPARENT found_end_parent
+    (59) expo -> call_let .
 
-    RIGHTPARENT     shift and go to state 97
+    TIMES_BY_SAME   reduce using rule 59 (expo -> call_let .)
+    SPLIT_BY        reduce using rule 59 (expo -> call_let .)
+    MULT_BY         reduce using rule 59 (expo -> call_let .)
+    ADD             reduce using rule 59 (expo -> call_let .)
+    LESS            reduce using rule 59 (expo -> call_let .)
+    RIGHTPARENT     reduce using rule 59 (expo -> call_let .)
+    DOTCOMMA        reduce using rule 59 (expo -> call_let .)
+    GREATERTN       reduce using rule 59 (expo -> call_let .)
+    LESSTN          reduce using rule 59 (expo -> call_let .)
+    SAME            reduce using rule 59 (expo -> call_let .)
+    NOTSAME         reduce using rule 59 (expo -> call_let .)
+    LEFTPARENT      reduce using rule 59 (expo -> call_let .)
+    INI_INT         reduce using rule 59 (expo -> call_let .)
+    INI_FLOAT       reduce using rule 59 (expo -> call_let .)
+    ID              reduce using rule 59 (expo -> call_let .)
+    IF              reduce using rule 59 (expo -> call_let .)
+    RIGHTKEY        reduce using rule 59 (expo -> call_let .)
 
 
 state 88
 
-    (48) assign -> call_let set_appear SET set_value .
+    (52) term -> fact factor_appear aux_term .
 
-    ID              reduce using rule 48 (assign -> call_let set_appear SET set_value .)
-    LEFTPARENT      reduce using rule 48 (assign -> call_let set_appear SET set_value .)
-    INI_INT         reduce using rule 48 (assign -> call_let set_appear SET set_value .)
-    INI_FLOAT       reduce using rule 48 (assign -> call_let set_appear SET set_value .)
-    RIGHTKEY        reduce using rule 48 (assign -> call_let set_appear SET set_value .)
+    ADD             reduce using rule 52 (term -> fact factor_appear aux_term .)
+    LESS            reduce using rule 52 (term -> fact factor_appear aux_term .)
+    IF              reduce using rule 52 (term -> fact factor_appear aux_term .)
+    ID              reduce using rule 52 (term -> fact factor_appear aux_term .)
+    LEFTPARENT      reduce using rule 52 (term -> fact factor_appear aux_term .)
+    INI_INT         reduce using rule 52 (term -> fact factor_appear aux_term .)
+    INI_FLOAT       reduce using rule 52 (term -> fact factor_appear aux_term .)
+    RIGHTKEY        reduce using rule 52 (term -> fact factor_appear aux_term .)
+    RIGHTPARENT     reduce using rule 52 (term -> fact factor_appear aux_term .)
+    DOTCOMMA        reduce using rule 52 (term -> fact factor_appear aux_term .)
+    GREATERTN       reduce using rule 52 (term -> fact factor_appear aux_term .)
+    LESSTN          reduce using rule 52 (term -> fact factor_appear aux_term .)
+    SAME            reduce using rule 52 (term -> fact factor_appear aux_term .)
+    NOTSAME         reduce using rule 52 (term -> fact factor_appear aux_term .)
 
 
 state 89
 
-    (49) assign -> call_let set_appear SET expresion . seen_final_asignacion DOTCOMMA
-    (50) seen_final_asignacion -> .
+    (53) aux_term -> SPLIT_BY . add_operator term
+    (69) add_operator -> .
 
-    DOTCOMMA        reduce using rule 50 (seen_final_asignacion -> .)
+    LEFTPARENT      reduce using rule 69 (add_operator -> .)
+    INI_INT         reduce using rule 69 (add_operator -> .)
+    INI_FLOAT       reduce using rule 69 (add_operator -> .)
+    ID              reduce using rule 69 (add_operator -> .)
 
-    seen_final_asignacion          shift and go to state 98
+    add_operator                   shift and go to state 102
 
 state 90
 
-    (62) set_value -> INI_INT . aux_int_check append_operand DOTCOMMA generate_quad
-    (58) call_lets -> INI_INT . check_global_const_exists
-    (66) aux_int_check -> .
-    (60) check_global_const_exists -> . add_operand
-    (51) add_operand -> .
+    (54) aux_term -> MULT_BY . add_operator term
+    (69) add_operator -> .
 
-  ! reduce/reduce conflict for DOTCOMMA resolved using rule 51 (add_operand -> .)
-    TIMES_BY_SAME   reduce using rule 51 (add_operand -> .)
-    SPLIT_BY        reduce using rule 51 (add_operand -> .)
-    MULT_BY         reduce using rule 51 (add_operand -> .)
-    ADD             reduce using rule 51 (add_operand -> .)
-    LESS            reduce using rule 51 (add_operand -> .)
-    DOTCOMMA        reduce using rule 51 (add_operand -> .)
+    LEFTPARENT      reduce using rule 69 (add_operator -> .)
+    INI_INT         reduce using rule 69 (add_operator -> .)
+    INI_FLOAT       reduce using rule 69 (add_operator -> .)
+    ID              reduce using rule 69 (add_operator -> .)
 
-  ! DOTCOMMA        [ reduce using rule 66 (aux_int_check -> .) ]
-
-    aux_int_check                  shift and go to state 99
-    check_global_const_exists      shift and go to state 75
-    add_operand                    shift and go to state 76
+    add_operator                   shift and go to state 103
 
 state 91
 
-    (63) set_value -> INI_FLOAT . aux_float_check append_operand DOTCOMMA generate_quad
-    (59) call_lets -> INI_FLOAT . check_global_const_exists
-    (67) aux_float_check -> .
-    (60) check_global_const_exists -> . add_operand
-    (51) add_operand -> .
+    (56) fact -> expo expo_appear aux_expo .
 
-  ! reduce/reduce conflict for DOTCOMMA resolved using rule 51 (add_operand -> .)
-    TIMES_BY_SAME   reduce using rule 51 (add_operand -> .)
-    SPLIT_BY        reduce using rule 51 (add_operand -> .)
-    MULT_BY         reduce using rule 51 (add_operand -> .)
-    ADD             reduce using rule 51 (add_operand -> .)
-    LESS            reduce using rule 51 (add_operand -> .)
-    DOTCOMMA        reduce using rule 51 (add_operand -> .)
+    SPLIT_BY        reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    MULT_BY         reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    ADD             reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    LESS            reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    IF              reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    ID              reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    LEFTPARENT      reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    INI_INT         reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    INI_FLOAT       reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    RIGHTKEY        reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    RIGHTPARENT     reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    DOTCOMMA        reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    GREATERTN       reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    LESSTN          reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    SAME            reduce using rule 56 (fact -> expo expo_appear aux_expo .)
+    NOTSAME         reduce using rule 56 (fact -> expo expo_appear aux_expo .)
 
-  ! DOTCOMMA        [ reduce using rule 67 (aux_float_check -> .) ]
-
-    aux_float_check                shift and go to state 100
-    check_global_const_exists      shift and go to state 77
-    add_operand                    shift and go to state 76
 
 state 92
 
-    (34) aux_expresion -> ADD add_operator . expresion
-    (32) expresion -> . term term_appear
-    (33) expresion -> . term term_appear aux_expresion
-    (36) term -> . fact factor_appear
-    (37) term -> . fact factor_appear aux_term
-    (40) fact -> . expo expo_appear
-    (41) fact -> . expo expo_appear aux_expo
-    (42) expo -> . parent_aux
-    (43) expo -> . call_lets
-    (44) parent_aux -> . LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-    (58) call_lets -> . INI_INT check_global_const_exists
-    (59) call_lets -> . INI_FLOAT check_global_const_exists
+    (64) aux_expo -> TIMES_BY_SAME . add_operator fact
+    (69) add_operator -> .
 
-    LEFTPARENT      shift and go to state 64
-    INI_INT         shift and go to state 65
-    INI_FLOAT       shift and go to state 66
+    LEFTPARENT      reduce using rule 69 (add_operator -> .)
+    INI_INT         reduce using rule 69 (add_operator -> .)
+    INI_FLOAT       reduce using rule 69 (add_operator -> .)
+    ID              reduce using rule 69 (add_operator -> .)
 
-    expresion                      shift and go to state 101
-    term                           shift and go to state 58
-    fact                           shift and go to state 60
-    expo                           shift and go to state 61
-    parent_aux                     shift and go to state 62
-    call_lets                      shift and go to state 63
+    add_operator                   shift and go to state 104
 
 state 93
 
-    (35) aux_expresion -> LESS add_operator . expresion
-    (32) expresion -> . term term_appear
-    (33) expresion -> . term term_appear aux_expresion
-    (36) term -> . fact factor_appear
-    (37) term -> . fact factor_appear aux_term
-    (40) fact -> . expo expo_appear
-    (41) fact -> . expo expo_appear aux_expo
-    (42) expo -> . parent_aux
-    (43) expo -> . call_lets
-    (44) parent_aux -> . LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-    (58) call_lets -> . INI_INT check_global_const_exists
-    (59) call_lets -> . INI_FLOAT check_global_const_exists
+    (65) assign -> call_let set_appear SET set_value .
 
-    LEFTPARENT      shift and go to state 64
-    INI_INT         shift and go to state 65
-    INI_FLOAT       shift and go to state 66
+    IF              reduce using rule 65 (assign -> call_let set_appear SET set_value .)
+    ID              reduce using rule 65 (assign -> call_let set_appear SET set_value .)
+    LEFTPARENT      reduce using rule 65 (assign -> call_let set_appear SET set_value .)
+    INI_INT         reduce using rule 65 (assign -> call_let set_appear SET set_value .)
+    INI_FLOAT       reduce using rule 65 (assign -> call_let set_appear SET set_value .)
+    RIGHTKEY        reduce using rule 65 (assign -> call_let set_appear SET set_value .)
 
-    expresion                      shift and go to state 102
-    term                           shift and go to state 58
-    fact                           shift and go to state 60
-    expo                           shift and go to state 61
-    parent_aux                     shift and go to state 62
-    call_lets                      shift and go to state 63
 
 state 94
 
-    (38) aux_term -> SPLIT_BY add_operator . term
-    (36) term -> . fact factor_appear
-    (37) term -> . fact factor_appear aux_term
-    (40) fact -> . expo expo_appear
-    (41) fact -> . expo expo_appear aux_expo
-    (42) expo -> . parent_aux
-    (43) expo -> . call_lets
-    (44) parent_aux -> . LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-    (58) call_lets -> . INI_INT check_global_const_exists
-    (59) call_lets -> . INI_FLOAT check_global_const_exists
+    (66) assign -> call_let set_appear SET expresion_line . seen_final_asignacion DOTCOMMA
+    (67) seen_final_asignacion -> .
 
-    LEFTPARENT      shift and go to state 64
-    INI_INT         shift and go to state 65
-    INI_FLOAT       shift and go to state 66
+    DOTCOMMA        reduce using rule 67 (seen_final_asignacion -> .)
 
-    term                           shift and go to state 103
-    fact                           shift and go to state 60
-    expo                           shift and go to state 61
-    parent_aux                     shift and go to state 62
-    call_lets                      shift and go to state 63
+    seen_final_asignacion          shift and go to state 105
 
 state 95
 
-    (39) aux_term -> MULT_BY add_operator . term
-    (36) term -> . fact factor_appear
-    (37) term -> . fact factor_appear aux_term
-    (40) fact -> . expo expo_appear
-    (41) fact -> . expo expo_appear aux_expo
-    (42) expo -> . parent_aux
-    (43) expo -> . call_lets
-    (44) parent_aux -> . LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-    (58) call_lets -> . INI_INT check_global_const_exists
-    (59) call_lets -> . INI_FLOAT check_global_const_exists
+    (79) set_value -> INI_INT . aux_int_check append_operand DOTCOMMA
+    (75) call_lets -> INI_INT . check_global_const_exists
+    (82) aux_int_check -> .
+    (77) check_global_const_exists -> . add_operand
+    (68) add_operand -> .
 
-    LEFTPARENT      shift and go to state 64
-    INI_INT         shift and go to state 65
-    INI_FLOAT       shift and go to state 66
+  ! reduce/reduce conflict for DOTCOMMA resolved using rule 68 (add_operand -> .)
+    TIMES_BY_SAME   reduce using rule 68 (add_operand -> .)
+    SPLIT_BY        reduce using rule 68 (add_operand -> .)
+    MULT_BY         reduce using rule 68 (add_operand -> .)
+    ADD             reduce using rule 68 (add_operand -> .)
+    LESS            reduce using rule 68 (add_operand -> .)
+    DOTCOMMA        reduce using rule 68 (add_operand -> .)
 
-    term                           shift and go to state 104
-    fact                           shift and go to state 60
-    expo                           shift and go to state 61
-    parent_aux                     shift and go to state 62
-    call_lets                      shift and go to state 63
+  ! DOTCOMMA        [ reduce using rule 82 (aux_int_check -> .) ]
+
+    aux_int_check                  shift and go to state 106
+    check_global_const_exists      shift and go to state 78
+    add_operand                    shift and go to state 79
 
 state 96
 
-    (47) aux_expo -> TIMES_BY_SAME add_operator . fact
-    (40) fact -> . expo expo_appear
-    (41) fact -> . expo expo_appear aux_expo
-    (42) expo -> . parent_aux
-    (43) expo -> . call_lets
-    (44) parent_aux -> . LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent
-    (58) call_lets -> . INI_INT check_global_const_exists
-    (59) call_lets -> . INI_FLOAT check_global_const_exists
+    (80) set_value -> INI_FLOAT . aux_float_check append_operand DOTCOMMA
+    (76) call_lets -> INI_FLOAT . check_global_const_exists
+    (83) aux_float_check -> .
+    (77) check_global_const_exists -> . add_operand
+    (68) add_operand -> .
 
-    LEFTPARENT      shift and go to state 64
-    INI_INT         shift and go to state 65
-    INI_FLOAT       shift and go to state 66
+  ! reduce/reduce conflict for DOTCOMMA resolved using rule 68 (add_operand -> .)
+    TIMES_BY_SAME   reduce using rule 68 (add_operand -> .)
+    SPLIT_BY        reduce using rule 68 (add_operand -> .)
+    MULT_BY         reduce using rule 68 (add_operand -> .)
+    ADD             reduce using rule 68 (add_operand -> .)
+    LESS            reduce using rule 68 (add_operand -> .)
+    DOTCOMMA        reduce using rule 68 (add_operand -> .)
 
-    fact                           shift and go to state 105
-    expo                           shift and go to state 61
-    parent_aux                     shift and go to state 62
-    call_lets                      shift and go to state 63
+  ! DOTCOMMA        [ reduce using rule 83 (aux_float_check -> .) ]
+
+    aux_float_check                shift and go to state 107
+    check_global_const_exists      shift and go to state 80
+    add_operand                    shift and go to state 79
 
 state 97
 
-    (44) parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT . found_end_parent
-    (46) found_end_parent -> .
+    (49) aux_expresion -> ADD add_operator . expresion_line
+    (47) expresion_line -> . term term_appear
+    (48) expresion_line -> . term term_appear aux_expresion
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
+    (74) call_let -> . ID check_let_exists
 
-    TIMES_BY_SAME   reduce using rule 46 (found_end_parent -> .)
-    SPLIT_BY        reduce using rule 46 (found_end_parent -> .)
-    MULT_BY         reduce using rule 46 (found_end_parent -> .)
-    ADD             reduce using rule 46 (found_end_parent -> .)
-    LESS            reduce using rule 46 (found_end_parent -> .)
-    ID              reduce using rule 46 (found_end_parent -> .)
-    LEFTPARENT      reduce using rule 46 (found_end_parent -> .)
-    INI_INT         reduce using rule 46 (found_end_parent -> .)
-    INI_FLOAT       reduce using rule 46 (found_end_parent -> .)
-    RIGHTKEY        reduce using rule 46 (found_end_parent -> .)
-    RIGHTPARENT     reduce using rule 46 (found_end_parent -> .)
-    DOTCOMMA        reduce using rule 46 (found_end_parent -> .)
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+    ID              shift and go to state 62
 
-    found_end_parent               shift and go to state 106
+    expresion_line                 shift and go to state 108
+    term                           shift and go to state 59
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
+    call_let                       shift and go to state 87
 
 state 98
 
-    (49) assign -> call_let set_appear SET expresion seen_final_asignacion . DOTCOMMA
+    (50) aux_expresion -> LESS add_operator . expresion_line
+    (47) expresion_line -> . term term_appear
+    (48) expresion_line -> . term term_appear aux_expresion
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
+    (74) call_let -> . ID check_let_exists
 
-    DOTCOMMA        shift and go to state 107
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+    ID              shift and go to state 62
 
+    expresion_line                 shift and go to state 109
+    term                           shift and go to state 59
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
+    call_let                       shift and go to state 87
 
 state 99
 
-    (62) set_value -> INI_INT aux_int_check . append_operand DOTCOMMA generate_quad
-    (64) append_operand -> .
+    (34) condition -> IF LEFTPARENT found_init_parent condition_expresion . right_parent_condition RIGHTPARENT func_code end_if condition_end_check
+    (61) right_parent_condition -> .
 
-    DOTCOMMA        reduce using rule 64 (append_operand -> .)
+    RIGHTPARENT     reduce using rule 61 (right_parent_condition -> .)
 
-    append_operand                 shift and go to state 108
+    right_parent_condition         shift and go to state 110
 
 state 100
 
-    (63) set_value -> INI_FLOAT aux_float_check . append_operand DOTCOMMA generate_quad
-    (64) append_operand -> .
+    (45) condition_expresion -> expresion_line . condtion_appear
+    (46) condition_expresion -> expresion_line . condition_signs expresion_line condtion_appear
+    (35) condtion_appear -> .
+    (40) condition_signs -> . GREATERTN add_operator
+    (41) condition_signs -> . LESSTN add_operator
+    (42) condition_signs -> . SAME add_operator
+    (43) condition_signs -> . NOTSAME add_operator
+    (44) condition_signs -> .
 
-    DOTCOMMA        reduce using rule 64 (append_operand -> .)
+    RIGHTPARENT     reduce using rule 35 (condtion_appear -> .)
+    GREATERTN       shift and go to state 113
+    LESSTN          shift and go to state 114
+    SAME            shift and go to state 115
+    NOTSAME         shift and go to state 116
+    LEFTPARENT      reduce using rule 44 (condition_signs -> .)
+    INI_INT         reduce using rule 44 (condition_signs -> .)
+    INI_FLOAT       reduce using rule 44 (condition_signs -> .)
+    ID              reduce using rule 44 (condition_signs -> .)
 
-    append_operand                 shift and go to state 109
+    condtion_appear                shift and go to state 111
+    condition_signs                shift and go to state 112
 
 state 101
 
-    (34) aux_expresion -> ADD add_operator expresion .
+    (60) parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT . found_end_parent
+    (63) found_end_parent -> .
 
-    ID              reduce using rule 34 (aux_expresion -> ADD add_operator expresion .)
-    LEFTPARENT      reduce using rule 34 (aux_expresion -> ADD add_operator expresion .)
-    INI_INT         reduce using rule 34 (aux_expresion -> ADD add_operator expresion .)
-    INI_FLOAT       reduce using rule 34 (aux_expresion -> ADD add_operator expresion .)
-    RIGHTKEY        reduce using rule 34 (aux_expresion -> ADD add_operator expresion .)
-    RIGHTPARENT     reduce using rule 34 (aux_expresion -> ADD add_operator expresion .)
-    DOTCOMMA        reduce using rule 34 (aux_expresion -> ADD add_operator expresion .)
+    TIMES_BY_SAME   reduce using rule 63 (found_end_parent -> .)
+    SPLIT_BY        reduce using rule 63 (found_end_parent -> .)
+    MULT_BY         reduce using rule 63 (found_end_parent -> .)
+    ADD             reduce using rule 63 (found_end_parent -> .)
+    LESS            reduce using rule 63 (found_end_parent -> .)
+    IF              reduce using rule 63 (found_end_parent -> .)
+    ID              reduce using rule 63 (found_end_parent -> .)
+    LEFTPARENT      reduce using rule 63 (found_end_parent -> .)
+    INI_INT         reduce using rule 63 (found_end_parent -> .)
+    INI_FLOAT       reduce using rule 63 (found_end_parent -> .)
+    RIGHTKEY        reduce using rule 63 (found_end_parent -> .)
+    RIGHTPARENT     reduce using rule 63 (found_end_parent -> .)
+    DOTCOMMA        reduce using rule 63 (found_end_parent -> .)
+    GREATERTN       reduce using rule 63 (found_end_parent -> .)
+    LESSTN          reduce using rule 63 (found_end_parent -> .)
+    SAME            reduce using rule 63 (found_end_parent -> .)
+    NOTSAME         reduce using rule 63 (found_end_parent -> .)
 
+    found_end_parent               shift and go to state 117
 
 state 102
 
-    (35) aux_expresion -> LESS add_operator expresion .
+    (53) aux_term -> SPLIT_BY add_operator . term
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
+    (74) call_let -> . ID check_let_exists
 
-    ID              reduce using rule 35 (aux_expresion -> LESS add_operator expresion .)
-    LEFTPARENT      reduce using rule 35 (aux_expresion -> LESS add_operator expresion .)
-    INI_INT         reduce using rule 35 (aux_expresion -> LESS add_operator expresion .)
-    INI_FLOAT       reduce using rule 35 (aux_expresion -> LESS add_operator expresion .)
-    RIGHTKEY        reduce using rule 35 (aux_expresion -> LESS add_operator expresion .)
-    RIGHTPARENT     reduce using rule 35 (aux_expresion -> LESS add_operator expresion .)
-    DOTCOMMA        reduce using rule 35 (aux_expresion -> LESS add_operator expresion .)
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+    ID              shift and go to state 62
 
+    term                           shift and go to state 118
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
+    call_let                       shift and go to state 87
 
 state 103
 
-    (38) aux_term -> SPLIT_BY add_operator term .
+    (54) aux_term -> MULT_BY add_operator . term
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
+    (74) call_let -> . ID check_let_exists
 
-    ADD             reduce using rule 38 (aux_term -> SPLIT_BY add_operator term .)
-    LESS            reduce using rule 38 (aux_term -> SPLIT_BY add_operator term .)
-    ID              reduce using rule 38 (aux_term -> SPLIT_BY add_operator term .)
-    LEFTPARENT      reduce using rule 38 (aux_term -> SPLIT_BY add_operator term .)
-    INI_INT         reduce using rule 38 (aux_term -> SPLIT_BY add_operator term .)
-    INI_FLOAT       reduce using rule 38 (aux_term -> SPLIT_BY add_operator term .)
-    RIGHTKEY        reduce using rule 38 (aux_term -> SPLIT_BY add_operator term .)
-    RIGHTPARENT     reduce using rule 38 (aux_term -> SPLIT_BY add_operator term .)
-    DOTCOMMA        reduce using rule 38 (aux_term -> SPLIT_BY add_operator term .)
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+    ID              shift and go to state 62
 
+    term                           shift and go to state 119
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
+    call_let                       shift and go to state 87
 
 state 104
 
-    (39) aux_term -> MULT_BY add_operator term .
+    (64) aux_expo -> TIMES_BY_SAME add_operator . fact
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
+    (74) call_let -> . ID check_let_exists
 
-    ADD             reduce using rule 39 (aux_term -> MULT_BY add_operator term .)
-    LESS            reduce using rule 39 (aux_term -> MULT_BY add_operator term .)
-    ID              reduce using rule 39 (aux_term -> MULT_BY add_operator term .)
-    LEFTPARENT      reduce using rule 39 (aux_term -> MULT_BY add_operator term .)
-    INI_INT         reduce using rule 39 (aux_term -> MULT_BY add_operator term .)
-    INI_FLOAT       reduce using rule 39 (aux_term -> MULT_BY add_operator term .)
-    RIGHTKEY        reduce using rule 39 (aux_term -> MULT_BY add_operator term .)
-    RIGHTPARENT     reduce using rule 39 (aux_term -> MULT_BY add_operator term .)
-    DOTCOMMA        reduce using rule 39 (aux_term -> MULT_BY add_operator term .)
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+    ID              shift and go to state 62
 
+    fact                           shift and go to state 120
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
+    call_let                       shift and go to state 87
 
 state 105
 
-    (47) aux_expo -> TIMES_BY_SAME add_operator fact .
+    (66) assign -> call_let set_appear SET expresion_line seen_final_asignacion . DOTCOMMA
 
-    SPLIT_BY        reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    MULT_BY         reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    ADD             reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    LESS            reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    ID              reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    LEFTPARENT      reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    INI_INT         reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    INI_FLOAT       reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    RIGHTKEY        reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    RIGHTPARENT     reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
-    DOTCOMMA        reduce using rule 47 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    DOTCOMMA        shift and go to state 121
 
 
 state 106
 
-    (44) parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .
+    (79) set_value -> INI_INT aux_int_check . append_operand DOTCOMMA
+    (81) append_operand -> .
 
-    TIMES_BY_SAME   reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    SPLIT_BY        reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    MULT_BY         reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    ADD             reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    LESS            reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    ID              reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    LEFTPARENT      reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    INI_INT         reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    INI_FLOAT       reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    RIGHTKEY        reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    RIGHTPARENT     reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
-    DOTCOMMA        reduce using rule 44 (parent_aux -> LEFTPARENT found_init_parent expresion RIGHTPARENT found_end_parent .)
+    DOTCOMMA        reduce using rule 81 (append_operand -> .)
 
+    append_operand                 shift and go to state 122
 
 state 107
 
-    (49) assign -> call_let set_appear SET expresion seen_final_asignacion DOTCOMMA .
+    (80) set_value -> INI_FLOAT aux_float_check . append_operand DOTCOMMA
+    (81) append_operand -> .
 
-    ID              reduce using rule 49 (assign -> call_let set_appear SET expresion seen_final_asignacion DOTCOMMA .)
-    LEFTPARENT      reduce using rule 49 (assign -> call_let set_appear SET expresion seen_final_asignacion DOTCOMMA .)
-    INI_INT         reduce using rule 49 (assign -> call_let set_appear SET expresion seen_final_asignacion DOTCOMMA .)
-    INI_FLOAT       reduce using rule 49 (assign -> call_let set_appear SET expresion seen_final_asignacion DOTCOMMA .)
-    RIGHTKEY        reduce using rule 49 (assign -> call_let set_appear SET expresion seen_final_asignacion DOTCOMMA .)
+    DOTCOMMA        reduce using rule 81 (append_operand -> .)
 
+    append_operand                 shift and go to state 123
 
 state 108
 
-    (62) set_value -> INI_INT aux_int_check append_operand . DOTCOMMA generate_quad
+    (49) aux_expresion -> ADD add_operator expresion_line .
 
-    DOTCOMMA        shift and go to state 110
+    IF              reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    ID              reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    LEFTPARENT      reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    INI_INT         reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    INI_FLOAT       reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    RIGHTKEY        reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    RIGHTPARENT     reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    DOTCOMMA        reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    GREATERTN       reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    LESSTN          reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    SAME            reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
+    NOTSAME         reduce using rule 49 (aux_expresion -> ADD add_operator expresion_line .)
 
 
 state 109
 
-    (63) set_value -> INI_FLOAT aux_float_check append_operand . DOTCOMMA generate_quad
+    (50) aux_expresion -> LESS add_operator expresion_line .
 
-    DOTCOMMA        shift and go to state 111
+    IF              reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    ID              reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    LEFTPARENT      reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    INI_INT         reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    INI_FLOAT       reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    RIGHTKEY        reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    RIGHTPARENT     reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    DOTCOMMA        reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    GREATERTN       reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    LESSTN          reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    SAME            reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
+    NOTSAME         reduce using rule 50 (aux_expresion -> LESS add_operator expresion_line .)
 
 
 state 110
 
-    (62) set_value -> INI_INT aux_int_check append_operand DOTCOMMA . generate_quad
-    (65) generate_quad -> .
+    (34) condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition . RIGHTPARENT func_code end_if condition_end_check
 
-    ID              reduce using rule 65 (generate_quad -> .)
-    LEFTPARENT      reduce using rule 65 (generate_quad -> .)
-    INI_INT         reduce using rule 65 (generate_quad -> .)
-    INI_FLOAT       reduce using rule 65 (generate_quad -> .)
-    RIGHTKEY        reduce using rule 65 (generate_quad -> .)
+    RIGHTPARENT     shift and go to state 124
 
-    generate_quad                  shift and go to state 112
 
 state 111
 
-    (63) set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA . generate_quad
-    (65) generate_quad -> .
+    (45) condition_expresion -> expresion_line condtion_appear .
 
-    ID              reduce using rule 65 (generate_quad -> .)
-    LEFTPARENT      reduce using rule 65 (generate_quad -> .)
-    INI_INT         reduce using rule 65 (generate_quad -> .)
-    INI_FLOAT       reduce using rule 65 (generate_quad -> .)
-    RIGHTKEY        reduce using rule 65 (generate_quad -> .)
+    RIGHTPARENT     reduce using rule 45 (condition_expresion -> expresion_line condtion_appear .)
 
-    generate_quad                  shift and go to state 113
 
 state 112
 
-    (62) set_value -> INI_INT aux_int_check append_operand DOTCOMMA generate_quad .
+    (46) condition_expresion -> expresion_line condition_signs . expresion_line condtion_appear
+    (47) expresion_line -> . term term_appear
+    (48) expresion_line -> . term term_appear aux_expresion
+    (51) term -> . fact factor_appear
+    (52) term -> . fact factor_appear aux_term
+    (55) fact -> . expo expo_appear
+    (56) fact -> . expo expo_appear aux_expo
+    (57) expo -> . parent_aux
+    (58) expo -> . call_lets
+    (59) expo -> . call_let
+    (60) parent_aux -> . LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent
+    (75) call_lets -> . INI_INT check_global_const_exists
+    (76) call_lets -> . INI_FLOAT check_global_const_exists
+    (74) call_let -> . ID check_let_exists
 
-    ID              reduce using rule 62 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA generate_quad .)
-    LEFTPARENT      reduce using rule 62 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA generate_quad .)
-    INI_INT         reduce using rule 62 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA generate_quad .)
-    INI_FLOAT       reduce using rule 62 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA generate_quad .)
-    RIGHTKEY        reduce using rule 62 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA generate_quad .)
+    LEFTPARENT      shift and go to state 61
+    INI_INT         shift and go to state 67
+    INI_FLOAT       shift and go to state 68
+    ID              shift and go to state 62
 
+    expresion_line                 shift and go to state 125
+    term                           shift and go to state 59
+    fact                           shift and go to state 63
+    expo                           shift and go to state 64
+    parent_aux                     shift and go to state 65
+    call_lets                      shift and go to state 66
+    call_let                       shift and go to state 87
 
 state 113
 
-    (63) set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA generate_quad .
+    (40) condition_signs -> GREATERTN . add_operator
+    (69) add_operator -> .
 
-    ID              reduce using rule 63 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA generate_quad .)
-    LEFTPARENT      reduce using rule 63 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA generate_quad .)
-    INI_INT         reduce using rule 63 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA generate_quad .)
-    INI_FLOAT       reduce using rule 63 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA generate_quad .)
-    RIGHTKEY        reduce using rule 63 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA generate_quad .)
+    LEFTPARENT      reduce using rule 69 (add_operator -> .)
+    INI_INT         reduce using rule 69 (add_operator -> .)
+    INI_FLOAT       reduce using rule 69 (add_operator -> .)
+    ID              reduce using rule 69 (add_operator -> .)
+
+    add_operator                   shift and go to state 126
+
+state 114
+
+    (41) condition_signs -> LESSTN . add_operator
+    (69) add_operator -> .
+
+    LEFTPARENT      reduce using rule 69 (add_operator -> .)
+    INI_INT         reduce using rule 69 (add_operator -> .)
+    INI_FLOAT       reduce using rule 69 (add_operator -> .)
+    ID              reduce using rule 69 (add_operator -> .)
+
+    add_operator                   shift and go to state 127
+
+state 115
+
+    (42) condition_signs -> SAME . add_operator
+    (69) add_operator -> .
+
+    LEFTPARENT      reduce using rule 69 (add_operator -> .)
+    INI_INT         reduce using rule 69 (add_operator -> .)
+    INI_FLOAT       reduce using rule 69 (add_operator -> .)
+    ID              reduce using rule 69 (add_operator -> .)
+
+    add_operator                   shift and go to state 128
+
+state 116
+
+    (43) condition_signs -> NOTSAME . add_operator
+    (69) add_operator -> .
+
+    LEFTPARENT      reduce using rule 69 (add_operator -> .)
+    INI_INT         reduce using rule 69 (add_operator -> .)
+    INI_FLOAT       reduce using rule 69 (add_operator -> .)
+    ID              reduce using rule 69 (add_operator -> .)
+
+    add_operator                   shift and go to state 129
+
+state 117
+
+    (60) parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .
+
+    TIMES_BY_SAME   reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    SPLIT_BY        reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    MULT_BY         reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    ADD             reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    LESS            reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    IF              reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    ID              reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    LEFTPARENT      reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    INI_INT         reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    INI_FLOAT       reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    RIGHTKEY        reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    RIGHTPARENT     reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    DOTCOMMA        reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    GREATERTN       reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    LESSTN          reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    SAME            reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+    NOTSAME         reduce using rule 60 (parent_aux -> LEFTPARENT found_init_parent expresion_line RIGHTPARENT found_end_parent .)
+
+
+state 118
+
+    (53) aux_term -> SPLIT_BY add_operator term .
+
+    ADD             reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    LESS            reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    IF              reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    ID              reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    LEFTPARENT      reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    INI_INT         reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    INI_FLOAT       reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    RIGHTKEY        reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    RIGHTPARENT     reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    DOTCOMMA        reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    GREATERTN       reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    LESSTN          reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    SAME            reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+    NOTSAME         reduce using rule 53 (aux_term -> SPLIT_BY add_operator term .)
+
+
+state 119
+
+    (54) aux_term -> MULT_BY add_operator term .
+
+    ADD             reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    LESS            reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    IF              reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    ID              reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    LEFTPARENT      reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    INI_INT         reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    INI_FLOAT       reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    RIGHTKEY        reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    RIGHTPARENT     reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    DOTCOMMA        reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    GREATERTN       reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    LESSTN          reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    SAME            reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+    NOTSAME         reduce using rule 54 (aux_term -> MULT_BY add_operator term .)
+
+
+state 120
+
+    (64) aux_expo -> TIMES_BY_SAME add_operator fact .
+
+    SPLIT_BY        reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    MULT_BY         reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    ADD             reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    LESS            reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    IF              reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    ID              reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    LEFTPARENT      reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    INI_INT         reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    INI_FLOAT       reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    RIGHTKEY        reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    RIGHTPARENT     reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    DOTCOMMA        reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    GREATERTN       reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    LESSTN          reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    SAME            reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+    NOTSAME         reduce using rule 64 (aux_expo -> TIMES_BY_SAME add_operator fact .)
+
+
+state 121
+
+    (66) assign -> call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA .
+
+    IF              reduce using rule 66 (assign -> call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA .)
+    ID              reduce using rule 66 (assign -> call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA .)
+    LEFTPARENT      reduce using rule 66 (assign -> call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA .)
+    INI_INT         reduce using rule 66 (assign -> call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA .)
+    INI_FLOAT       reduce using rule 66 (assign -> call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA .)
+    RIGHTKEY        reduce using rule 66 (assign -> call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA .)
+
+
+state 122
+
+    (79) set_value -> INI_INT aux_int_check append_operand . DOTCOMMA
+
+    DOTCOMMA        shift and go to state 130
+
+
+state 123
+
+    (80) set_value -> INI_FLOAT aux_float_check append_operand . DOTCOMMA
+
+    DOTCOMMA        shift and go to state 131
+
+
+state 124
+
+    (34) condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT . func_code end_if condition_end_check
+    (27) func_code -> . LEFTKEY lets func_code_aux RIGHTKEY
+
+    LEFTKEY         shift and go to state 48
+
+    func_code                      shift and go to state 132
+
+state 125
+
+    (46) condition_expresion -> expresion_line condition_signs expresion_line . condtion_appear
+    (35) condtion_appear -> .
+
+    RIGHTPARENT     reduce using rule 35 (condtion_appear -> .)
+
+    condtion_appear                shift and go to state 133
+
+state 126
+
+    (40) condition_signs -> GREATERTN add_operator .
+
+    LEFTPARENT      reduce using rule 40 (condition_signs -> GREATERTN add_operator .)
+    INI_INT         reduce using rule 40 (condition_signs -> GREATERTN add_operator .)
+    INI_FLOAT       reduce using rule 40 (condition_signs -> GREATERTN add_operator .)
+    ID              reduce using rule 40 (condition_signs -> GREATERTN add_operator .)
+
+
+state 127
+
+    (41) condition_signs -> LESSTN add_operator .
+
+    LEFTPARENT      reduce using rule 41 (condition_signs -> LESSTN add_operator .)
+    INI_INT         reduce using rule 41 (condition_signs -> LESSTN add_operator .)
+    INI_FLOAT       reduce using rule 41 (condition_signs -> LESSTN add_operator .)
+    ID              reduce using rule 41 (condition_signs -> LESSTN add_operator .)
+
+
+state 128
+
+    (42) condition_signs -> SAME add_operator .
+
+    LEFTPARENT      reduce using rule 42 (condition_signs -> SAME add_operator .)
+    INI_INT         reduce using rule 42 (condition_signs -> SAME add_operator .)
+    INI_FLOAT       reduce using rule 42 (condition_signs -> SAME add_operator .)
+    ID              reduce using rule 42 (condition_signs -> SAME add_operator .)
+
+
+state 129
+
+    (43) condition_signs -> NOTSAME add_operator .
+
+    LEFTPARENT      reduce using rule 43 (condition_signs -> NOTSAME add_operator .)
+    INI_INT         reduce using rule 43 (condition_signs -> NOTSAME add_operator .)
+    INI_FLOAT       reduce using rule 43 (condition_signs -> NOTSAME add_operator .)
+    ID              reduce using rule 43 (condition_signs -> NOTSAME add_operator .)
+
+
+state 130
+
+    (79) set_value -> INI_INT aux_int_check append_operand DOTCOMMA .
+
+    IF              reduce using rule 79 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    ID              reduce using rule 79 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    LEFTPARENT      reduce using rule 79 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    INI_INT         reduce using rule 79 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    INI_FLOAT       reduce using rule 79 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    RIGHTKEY        reduce using rule 79 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+
+
+state 131
+
+    (80) set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .
+
+    IF              reduce using rule 80 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    ID              reduce using rule 80 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    LEFTPARENT      reduce using rule 80 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    INI_INT         reduce using rule 80 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    INI_FLOAT       reduce using rule 80 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    RIGHTKEY        reduce using rule 80 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+
+
+state 132
+
+    (34) condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code . end_if condition_end_check
+    (39) end_if -> .
+
+    ELSE            reduce using rule 39 (end_if -> .)
+    IF              reduce using rule 39 (end_if -> .)
+    ID              reduce using rule 39 (end_if -> .)
+    LEFTPARENT      reduce using rule 39 (end_if -> .)
+    INI_INT         reduce using rule 39 (end_if -> .)
+    INI_FLOAT       reduce using rule 39 (end_if -> .)
+    RIGHTKEY        reduce using rule 39 (end_if -> .)
+
+    end_if                         shift and go to state 134
+
+state 133
+
+    (46) condition_expresion -> expresion_line condition_signs expresion_line condtion_appear .
+
+    RIGHTPARENT     reduce using rule 46 (condition_expresion -> expresion_line condition_signs expresion_line condtion_appear .)
+
+
+state 134
+
+    (34) condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if . condition_end_check
+    (36) condition_end_check -> . ELSE func_code end_condition
+    (37) condition_end_check -> .
+
+    ELSE            shift and go to state 136
+    IF              reduce using rule 37 (condition_end_check -> .)
+    ID              reduce using rule 37 (condition_end_check -> .)
+    LEFTPARENT      reduce using rule 37 (condition_end_check -> .)
+    INI_INT         reduce using rule 37 (condition_end_check -> .)
+    INI_FLOAT       reduce using rule 37 (condition_end_check -> .)
+    RIGHTKEY        reduce using rule 37 (condition_end_check -> .)
+
+    condition_end_check            shift and go to state 135
+
+state 135
+
+    (34) condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check .
+
+    IF              reduce using rule 34 (condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check .)
+    ID              reduce using rule 34 (condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check .)
+    LEFTPARENT      reduce using rule 34 (condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check .)
+    INI_INT         reduce using rule 34 (condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check .)
+    INI_FLOAT       reduce using rule 34 (condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check .)
+    RIGHTKEY        reduce using rule 34 (condition -> IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT func_code end_if condition_end_check .)
+
+
+state 136
+
+    (36) condition_end_check -> ELSE . func_code end_condition
+    (27) func_code -> . LEFTKEY lets func_code_aux RIGHTKEY
+
+    LEFTKEY         shift and go to state 48
+
+    func_code                      shift and go to state 137
+
+state 137
+
+    (36) condition_end_check -> ELSE func_code . end_condition
+    (38) end_condition -> .
+
+    IF              reduce using rule 38 (end_condition -> .)
+    ID              reduce using rule 38 (end_condition -> .)
+    LEFTPARENT      reduce using rule 38 (end_condition -> .)
+    INI_INT         reduce using rule 38 (end_condition -> .)
+    INI_FLOAT       reduce using rule 38 (end_condition -> .)
+    RIGHTKEY        reduce using rule 38 (end_condition -> .)
+
+    end_condition                  shift and go to state 138
+
+state 138
+
+    (36) condition_end_check -> ELSE func_code end_condition .
+
+    IF              reduce using rule 36 (condition_end_check -> ELSE func_code end_condition .)
+    ID              reduce using rule 36 (condition_end_check -> ELSE func_code end_condition .)
+    LEFTPARENT      reduce using rule 36 (condition_end_check -> ELSE func_code end_condition .)
+    INI_INT         reduce using rule 36 (condition_end_check -> ELSE func_code end_condition .)
+    INI_FLOAT       reduce using rule 36 (condition_end_check -> ELSE func_code end_condition .)
+    RIGHTKEY        reduce using rule 36 (condition_end_check -> ELSE func_code end_condition .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
 WARNING: shift/reduce conflict for FUNC in state 6 resolved as shift
 WARNING: shift/reduce conflict for FUNC in state 10 resolved as shift
+WARNING: shift/reduce conflict for IF in state 51 resolved as shift
+WARNING: shift/reduce conflict for ID in state 51 resolved as shift
+WARNING: shift/reduce conflict for LEFTPARENT in state 51 resolved as shift
+WARNING: shift/reduce conflict for INI_INT in state 51 resolved as shift
+WARNING: shift/reduce conflict for INI_FLOAT in state 51 resolved as shift
+WARNING: shift/reduce conflict for IF in state 54 resolved as shift
+WARNING: shift/reduce conflict for ID in state 54 resolved as shift
+WARNING: shift/reduce conflict for LEFTPARENT in state 54 resolved as shift
+WARNING: shift/reduce conflict for INI_INT in state 54 resolved as shift
+WARNING: shift/reduce conflict for INI_FLOAT in state 54 resolved as shift
 WARNING: reduce/reduce conflict in state 6 resolved using rule (modules -> <empty>)
 WARNING: rejected rule (func -> <empty>) in state 6
 WARNING: reduce/reduce conflict in state 10 resolved using rule (modules -> <empty>)
 WARNING: rejected rule (func -> <empty>) in state 10
-WARNING: reduce/reduce conflict in state 90 resolved using rule (add_operand -> <empty>)
-WARNING: rejected rule (aux_int_check -> <empty>) in state 90
-WARNING: reduce/reduce conflict in state 91 resolved using rule (add_operand -> <empty>)
-WARNING: rejected rule (aux_float_check -> <empty>) in state 91
+WARNING: reduce/reduce conflict in state 51 resolved using rule (func_code_aux -> <empty>)
+WARNING: rejected rule (action -> <empty>) in state 51
+WARNING: reduce/reduce conflict in state 54 resolved using rule (func_code_aux -> <empty>)
+WARNING: rejected rule (action -> <empty>) in state 54
+WARNING: reduce/reduce conflict in state 95 resolved using rule (add_operand -> <empty>)
+WARNING: rejected rule (aux_int_check -> <empty>) in state 95
+WARNING: reduce/reduce conflict in state 96 resolved using rule (add_operand -> <empty>)
+WARNING: rejected rule (aux_float_check -> <empty>) in state 96
 WARNING: Rule (func -> <empty>) is never reduced
+WARNING: Rule (action -> <empty>) is never reduced
 WARNING: Rule (aux_int_check -> <empty>) is never reduced
 WARNING: Rule (aux_float_check -> <empty>) is never reduced
