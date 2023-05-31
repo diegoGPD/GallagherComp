@@ -158,7 +158,7 @@ def p_action(p):
 
 def p_condition(p):
     """
-        condition : IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT  func_code  end_if condition_end_check
+    condition : IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT  func_code end_if condition_end_check
     """
 
 

@@ -1,4 +1,3 @@
-
 variables = {
     'progName': '',
     # Current Status
@@ -11,7 +10,7 @@ variables = {
     # Save Variables
     'funciones': {},
     # Quad Generators
-    'quads': [[]],
+    'quads': [['GOTO', '', '', '']],
     'letTargets': [],
     'operators': [],
     'operands': [],
