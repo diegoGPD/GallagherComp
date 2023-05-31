@@ -11,7 +11,6 @@ variables = {
     'funciones': {},
     # Quad Generators
     'quads': [['GOTO', '', '', '']],
-    'letTargets': [],
     'operators': [],
     'operands': [],
     'types': [],

@@ -81,7 +81,6 @@ def p_aux_let(p):
 def p_func(p):
     """
         func : FUNC ID seen_func_name params TWOPOINTS return_func_type TWOPOINTS func_code
-              |
     """
 
 
@@ -152,13 +151,26 @@ def p_action(p):
         action : assign
                 | expresion_line
                 | condition
-                |
+                | while
+
     """
+
+def p_while(p):
+    """
+        while : WHILE while_appear LEFTPARENT condition_expresion right_parent_condition RIGHTPARENT func_code end_cond
+    """
+
+def p_while_appear(p):
+    """
+        while_appear :
+    """
+
+    compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount']);
 
 
 def p_condition(p):
     """
-    condition : IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT  func_code end_if condition_end_check
+    condition : IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT  func_code end_cond condition_end_check
     """
 
 
@@ -184,9 +196,9 @@ def p_end_condition(p):
     completeJumpQuadruple()
 
 
-def p_end_if(p):
+def p_end_cond(p):
     """
-        end_if :
+        end_cond :
     """
 
     generateJumpQuad('GOTO')
@@ -387,7 +399,7 @@ def p_call_let(p):
                 p[1]][
                 'type']
 
-    compilacion.variables.variables['letTargets'].append(p[1])
+    compilacion.variables.variables['operands'].append(p[1])
 
 
 def p_call_lets(p):

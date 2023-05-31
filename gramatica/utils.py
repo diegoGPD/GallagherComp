@@ -8,7 +8,7 @@ def generateQuad(sign, left, right, letTarget):
 
 
 def generateAssignQuad():
-    rightOperand = compilacion.variables.variables['letTargets'].pop()
+    rightOperand = compilacion.variables.variables['operands'].pop()
     leftOperand = compilacion.variables.variables['operands'].pop()
     equalSign = compilacion.variables.variables['operators'].pop()
     quad = generateQuad(equalSign, rightOperand, '', leftOperand)
@@ -18,11 +18,11 @@ def generateAssignQuad():
 
 def generateOperationQuad(conditional = False):
     rightOperand = compilacion.variables.variables['operands'].pop()
-    if (conditional): leftOperand = compilacion.variables.variables['letTargets'].pop()
+    if (conditional): leftOperand = compilacion.variables.variables['operands'].pop()
     else: leftOperand = compilacion.variables.variables['operands'].pop()
     sign = compilacion.variables.variables['operators'].pop()
     quad = generateQuad(sign, leftOperand, rightOperand, 'temp' + str(compilacion.variables.variables['tempCount']))
-    if (conditional): compilacion.variables.variables['letTargets'].append('temp' + str(compilacion.variables.variables['tempCount']))
+    if (conditional): compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
     else: compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
     compilacion.variables.variables['tempCount'] += 1
     compilacion.variables.variables['quads'].append(quad)
@@ -31,9 +31,9 @@ def generateOperationQuad(conditional = False):
 
 def generateJumpQuad(jumpType):
     if (jumpType == 'GOTO'):
-        compilacion.variables.variables['letTargets'].append('temp' + str(compilacion.variables.variables['tempCount']))
+        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
         compilacion.variables.variables['tempCount'] += 1
-    result = compilacion.variables.variables['letTargets'].pop()
+    result = compilacion.variables.variables['operands'].pop()
     quad = generateQuad(jumpType, result, '', '')
     compilacion.variables.variables['quads'].append(quad)
     compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'])
