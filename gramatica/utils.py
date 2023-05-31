@@ -13,7 +13,6 @@ def generateAssignQuad():
     equalSign = compilacion.variables.variables['operators'].pop()
     quad = generateQuad(equalSign, rightOperand, '', leftOperand)
     compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
 
 
 def generateOperationQuad(conditional = False):
@@ -26,7 +25,6 @@ def generateOperationQuad(conditional = False):
     else: compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
     compilacion.variables.variables['tempCount'] += 1
     compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
 
 
 def generateJumpQuad(jumpType):
@@ -37,12 +35,26 @@ def generateJumpQuad(jumpType):
     quad = generateQuad(jumpType, result, '', '')
     compilacion.variables.variables['quads'].append(quad)
     compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'])
-    print(compilacion.variables.variables['quads'])
 
 
 def completeJumpQuadruple():
     quadToJump = compilacion.variables.variables['quadCount']
     quadToComplete = compilacion.variables.variables['jumps'].pop()
     compilacion.variables.variables['quads'][quadToComplete][2] = quadToJump
-    print(len(compilacion.variables.variables['quads']))
-    print(compilacion.variables.variables['quads'])
+
+def callFuncQuadruple(funcName):
+    if (funcName) in compilacion.variables.variables['funciones']:
+        compilacion.variables.variables['funcCalls'].append(funcName)
+        quad = generateQuad('ERA', '', '', funcName)
+        compilacion.variables.variables['quads'].append(quad)
+
+def paramaterQuad():
+    generateQuad = compilacion.variables.variables['operands'].pop()
+    functionCalled = compilacion.variables.variables['funcCalls'][-1]
+
+    if len(compilacion.variables.variables['funciones'][functionCalled]['paramsTable']) <= compilacion.variables.variables['parameterCounter']:
+        print('ERROR TOO MANY PARAMETERS')
+
+    quad = generateQuad('PARAMATER', '', generateQuad, compilacion.variables.variables['parameterCounter'])
+    compilacion.variables.variables['quads'].append(quad)
+

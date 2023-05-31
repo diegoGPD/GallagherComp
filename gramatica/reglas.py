@@ -1,7 +1,7 @@
 ####### REGLAS GRAMATICALES ############
 import compilacion.variables
 from gramatica.utils import generateQuad, generateAssignQuad, generateOperationQuad, generateJumpQuad, \
-    completeJumpQuadruple
+    completeJumpQuadruple, callFuncQuadruple, paramaterQuad
 from semantica import regex
 from semantica.utils import validate_set_type
 
@@ -152,8 +152,41 @@ def p_action(p):
                 | expresion_line
                 | condition
                 | while
-
+                | func_call
     """
+
+def p_func_call(p):
+    """
+        func_call : ID func_call_ID LEFTPARENT func_calls_params end_func_call_params
+    """
+
+def p_func_call_ID(p):
+    """
+        func_call_ID :
+    """
+
+    callFuncQuadruple(p[-1])
+
+def p_func_calls_params(p):
+    """
+        func_calls_params : expresion parameter_call COMMA add_parameter func_calls_params
+                            | expresion parameter_call
+    """
+
+def p_parameter_call(p):
+    """
+        parameter_call :
+    """
+
+    paramaterQuad()
+
+def p_add_parameter(p):
+    """
+        add_parameter :
+    """
+
+    compilacion.variables.variables['parameterCounter'] += 1
+
 
 def p_while(p):
     """
