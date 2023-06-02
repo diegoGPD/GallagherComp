@@ -5,6 +5,7 @@ variables = {
     'currentType': '',
     'currentLet': '',
     'currentSign': '',
+    'currentFuncCalled':'',
     'quadCount': 0,
     'tempCount': 1,
     'paramCounter': 0,

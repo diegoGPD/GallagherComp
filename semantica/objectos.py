@@ -166,7 +166,8 @@ tokens = [
     'GOTOFUNC',
     'GOTO',
     'GOTOT',
-    'GOTOF'
+    'GOTOF',
+    'ENDFUNC'
 ]
 
 ######### PALABRAS RESERVADAS #############
@@ -182,7 +183,7 @@ palabrasReservadas = {
     'float': 'FLOAT',
     'bool': 'BOOL',
     'void': 'VOID',
-    'printV' : 'PRINTV',
+    'printG' : 'PRINTG',
     'do' : 'DO',
     'while': 'WHILE',
 }

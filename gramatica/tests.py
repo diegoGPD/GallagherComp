@@ -8,7 +8,7 @@ lexer = lex.lex(module=regex)
 parser = yacc.yacc(module=reglas)
 
 def test():
-    file = open("/Users/chuca/PycharmProjects/compiladorSL/gramatica/test1.txt").read()
+    file = open("/Users/chuca/PycharmProjects/compiladorSL/gramatica/testsFiles/test2.txt").read()
     parser.parse(file)
 
 test()

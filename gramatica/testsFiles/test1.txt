@@ -18,9 +18,10 @@ func TestFunction(int testIntParam1, float testIntParam2): int : {
     }
     while ( gohan < goku ) {
         goku = 6;
+        TestFunction(goku, gohan);
     }
 }
 
 func main() : void : {
-    TestFunction()
+    TestFunction(uno, dos);
 }

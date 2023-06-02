@@ -1,7 +1,7 @@
 ####### REGLAS GRAMATICALES ############
 import compilacion.variables
 from gramatica.utils import generateQuad, generateAssignQuad, generateOperationQuad, generateJumpQuad, \
-    completeJumpQuadruple, callFuncQuadruple, paramaterQuad
+    completeJumpQuadruple, callFuncQuadruple, paramaterQuad, restartFuncCalled, generateEndFuncQuad, generateWriteQuad
 from semantica import regex
 from semantica.utils import validate_set_type
 
@@ -89,7 +89,12 @@ def p_seen_func_name(p):
         seen_func_name :
     """
     compilacion.variables.variables['currentFunc'] = p[-1]
+    compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'])
     compilacion.variables.variables['funciones'][p[-1]] = {'type': ''}
+    if not ('letsTable' in compilacion.variables.variables['funciones'][
+            compilacion.variables.variables['currentFunc']]):
+            compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']][
+                'letsTable'] = {}
 
 
 def p_params(p):
@@ -102,9 +107,9 @@ def p_param_table_init(p):
     '''
       param_table_init :
     '''
-    if not ('letsTable' in compilacion.variables.variables['funciones'][
+    if not ('paramsTable' in compilacion.variables.variables['funciones'][
         compilacion.variables.variables['currentFunc']]):
-        compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'] = {}
+        compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['paramsTable'] = {}
 
 
 def p_param_declare(p):
@@ -135,9 +140,15 @@ def p_void_detect(p):
 
 def p_func_code(p):
     """
-        func_code : LEFTKEY lets func_code_aux RIGHTKEY
+        func_code : LEFTKEY lets func_code_aux RIGHTKEY end_func
     """
 
+def p_end_func(p):
+    """
+        end_func :
+    """
+
+    generateEndFuncQuad()
 
 def p_func_code_aux(p):
     """
@@ -153,24 +164,73 @@ def p_action(p):
                 | condition
                 | while
                 | func_call
+                | write
     """
+
+def p_write(p):
+    """
+          write : PRINTG LEFTPARENT write_found RIGHTPARENT DOTCOMMA
+    """
+
+def p_write_found(p):
+    """
+       write_found : write_found_aux
+                    | write_found_aux COMMA write_found
+    """
+
+def p_write_found_aux(p):
+    """
+        write_found_aux : expresion_line print_exp
+                        | INI_STRING string_appear print_exp
+    """
+
+def p_print_exp(p):
+    """
+        print_exp :
+    """
+
+    generateWriteQuad()
+
+def p_string_appear(p):
+    """
+        string_appear :
+    """
+
+    compilacion.variables.variables['operands'].append(p[-1])
 
 def p_func_call(p):
     """
-        func_call : ID func_call_ID LEFTPARENT func_calls_params end_func_call_params
+        func_call : ID func_call_ID LEFTPARENT func_calls_params end_func_call_params RIGHTPARENT end_func_call DOTCOMMA
+                    |
     """
+
+def p_end_func_call_params(p):
+    """
+        end_func_call_params :
+    """
+
+    if len(compilacion.variables.variables['funciones'][compilacion.variables.variables['functionCalled']]['paramsTable']) != compilacion.variables.variables['paramCounter'] :
+        'Muchos o poquitos params bro'
 
 def p_func_call_ID(p):
     """
         func_call_ID :
     """
-
+    print(p[-1])
     callFuncQuadruple(p[-1])
+
+def p_end_func_call(p):
+    """
+        end_func_call :
+    """
+    print(compilacion.variables.variables['funcCalls'])
+    restartFuncCalled()
+
 
 def p_func_calls_params(p):
     """
-        func_calls_params : expresion parameter_call COMMA add_parameter func_calls_params
-                            | expresion parameter_call
+        func_calls_params : expresion_line parameter_call COMMA add_parameter func_calls_params
+                            | expresion_line parameter_call
     """
 
 def p_parameter_call(p):
@@ -185,12 +245,12 @@ def p_add_parameter(p):
         add_parameter :
     """
 
-    compilacion.variables.variables['parameterCounter'] += 1
+    compilacion.variables.variables['paramCounter'] += 1
 
 
 def p_while(p):
     """
-        while : WHILE while_appear LEFTPARENT condition_expresion right_parent_condition RIGHTPARENT func_code end_cond
+        while : WHILE while_appear LEFTPARENT condition_expresion right_parent_condition RIGHTPARENT condition_code end_cond
     """
 
 def p_while_appear(p):
@@ -203,7 +263,7 @@ def p_while_appear(p):
 
 def p_condition(p):
     """
-    condition : IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT  func_code end_cond condition_end_check
+        condition : IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT  condition_code end_cond condition_end_check
     """
 
 
@@ -217,15 +277,19 @@ def p_condtion_appear(p):
 
 def p_condition_end_check(p):
     """
-        condition_end_check : ELSE func_code end_condition
-                              |
+        condition_end_check : ELSE condition_code end_condition
+                              | end_condition
+    """
+
+def p_condition_code(p):
+    """
+        condition_code : LEFTKEY lets func_code_aux RIGHTKEY
     """
 
 def p_end_condition(p):
     """
         end_condition :
     """
-
     completeJumpQuadruple()
 
 
@@ -233,7 +297,7 @@ def p_end_cond(p):
     """
         end_cond :
     """
-
+    completeJumpQuadruple()
     generateJumpQuad('GOTO')
     completeJumpQuadruple()
 

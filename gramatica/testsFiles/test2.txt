@@ -1,0 +1,30 @@
+Programa patito;
+
+let int a, b;
+
+let float f;
+
+func uno(int a): int : {
+    a = a + b * a;
+    printG(a, b, a + b);
+}
+
+func dos(int a, int b, float g): int : {
+    let int i;
+    i = b;
+    while(i>0){
+        a = a + b * i + b;
+        uno(i * 2);
+        printG(a);
+        i = i - 1;
+    }
+}
+
+func main(): int : {
+    a = 3;
+    b = a + 1;
+    printG(a, b);
+    f = 3.14;
+    uno(a + b ^ 2, b, f*3);
+    printG(a, b, f * 2 + 1);
+}
