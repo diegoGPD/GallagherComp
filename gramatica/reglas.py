@@ -3,7 +3,8 @@ import compilacion.variables
 from directions.virtualMemoryAssignation import setLetIDToVirtualMemory, setConstantIDToVirtualMemory, \
     resetLocalVirtualMemory
 from gramatica.utils import generateQuad, generateAssignQuad, generateOperationQuad, generateJumpQuad, \
-    completeJumpQuadruple, callFuncQuadruple, paramaterQuad, restartFuncCalled, generateEndFuncQuad, generateWriteQuad
+    completeJumpQuadruple, callFuncQuadruple, paramaterQuad, restartFuncCalled, generateEndFuncQuad, generateWriteQuad, \
+    generateReturnQuad
 from semantica import regex
 from semantica.utils import validate_set_type
 
@@ -102,6 +103,8 @@ def p_seen_func_name(p):
             compilacion.variables.variables['currentFunc']]):
             compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']][
                 'letsTable'] = {}
+            setLetIDToVirtualMemory(p[-1], compilacion.variables.variables['currentType'], 'global', compilacion.variables.variables['progName'])
+
 
 
 def p_params(p):
@@ -170,9 +173,23 @@ def p_action(p):
                 | expresion_line
                 | condition
                 | while
-                | func_call
+                | func_call DOTCOMMA
                 | write
+                | return
     """
+
+def p_return(p):
+    """
+        return : RETURN expresion_line return_aux DOTCOMMA
+    """
+
+def p_return_aux(p):
+    """
+        return_aux :
+    """
+
+    generateReturnQuad()
+
 
 def p_write(p):
     """
@@ -207,7 +224,7 @@ def p_string_appear(p):
 
 def p_func_call(p):
     """
-        func_call : ID func_call_ID LEFTPARENT func_calls_params end_func_call_params RIGHTPARENT end_func_call DOTCOMMA
+        func_call : AT ID func_call_ID LEFTPARENT func_calls_params end_func_call_params RIGHTPARENT end_func_call
                     |
     """
 
@@ -411,6 +428,7 @@ def p_assign(p):
     """
         assign : call_let set_appear SET set_value
                 | call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA
+                | call_let set_appear SET func_call DOTCOMMA
     """
 
 

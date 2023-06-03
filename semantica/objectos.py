@@ -187,6 +187,7 @@ palabrasReservadas = {
     'printG' : 'PRINTG',
     'do' : 'DO',
     'while': 'WHILE',
+    'return': 'RETURN'
 }
 
 ######## RESERVADAS + TOKENS ############

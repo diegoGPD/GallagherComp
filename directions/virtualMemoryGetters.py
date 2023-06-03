@@ -1,10 +1,10 @@
 from compilacion.virtualMemory import virtualMemory
 
 
-def getVirtualMemoryAddressValue(let_ID, scope, func):
+def getVirtualMemoryAddressValue(let_ID, scope, func = ''):
     if (let_ID in virtualMemory['constant']):
         return virtualMemory['constant'][let_ID]
-    if (func != 'global'):
+    if (scope != 'global'):
         keys = virtualMemory['local'][func]
         if let_ID in keys:
             return virtualMemory['local'][func][let_ID]

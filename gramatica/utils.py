@@ -1,6 +1,5 @@
 ######### Utils for Gramatic ###########
 import compilacion.variables
-from compilacion.virtualMemory import virtualMemory
 from directions.virtualMemoryAssignation import setLetIDToVirtualMemory
 from directions.virtualMemoryGetters import getVirtualMemoryAddressValue
 
@@ -18,7 +17,6 @@ def generateAssignQuad():
     equalSign = compilacion.variables.variables['operators'].pop()
     quad = generateQuad(equalSign, rightAddress, '', leftAddress)
     compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
 
 
 
@@ -44,7 +42,6 @@ def generateOperationQuad(conditional = False):
         compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
     compilacion.variables.variables['tempCount'] += 1
     compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
 
 
 
@@ -60,7 +57,6 @@ def generateJumpQuad(jumpType):
     quad = generateQuad(jumpType, result, '', '')
     compilacion.variables.variables['quads'].append(quad)
     compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'])
-    print(compilacion.variables.variables['quads'])
 
 
 
@@ -75,7 +71,6 @@ def callFuncQuadruple(funcName):
         compilacion.variables.variables['funcCalls'].append(funcName)
         quad = generateQuad('ERA', '', '', funcName)
         compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
 
 
 
@@ -86,24 +81,28 @@ def paramaterQuad():
         print('ERROR TOO MANY PARAMETERS')
     quad = generateQuad('PARAMATER', operand, '', 'param' + str(compilacion.variables.variables['paramCounter']))
     compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
 
 def restartFuncCalled():
     compilacion.variables.variables['paramCounter'] = 0
     functionCalled = compilacion.variables.variables['funcCalls'].pop()
     quad = generateQuad('GOTOFUNC', functionCalled, '', '')
     compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
 
 
 def generateEndFuncQuad():
     compilacion.variables.variables['tempCount'] = 1
     quad = generateQuad('ENDFUNC', '', '', '')
     compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'], virtualMemory)
 
 def generateWriteQuad():
     valueToPrint = compilacion.variables.variables['operands'].pop()
     quad = generateQuad('PRINTG', '', '', valueToPrint)
     compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
+
+def generateReturnQuad():
+    result = compilacion.variables.variables['operands'].pop()
+    resultAddress = getVirtualMemoryAddressValue(compilacion.variables.variables['currentFunc'], 'global')
+    quad = generateQuad('=', result, '', resultAddress)
+    compilacion.variables.variables['quads'].append(quad)
+
+

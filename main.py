@@ -1,8 +1,20 @@
 #################COMPILADOR########################
+from ply import yacc, lex
 
-def main(): {
-    print('AA soy un main')
-}
+from GeneralUtils.printUtils import printAllResults
+from gramatica import reglas
+from gramatica.tests import parser
+from semantica import regex
+
+lexer = lex.lex(module=regex)
+
+parser = yacc.yacc(module=reglas)
+
+
+def main():
+    file = open("/Users/chuca/PycharmProjects/compiladorSL/gramatica/testsFiles/test2.txt").read()
+    parser.parse(file)
+    printAllResults()
 
 
 main()
