@@ -2,6 +2,7 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
+    AT
     DO
     ENDFUNC
     GOTO
@@ -113,22 +114,24 @@ Rule 94    expo_appear -> <empty>
 Rule 95    call_let -> ID check_let_exists
 Rule 96    call_lets -> INI_INT check_global_const_exists
 Rule 97    call_lets -> INI_FLOAT check_global_const_exists
-Rule 98    check_global_const_exists -> add_operand
-Rule 99    check_let_exists -> <empty>
-Rule 100   set_value -> INI_INT aux_int_check append_operand DOTCOMMA
-Rule 101   set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA
-Rule 102   append_operand -> <empty>
-Rule 103   aux_int_check -> <empty>
-Rule 104   aux_float_check -> <empty>
-Rule 105   empty -> <empty>
+Rule 98    check_global_const_exists -> add_operand_const
+Rule 99    add_operand_const -> <empty>
+Rule 100   check_let_exists -> <empty>
+Rule 101   set_value -> INI_INT aux_int_check append_operand DOTCOMMA
+Rule 102   set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA
+Rule 103   append_operand -> <empty>
+Rule 104   aux_int_check -> <empty>
+Rule 105   aux_float_check -> <empty>
+Rule 106   empty -> <empty>
 
 Terminals, with rules where they appear
 
 ADD                  : 70
+AT                   : 
 BOOL                 : 11
 COMMA                : 14 21 38 48
 DO                   : 
-DOTCOMMA             : 1 6 36 43 87 100 101
+DOTCOMMA             : 1 6 36 43 87 101 102
 ELSE                 : 56
 ENDFUNC              : 
 FLOAT                : 10
@@ -141,8 +144,8 @@ ID                   : 1 6 14 16 20 43 95
 IF                   : 54
 IGNOREGOTOFUNC       : 
 INI_BOOL             : 
-INI_FLOAT            : 97 101
-INI_INT              : 96 100
+INI_FLOAT            : 97 102
+INI_INT              : 96 101
 INI_STRING           : 40
 INT                  : 9
 LEFTBRACK            : 
@@ -171,15 +174,16 @@ error                :
 Nonterminals, with rules where they appear
 
 action               : 28
-add_operand          : 98
+add_operand          : 
+add_operand_const    : 98
 add_operator         : 61 62 63 64 70 71 74 75 85
 add_parameter        : 48
-append_operand       : 100 101
+append_operand       : 101 102
 assign               : 30
 aux_expo             : 77
 aux_expresion        : 69
-aux_float_check      : 101
-aux_int_check        : 100
+aux_float_check      : 102
+aux_int_check        : 101
 aux_let              : 6 14
 aux_term             : 73
 call_let             : 80 86 87
@@ -288,11 +292,11 @@ state 5
     (1) compile -> PROG ID seen_program DOTCOMMA . lets modules
     (6) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
     (7) lets -> . empty
-    (105) empty -> .
+    (106) empty -> .
 
     LET             shift and go to state 7
-    FUNC            reduce using rule 105 (empty -> .)
-    $end            reduce using rule 105 (empty -> .)
+    FUNC            reduce using rule 106 (empty -> .)
+    $end            reduce using rule 106 (empty -> .)
 
     lets                           shift and go to state 6
     empty                          shift and go to state 8
@@ -530,13 +534,13 @@ state 28
     (9) type -> . INT seen_type
     (10) type -> . FLOAT seen_type
     (11) type -> . BOOL seen_type
-    (105) empty -> .
+    (106) empty -> .
 
     COMMA           shift and go to state 36
     INT             shift and go to state 16
     FLOAT           shift and go to state 17
     BOOL            shift and go to state 18
-    RIGHTPARENT     reduce using rule 105 (empty -> .)
+    RIGHTPARENT     reduce using rule 106 (empty -> .)
 
     param_declare                  shift and go to state 34
     type                           shift and go to state 35
@@ -602,13 +606,13 @@ state 36
     (9) type -> . INT seen_type
     (10) type -> . FLOAT seen_type
     (11) type -> . BOOL seen_type
-    (105) empty -> .
+    (106) empty -> .
 
     COMMA           shift and go to state 36
     INT             shift and go to state 16
     FLOAT           shift and go to state 17
     BOOL            shift and go to state 18
-    RIGHTPARENT     reduce using rule 105 (empty -> .)
+    RIGHTPARENT     reduce using rule 106 (empty -> .)
 
     param_declare                  shift and go to state 44
     type                           shift and go to state 35
@@ -626,19 +630,19 @@ state 38
     (6) lets -> LET seen_lets type ID seen_ID_let aux_let DOTCOMMA . lets
     (6) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
     (7) lets -> . empty
-    (105) empty -> .
+    (106) empty -> .
 
     LET             shift and go to state 7
-    FUNC            reduce using rule 105 (empty -> .)
-    $end            reduce using rule 105 (empty -> .)
-    IF              reduce using rule 105 (empty -> .)
-    WHILE           reduce using rule 105 (empty -> .)
-    ID              reduce using rule 105 (empty -> .)
-    PRINTG          reduce using rule 105 (empty -> .)
-    LEFTPARENT      reduce using rule 105 (empty -> .)
-    INI_INT         reduce using rule 105 (empty -> .)
-    INI_FLOAT       reduce using rule 105 (empty -> .)
-    RIGHTKEY        reduce using rule 105 (empty -> .)
+    FUNC            reduce using rule 106 (empty -> .)
+    $end            reduce using rule 106 (empty -> .)
+    IF              reduce using rule 106 (empty -> .)
+    WHILE           reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+    PRINTG          reduce using rule 106 (empty -> .)
+    LEFTPARENT      reduce using rule 106 (empty -> .)
+    INI_INT         reduce using rule 106 (empty -> .)
+    INI_FLOAT       reduce using rule 106 (empty -> .)
+    RIGHTKEY        reduce using rule 106 (empty -> .)
 
     lets                           shift and go to state 45
     empty                          shift and go to state 8
@@ -736,17 +740,17 @@ state 48
     (26) func_code -> LEFTKEY . lets func_code_aux RIGHTKEY end_func
     (6) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
     (7) lets -> . empty
-    (105) empty -> .
+    (106) empty -> .
 
     LET             shift and go to state 7
-    IF              reduce using rule 105 (empty -> .)
-    WHILE           reduce using rule 105 (empty -> .)
-    ID              reduce using rule 105 (empty -> .)
-    PRINTG          reduce using rule 105 (empty -> .)
-    LEFTPARENT      reduce using rule 105 (empty -> .)
-    INI_INT         reduce using rule 105 (empty -> .)
-    INI_FLOAT       reduce using rule 105 (empty -> .)
-    RIGHTKEY        reduce using rule 105 (empty -> .)
+    IF              reduce using rule 106 (empty -> .)
+    WHILE           reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+    PRINTG          reduce using rule 106 (empty -> .)
+    LEFTPARENT      reduce using rule 106 (empty -> .)
+    INI_INT         reduce using rule 106 (empty -> .)
+    INI_FLOAT       reduce using rule 106 (empty -> .)
+    RIGHTKEY        reduce using rule 106 (empty -> .)
 
     lets                           shift and go to state 51
     empty                          shift and go to state 8
@@ -760,13 +764,13 @@ state 49
     (9) type -> . INT seen_type
     (10) type -> . FLOAT seen_type
     (11) type -> . BOOL seen_type
-    (105) empty -> .
+    (106) empty -> .
 
     COMMA           shift and go to state 36
     INT             shift and go to state 16
     FLOAT           shift and go to state 17
     BOOL            shift and go to state 18
-    RIGHTPARENT     reduce using rule 105 (empty -> .)
+    RIGHTPARENT     reduce using rule 106 (empty -> .)
 
     type                           shift and go to state 35
     param_declare                  shift and go to state 52
@@ -1106,25 +1110,25 @@ state 66
     (43) func_call -> ID . func_call_ID LEFTPARENT func_calls_params end_func_call_params RIGHTPARENT end_func_call DOTCOMMA
     (95) call_let -> ID . check_let_exists
     (46) func_call_ID -> .
-    (99) check_let_exists -> .
+    (100) check_let_exists -> .
 
   ! reduce/reduce conflict for LEFTPARENT resolved using rule 46 (func_call_ID -> .)
     LEFTPARENT      reduce using rule 46 (func_call_ID -> .)
-    SET             reduce using rule 99 (check_let_exists -> .)
-    TIMES_BY_SAME   reduce using rule 99 (check_let_exists -> .)
-    SPLIT_BY        reduce using rule 99 (check_let_exists -> .)
-    MULT_BY         reduce using rule 99 (check_let_exists -> .)
-    ADD             reduce using rule 99 (check_let_exists -> .)
-    LESS            reduce using rule 99 (check_let_exists -> .)
-    IF              reduce using rule 99 (check_let_exists -> .)
-    WHILE           reduce using rule 99 (check_let_exists -> .)
-    ID              reduce using rule 99 (check_let_exists -> .)
-    PRINTG          reduce using rule 99 (check_let_exists -> .)
-    INI_INT         reduce using rule 99 (check_let_exists -> .)
-    INI_FLOAT       reduce using rule 99 (check_let_exists -> .)
-    RIGHTKEY        reduce using rule 99 (check_let_exists -> .)
+    SET             reduce using rule 100 (check_let_exists -> .)
+    TIMES_BY_SAME   reduce using rule 100 (check_let_exists -> .)
+    SPLIT_BY        reduce using rule 100 (check_let_exists -> .)
+    MULT_BY         reduce using rule 100 (check_let_exists -> .)
+    ADD             reduce using rule 100 (check_let_exists -> .)
+    LESS            reduce using rule 100 (check_let_exists -> .)
+    IF              reduce using rule 100 (check_let_exists -> .)
+    WHILE           reduce using rule 100 (check_let_exists -> .)
+    ID              reduce using rule 100 (check_let_exists -> .)
+    PRINTG          reduce using rule 100 (check_let_exists -> .)
+    INI_INT         reduce using rule 100 (check_let_exists -> .)
+    INI_FLOAT       reduce using rule 100 (check_let_exists -> .)
+    RIGHTKEY        reduce using rule 100 (check_let_exists -> .)
 
-  ! LEFTPARENT      [ reduce using rule 99 (check_let_exists -> .) ]
+  ! LEFTPARENT      [ reduce using rule 100 (check_let_exists -> .) ]
 
     func_call_ID                   shift and go to state 81
     check_let_exists               shift and go to state 82
@@ -1248,62 +1252,62 @@ state 71
 state 72
 
     (96) call_lets -> INI_INT . check_global_const_exists
-    (98) check_global_const_exists -> . add_operand
-    (89) add_operand -> .
+    (98) check_global_const_exists -> . add_operand_const
+    (99) add_operand_const -> .
 
-    TIMES_BY_SAME   reduce using rule 89 (add_operand -> .)
-    SPLIT_BY        reduce using rule 89 (add_operand -> .)
-    MULT_BY         reduce using rule 89 (add_operand -> .)
-    ADD             reduce using rule 89 (add_operand -> .)
-    LESS            reduce using rule 89 (add_operand -> .)
-    IF              reduce using rule 89 (add_operand -> .)
-    WHILE           reduce using rule 89 (add_operand -> .)
-    ID              reduce using rule 89 (add_operand -> .)
-    PRINTG          reduce using rule 89 (add_operand -> .)
-    LEFTPARENT      reduce using rule 89 (add_operand -> .)
-    INI_INT         reduce using rule 89 (add_operand -> .)
-    INI_FLOAT       reduce using rule 89 (add_operand -> .)
-    RIGHTKEY        reduce using rule 89 (add_operand -> .)
-    RIGHTPARENT     reduce using rule 89 (add_operand -> .)
-    COMMA           reduce using rule 89 (add_operand -> .)
-    GREATERTN       reduce using rule 89 (add_operand -> .)
-    LESSTN          reduce using rule 89 (add_operand -> .)
-    SAME            reduce using rule 89 (add_operand -> .)
-    NOTSAME         reduce using rule 89 (add_operand -> .)
-    DOTCOMMA        reduce using rule 89 (add_operand -> .)
+    TIMES_BY_SAME   reduce using rule 99 (add_operand_const -> .)
+    SPLIT_BY        reduce using rule 99 (add_operand_const -> .)
+    MULT_BY         reduce using rule 99 (add_operand_const -> .)
+    ADD             reduce using rule 99 (add_operand_const -> .)
+    LESS            reduce using rule 99 (add_operand_const -> .)
+    IF              reduce using rule 99 (add_operand_const -> .)
+    WHILE           reduce using rule 99 (add_operand_const -> .)
+    ID              reduce using rule 99 (add_operand_const -> .)
+    PRINTG          reduce using rule 99 (add_operand_const -> .)
+    LEFTPARENT      reduce using rule 99 (add_operand_const -> .)
+    INI_INT         reduce using rule 99 (add_operand_const -> .)
+    INI_FLOAT       reduce using rule 99 (add_operand_const -> .)
+    RIGHTKEY        reduce using rule 99 (add_operand_const -> .)
+    RIGHTPARENT     reduce using rule 99 (add_operand_const -> .)
+    COMMA           reduce using rule 99 (add_operand_const -> .)
+    GREATERTN       reduce using rule 99 (add_operand_const -> .)
+    LESSTN          reduce using rule 99 (add_operand_const -> .)
+    SAME            reduce using rule 99 (add_operand_const -> .)
+    NOTSAME         reduce using rule 99 (add_operand_const -> .)
+    DOTCOMMA        reduce using rule 99 (add_operand_const -> .)
 
     check_global_const_exists      shift and go to state 86
-    add_operand                    shift and go to state 87
+    add_operand_const              shift and go to state 87
 
 state 73
 
     (97) call_lets -> INI_FLOAT . check_global_const_exists
-    (98) check_global_const_exists -> . add_operand
-    (89) add_operand -> .
+    (98) check_global_const_exists -> . add_operand_const
+    (99) add_operand_const -> .
 
-    TIMES_BY_SAME   reduce using rule 89 (add_operand -> .)
-    SPLIT_BY        reduce using rule 89 (add_operand -> .)
-    MULT_BY         reduce using rule 89 (add_operand -> .)
-    ADD             reduce using rule 89 (add_operand -> .)
-    LESS            reduce using rule 89 (add_operand -> .)
-    IF              reduce using rule 89 (add_operand -> .)
-    WHILE           reduce using rule 89 (add_operand -> .)
-    ID              reduce using rule 89 (add_operand -> .)
-    PRINTG          reduce using rule 89 (add_operand -> .)
-    LEFTPARENT      reduce using rule 89 (add_operand -> .)
-    INI_INT         reduce using rule 89 (add_operand -> .)
-    INI_FLOAT       reduce using rule 89 (add_operand -> .)
-    RIGHTKEY        reduce using rule 89 (add_operand -> .)
-    RIGHTPARENT     reduce using rule 89 (add_operand -> .)
-    COMMA           reduce using rule 89 (add_operand -> .)
-    GREATERTN       reduce using rule 89 (add_operand -> .)
-    LESSTN          reduce using rule 89 (add_operand -> .)
-    SAME            reduce using rule 89 (add_operand -> .)
-    NOTSAME         reduce using rule 89 (add_operand -> .)
-    DOTCOMMA        reduce using rule 89 (add_operand -> .)
+    TIMES_BY_SAME   reduce using rule 99 (add_operand_const -> .)
+    SPLIT_BY        reduce using rule 99 (add_operand_const -> .)
+    MULT_BY         reduce using rule 99 (add_operand_const -> .)
+    ADD             reduce using rule 99 (add_operand_const -> .)
+    LESS            reduce using rule 99 (add_operand_const -> .)
+    IF              reduce using rule 99 (add_operand_const -> .)
+    WHILE           reduce using rule 99 (add_operand_const -> .)
+    ID              reduce using rule 99 (add_operand_const -> .)
+    PRINTG          reduce using rule 99 (add_operand_const -> .)
+    LEFTPARENT      reduce using rule 99 (add_operand_const -> .)
+    INI_INT         reduce using rule 99 (add_operand_const -> .)
+    INI_FLOAT       reduce using rule 99 (add_operand_const -> .)
+    RIGHTKEY        reduce using rule 99 (add_operand_const -> .)
+    RIGHTPARENT     reduce using rule 99 (add_operand_const -> .)
+    COMMA           reduce using rule 99 (add_operand_const -> .)
+    GREATERTN       reduce using rule 99 (add_operand_const -> .)
+    LESSTN          reduce using rule 99 (add_operand_const -> .)
+    SAME            reduce using rule 99 (add_operand_const -> .)
+    NOTSAME         reduce using rule 99 (add_operand_const -> .)
+    DOTCOMMA        reduce using rule 99 (add_operand_const -> .)
 
     check_global_const_exists      shift and go to state 88
-    add_operand                    shift and go to state 87
+    add_operand_const              shift and go to state 87
 
 state 74
 
@@ -1563,28 +1567,28 @@ state 86
 
 state 87
 
-    (98) check_global_const_exists -> add_operand .
+    (98) check_global_const_exists -> add_operand_const .
 
-    TIMES_BY_SAME   reduce using rule 98 (check_global_const_exists -> add_operand .)
-    SPLIT_BY        reduce using rule 98 (check_global_const_exists -> add_operand .)
-    MULT_BY         reduce using rule 98 (check_global_const_exists -> add_operand .)
-    ADD             reduce using rule 98 (check_global_const_exists -> add_operand .)
-    LESS            reduce using rule 98 (check_global_const_exists -> add_operand .)
-    IF              reduce using rule 98 (check_global_const_exists -> add_operand .)
-    WHILE           reduce using rule 98 (check_global_const_exists -> add_operand .)
-    ID              reduce using rule 98 (check_global_const_exists -> add_operand .)
-    PRINTG          reduce using rule 98 (check_global_const_exists -> add_operand .)
-    LEFTPARENT      reduce using rule 98 (check_global_const_exists -> add_operand .)
-    INI_INT         reduce using rule 98 (check_global_const_exists -> add_operand .)
-    INI_FLOAT       reduce using rule 98 (check_global_const_exists -> add_operand .)
-    RIGHTKEY        reduce using rule 98 (check_global_const_exists -> add_operand .)
-    RIGHTPARENT     reduce using rule 98 (check_global_const_exists -> add_operand .)
-    COMMA           reduce using rule 98 (check_global_const_exists -> add_operand .)
-    GREATERTN       reduce using rule 98 (check_global_const_exists -> add_operand .)
-    LESSTN          reduce using rule 98 (check_global_const_exists -> add_operand .)
-    SAME            reduce using rule 98 (check_global_const_exists -> add_operand .)
-    NOTSAME         reduce using rule 98 (check_global_const_exists -> add_operand .)
-    DOTCOMMA        reduce using rule 98 (check_global_const_exists -> add_operand .)
+    TIMES_BY_SAME   reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    SPLIT_BY        reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    MULT_BY         reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    ADD             reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    LESS            reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    IF              reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    WHILE           reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    ID              reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    PRINTG          reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    LEFTPARENT      reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    INI_INT         reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    INI_FLOAT       reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    RIGHTKEY        reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    RIGHTPARENT     reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    COMMA           reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    GREATERTN       reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    LESSTN          reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    SAME            reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    NOTSAME         reduce using rule 98 (check_global_const_exists -> add_operand_const .)
+    DOTCOMMA        reduce using rule 98 (check_global_const_exists -> add_operand_const .)
 
 
 state 88
@@ -1625,8 +1629,8 @@ state 90
 
     (86) assign -> call_let set_appear SET . set_value
     (87) assign -> call_let set_appear SET . expresion_line seen_final_asignacion DOTCOMMA
-    (100) set_value -> . INI_INT aux_int_check append_operand DOTCOMMA
-    (101) set_value -> . INI_FLOAT aux_float_check append_operand DOTCOMMA
+    (101) set_value -> . INI_INT aux_int_check append_operand DOTCOMMA
+    (102) set_value -> . INI_FLOAT aux_float_check append_operand DOTCOMMA
     (68) expresion_line -> . term term_appear
     (69) expresion_line -> . term term_appear aux_expresion
     (72) term -> . fact factor_appear
@@ -1769,28 +1773,28 @@ state 96
 state 97
 
     (95) call_let -> ID . check_let_exists
-    (99) check_let_exists -> .
+    (100) check_let_exists -> .
 
-    TIMES_BY_SAME   reduce using rule 99 (check_let_exists -> .)
-    SPLIT_BY        reduce using rule 99 (check_let_exists -> .)
-    MULT_BY         reduce using rule 99 (check_let_exists -> .)
-    ADD             reduce using rule 99 (check_let_exists -> .)
-    LESS            reduce using rule 99 (check_let_exists -> .)
-    RIGHTPARENT     reduce using rule 99 (check_let_exists -> .)
-    COMMA           reduce using rule 99 (check_let_exists -> .)
-    DOTCOMMA        reduce using rule 99 (check_let_exists -> .)
-    GREATERTN       reduce using rule 99 (check_let_exists -> .)
-    LESSTN          reduce using rule 99 (check_let_exists -> .)
-    SAME            reduce using rule 99 (check_let_exists -> .)
-    NOTSAME         reduce using rule 99 (check_let_exists -> .)
-    LEFTPARENT      reduce using rule 99 (check_let_exists -> .)
-    INI_INT         reduce using rule 99 (check_let_exists -> .)
-    INI_FLOAT       reduce using rule 99 (check_let_exists -> .)
-    ID              reduce using rule 99 (check_let_exists -> .)
-    IF              reduce using rule 99 (check_let_exists -> .)
-    WHILE           reduce using rule 99 (check_let_exists -> .)
-    PRINTG          reduce using rule 99 (check_let_exists -> .)
-    RIGHTKEY        reduce using rule 99 (check_let_exists -> .)
+    TIMES_BY_SAME   reduce using rule 100 (check_let_exists -> .)
+    SPLIT_BY        reduce using rule 100 (check_let_exists -> .)
+    MULT_BY         reduce using rule 100 (check_let_exists -> .)
+    ADD             reduce using rule 100 (check_let_exists -> .)
+    LESS            reduce using rule 100 (check_let_exists -> .)
+    RIGHTPARENT     reduce using rule 100 (check_let_exists -> .)
+    COMMA           reduce using rule 100 (check_let_exists -> .)
+    DOTCOMMA        reduce using rule 100 (check_let_exists -> .)
+    GREATERTN       reduce using rule 100 (check_let_exists -> .)
+    LESSTN          reduce using rule 100 (check_let_exists -> .)
+    SAME            reduce using rule 100 (check_let_exists -> .)
+    NOTSAME         reduce using rule 100 (check_let_exists -> .)
+    LEFTPARENT      reduce using rule 100 (check_let_exists -> .)
+    INI_INT         reduce using rule 100 (check_let_exists -> .)
+    INI_FLOAT       reduce using rule 100 (check_let_exists -> .)
+    ID              reduce using rule 100 (check_let_exists -> .)
+    IF              reduce using rule 100 (check_let_exists -> .)
+    WHILE           reduce using rule 100 (check_let_exists -> .)
+    PRINTG          reduce using rule 100 (check_let_exists -> .)
+    RIGHTKEY        reduce using rule 100 (check_let_exists -> .)
 
     check_let_exists               shift and go to state 82
 
@@ -2005,47 +2009,47 @@ state 110
 
 state 111
 
-    (100) set_value -> INI_INT . aux_int_check append_operand DOTCOMMA
+    (101) set_value -> INI_INT . aux_int_check append_operand DOTCOMMA
     (96) call_lets -> INI_INT . check_global_const_exists
-    (103) aux_int_check -> .
-    (98) check_global_const_exists -> . add_operand
-    (89) add_operand -> .
+    (104) aux_int_check -> .
+    (98) check_global_const_exists -> . add_operand_const
+    (99) add_operand_const -> .
 
-  ! reduce/reduce conflict for DOTCOMMA resolved using rule 89 (add_operand -> .)
-    TIMES_BY_SAME   reduce using rule 89 (add_operand -> .)
-    SPLIT_BY        reduce using rule 89 (add_operand -> .)
-    MULT_BY         reduce using rule 89 (add_operand -> .)
-    ADD             reduce using rule 89 (add_operand -> .)
-    LESS            reduce using rule 89 (add_operand -> .)
-    DOTCOMMA        reduce using rule 89 (add_operand -> .)
+  ! reduce/reduce conflict for DOTCOMMA resolved using rule 99 (add_operand_const -> .)
+    TIMES_BY_SAME   reduce using rule 99 (add_operand_const -> .)
+    SPLIT_BY        reduce using rule 99 (add_operand_const -> .)
+    MULT_BY         reduce using rule 99 (add_operand_const -> .)
+    ADD             reduce using rule 99 (add_operand_const -> .)
+    LESS            reduce using rule 99 (add_operand_const -> .)
+    DOTCOMMA        reduce using rule 99 (add_operand_const -> .)
 
-  ! DOTCOMMA        [ reduce using rule 103 (aux_int_check -> .) ]
+  ! DOTCOMMA        [ reduce using rule 104 (aux_int_check -> .) ]
 
     aux_int_check                  shift and go to state 129
     check_global_const_exists      shift and go to state 86
-    add_operand                    shift and go to state 87
+    add_operand_const              shift and go to state 87
 
 state 112
 
-    (101) set_value -> INI_FLOAT . aux_float_check append_operand DOTCOMMA
+    (102) set_value -> INI_FLOAT . aux_float_check append_operand DOTCOMMA
     (97) call_lets -> INI_FLOAT . check_global_const_exists
-    (104) aux_float_check -> .
-    (98) check_global_const_exists -> . add_operand
-    (89) add_operand -> .
+    (105) aux_float_check -> .
+    (98) check_global_const_exists -> . add_operand_const
+    (99) add_operand_const -> .
 
-  ! reduce/reduce conflict for DOTCOMMA resolved using rule 89 (add_operand -> .)
-    TIMES_BY_SAME   reduce using rule 89 (add_operand -> .)
-    SPLIT_BY        reduce using rule 89 (add_operand -> .)
-    MULT_BY         reduce using rule 89 (add_operand -> .)
-    ADD             reduce using rule 89 (add_operand -> .)
-    LESS            reduce using rule 89 (add_operand -> .)
-    DOTCOMMA        reduce using rule 89 (add_operand -> .)
+  ! reduce/reduce conflict for DOTCOMMA resolved using rule 99 (add_operand_const -> .)
+    TIMES_BY_SAME   reduce using rule 99 (add_operand_const -> .)
+    SPLIT_BY        reduce using rule 99 (add_operand_const -> .)
+    MULT_BY         reduce using rule 99 (add_operand_const -> .)
+    ADD             reduce using rule 99 (add_operand_const -> .)
+    LESS            reduce using rule 99 (add_operand_const -> .)
+    DOTCOMMA        reduce using rule 99 (add_operand_const -> .)
 
-  ! DOTCOMMA        [ reduce using rule 104 (aux_float_check -> .) ]
+  ! DOTCOMMA        [ reduce using rule 105 (aux_float_check -> .) ]
 
     aux_float_check                shift and go to state 130
     check_global_const_exists      shift and go to state 88
-    add_operand                    shift and go to state 87
+    add_operand_const              shift and go to state 87
 
 state 113
 
@@ -2346,19 +2350,19 @@ state 128
 
 state 129
 
-    (100) set_value -> INI_INT aux_int_check . append_operand DOTCOMMA
-    (102) append_operand -> .
+    (101) set_value -> INI_INT aux_int_check . append_operand DOTCOMMA
+    (103) append_operand -> .
 
-    DOTCOMMA        reduce using rule 102 (append_operand -> .)
+    DOTCOMMA        reduce using rule 103 (append_operand -> .)
 
     append_operand                 shift and go to state 151
 
 state 130
 
-    (101) set_value -> INI_FLOAT aux_float_check . append_operand DOTCOMMA
-    (102) append_operand -> .
+    (102) set_value -> INI_FLOAT aux_float_check . append_operand DOTCOMMA
+    (103) append_operand -> .
 
-    DOTCOMMA        reduce using rule 102 (append_operand -> .)
+    DOTCOMMA        reduce using rule 103 (append_operand -> .)
 
     append_operand                 shift and go to state 152
 
@@ -2661,14 +2665,14 @@ state 150
 
 state 151
 
-    (100) set_value -> INI_INT aux_int_check append_operand . DOTCOMMA
+    (101) set_value -> INI_INT aux_int_check append_operand . DOTCOMMA
 
     DOTCOMMA        shift and go to state 162
 
 
 state 152
 
-    (101) set_value -> INI_FLOAT aux_float_check append_operand . DOTCOMMA
+    (102) set_value -> INI_FLOAT aux_float_check append_operand . DOTCOMMA
 
     DOTCOMMA        shift and go to state 163
 
@@ -2763,30 +2767,30 @@ state 161
 
 state 162
 
-    (100) set_value -> INI_INT aux_int_check append_operand DOTCOMMA .
+    (101) set_value -> INI_INT aux_int_check append_operand DOTCOMMA .
 
-    IF              reduce using rule 100 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
-    WHILE           reduce using rule 100 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
-    ID              reduce using rule 100 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
-    PRINTG          reduce using rule 100 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
-    LEFTPARENT      reduce using rule 100 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
-    INI_INT         reduce using rule 100 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
-    INI_FLOAT       reduce using rule 100 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
-    RIGHTKEY        reduce using rule 100 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    IF              reduce using rule 101 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    WHILE           reduce using rule 101 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    ID              reduce using rule 101 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    PRINTG          reduce using rule 101 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    LEFTPARENT      reduce using rule 101 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    INI_INT         reduce using rule 101 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    INI_FLOAT       reduce using rule 101 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
+    RIGHTKEY        reduce using rule 101 (set_value -> INI_INT aux_int_check append_operand DOTCOMMA .)
 
 
 state 163
 
-    (101) set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .
+    (102) set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .
 
-    IF              reduce using rule 101 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
-    WHILE           reduce using rule 101 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
-    ID              reduce using rule 101 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
-    PRINTG          reduce using rule 101 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
-    LEFTPARENT      reduce using rule 101 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
-    INI_INT         reduce using rule 101 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
-    INI_FLOAT       reduce using rule 101 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
-    RIGHTKEY        reduce using rule 101 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    IF              reduce using rule 102 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    WHILE           reduce using rule 102 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    ID              reduce using rule 102 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    PRINTG          reduce using rule 102 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    LEFTPARENT      reduce using rule 102 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    INI_INT         reduce using rule 102 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    INI_FLOAT       reduce using rule 102 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
+    RIGHTKEY        reduce using rule 102 (set_value -> INI_FLOAT aux_float_check append_operand DOTCOMMA .)
 
 
 state 164
@@ -2811,17 +2815,17 @@ state 165
     (58) condition_code -> LEFTKEY . lets func_code_aux RIGHTKEY
     (6) lets -> . LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
     (7) lets -> . empty
-    (105) empty -> .
+    (106) empty -> .
 
     LET             shift and go to state 7
-    IF              reduce using rule 105 (empty -> .)
-    WHILE           reduce using rule 105 (empty -> .)
-    ID              reduce using rule 105 (empty -> .)
-    PRINTG          reduce using rule 105 (empty -> .)
-    LEFTPARENT      reduce using rule 105 (empty -> .)
-    INI_INT         reduce using rule 105 (empty -> .)
-    INI_FLOAT       reduce using rule 105 (empty -> .)
-    RIGHTKEY        reduce using rule 105 (empty -> .)
+    IF              reduce using rule 106 (empty -> .)
+    WHILE           reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+    PRINTG          reduce using rule 106 (empty -> .)
+    LEFTPARENT      reduce using rule 106 (empty -> .)
+    INI_INT         reduce using rule 106 (empty -> .)
+    INI_FLOAT       reduce using rule 106 (empty -> .)
+    RIGHTKEY        reduce using rule 106 (empty -> .)
 
     lets                           shift and go to state 171
     empty                          shift and go to state 8
@@ -3135,9 +3139,9 @@ WARNING: reduce/reduce conflict in state 54 resolved using rule (func_code_aux -
 WARNING: rejected rule (func_call -> <empty>) in state 54
 WARNING: reduce/reduce conflict in state 66 resolved using rule (func_call_ID -> <empty>)
 WARNING: rejected rule (check_let_exists -> <empty>) in state 66
-WARNING: reduce/reduce conflict in state 111 resolved using rule (add_operand -> <empty>)
+WARNING: reduce/reduce conflict in state 111 resolved using rule (add_operand_const -> <empty>)
 WARNING: rejected rule (aux_int_check -> <empty>) in state 111
-WARNING: reduce/reduce conflict in state 112 resolved using rule (add_operand -> <empty>)
+WARNING: reduce/reduce conflict in state 112 resolved using rule (add_operand_const -> <empty>)
 WARNING: rejected rule (aux_float_check -> <empty>) in state 112
 WARNING: reduce/reduce conflict in state 171 resolved using rule (func_code_aux -> <empty>)
 WARNING: rejected rule (func_call -> <empty>) in state 171

@@ -167,7 +167,8 @@ tokens = [
     'GOTO',
     'GOTOT',
     'GOTOF',
-    'ENDFUNC'
+    'ENDFUNC',
+    'AT',
 ]
 
 ######### PALABRAS RESERVADAS #############

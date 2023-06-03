@@ -1,5 +1,7 @@
 ####### REGLAS GRAMATICALES ############
 import compilacion.variables
+from directions.virtualMemoryAssignation import setLetIDToVirtualMemory, setConstantIDToVirtualMemory, \
+    resetLocalVirtualMemory
 from gramatica.utils import generateQuad, generateAssignQuad, generateOperationQuad, generateJumpQuad, \
     completeJumpQuadruple, callFuncQuadruple, paramaterQuad, restartFuncCalled, generateEndFuncQuad, generateWriteQuad
 from semantica import regex
@@ -68,7 +70,12 @@ def p_seen_ID_let(p):
         pass
     compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
         newLet] = {
-        'type': compilacion.variables.variables['currentType']}
+        'type': compilacion.variables.variables['currentType']
+    }
+    if (compilacion.variables.variables['currentFunc'] != compilacion.variables.variables['progName']):
+        setLetIDToVirtualMemory(p[-1], compilacion.variables.variables['currentType'], 'local', compilacion.variables.variables['currentFunc'])
+    else:
+        setLetIDToVirtualMemory(p[-1], compilacion.variables.variables['currentType'], 'global', compilacion.variables.variables['currentFunc'])
 
 
 def p_aux_let(p):
@@ -147,7 +154,7 @@ def p_end_func(p):
     """
         end_func :
     """
-
+    resetLocalVirtualMemory()
     generateEndFuncQuad()
 
 def p_func_code_aux(p):
@@ -195,7 +202,7 @@ def p_string_appear(p):
     """
         string_appear :
     """
-
+    setLetIDToVirtualMemory(p[-1], compilacion.variables.variables['currentType'], 'local', compilacion.variables.variables['currentFunc'])
     compilacion.variables.variables['operands'].append(p[-1])
 
 def p_func_call(p):
@@ -223,7 +230,6 @@ def p_end_func_call(p):
     """
         end_func_call :
     """
-    print(compilacion.variables.variables['funcCalls'])
     restartFuncCalled()
 
 
@@ -419,7 +425,10 @@ def p_add_operand(p):
     """
         add_operand :
     """
-
+    if (compilacion.variables.variables['currentFunc'] != compilacion.variables.variables['progName']):
+        setLetIDToVirtualMemory(p[-1], compilacion.variables.variables['currentType'], 'local', compilacion.variables.variables['currentFunc'])
+    else:
+        setLetIDToVirtualMemory(p[-1], compilacion.variables.variables['currentType'], 'global', compilacion.variables.variables['currentFunc'])
     compilacion.variables.variables['operands'].append(p[-1])
 
 
@@ -496,6 +505,10 @@ def p_call_let(p):
                 p[1]][
                 'type']
 
+    if (compilacion.variables.variables['currentFunc'] != compilacion.variables.variables['progName']):
+        setLetIDToVirtualMemory(p[1], compilacion.variables.variables['currentType'], 'local', compilacion.variables.variables['currentFunc'])
+    else:
+        setLetIDToVirtualMemory(p[1], compilacion.variables.variables['currentType'], 'global', compilacion.variables.variables['currentFunc'])
     compilacion.variables.variables['operands'].append(p[1])
 
 
@@ -508,15 +521,22 @@ def p_call_lets(p):
 
 def p_check_global_const_exists(p):
     """
-        check_global_const_exists : add_operand
+        check_global_const_exists : add_operand_const
     """
     if compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'].get(
             p[-1]) is None:
         compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'][
             p[-1]] = {
             'type': 'pruebaa'}
-
+    setConstantIDToVirtualMemory(p[-1])
     p[0] = p[-1]
+
+def p_add_operan_const(p):
+    """
+        add_operand_const :
+    """
+
+    compilacion.variables.variables['operands'].append(p[-1])
 
 
 def p_check_let_exists(p):
@@ -553,6 +573,7 @@ def p_aux_int_check(p):
     """
         aux_int_check :
     """
+
     valid = validate_set_type(compilacion.variables.variables['currentSign'],
                               compilacion.variables.variables['currentType'], 'int')
     if valid == 'error':
@@ -566,6 +587,8 @@ def p_aux_float_check(p):
     """
     valid = validate_set_type(compilacion.variables.variables['currentSign'],
                               compilacion.variables.variables['currentType'], 'float')
+
+    setConstantIDToVirtualMemory(p[-1])
     if valid == 'error':
         print('ERROR')
         p_error(-2)

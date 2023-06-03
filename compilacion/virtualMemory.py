@@ -1,7 +1,7 @@
 
 virtualMemory = {
     "global": {},
+    "constant": {},
     "local": {},
-    "temporal": {},
-    "constant": {}
+    "temporal": {}
 }

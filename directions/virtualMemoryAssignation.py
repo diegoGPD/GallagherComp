@@ -2,7 +2,8 @@ from compilacion.directionCounters import virtualMemoryCounter
 from compilacion.virtualMemory import virtualMemory
 from compilacion.virtualMemorySize import memorySizes
 
-def setNewMatch(scope, type):
+
+def setNewMatch(scope, type=''):
     if scope == "global":
         if type == 'int':
             address = memorySizes['GLOBAL_LET_INT_START'] + virtualMemoryCounter['global_let_int_counter']
@@ -63,9 +64,6 @@ def setNewMatch(scope, type):
 
 
 def resetLocalVirtualMemory():
-    virtualMemory['local'] = {}
-    virtualMemory['temporal'] = {}
-
     virtualMemoryCounter['local_let_int_counter'] = 0
     virtualMemoryCounter['local_let_float_counter'] = 0
     virtualMemoryCounter['local_let_bool_counter'] = 0
@@ -75,3 +73,25 @@ def resetLocalVirtualMemory():
     virtualMemoryCounter['temporal_let_float_counter'] = 0
     virtualMemoryCounter['temporal_let_bool_counter'] = 0
     virtualMemoryCounter['temporal_let_string_counter'] = 0
+
+
+def setConstantIDToVirtualMemory(let_constant_ID):
+    assignedAddress = setNewMatch("constant")
+    virtualMemory["constant"][let_constant_ID] = assignedAddress
+    return assignedAddress
+
+
+def setLetIDToVirtualMemory(let_ID, type, scope, func):
+    if let_ID in virtualMemory['constant']:
+        return
+
+    assignedAddress = setNewMatch(scope, type)
+    if scope != 'global':
+        if func in virtualMemory[scope]:
+            virtualMemory[scope][func][let_ID] = assignedAddress
+        else:
+            virtualMemory[scope][func] = {let_ID: None}
+            virtualMemory[scope][func][let_ID] = assignedAddress
+    else:
+        virtualMemory[scope][let_ID] = assignedAddress
+    return assignedAddress

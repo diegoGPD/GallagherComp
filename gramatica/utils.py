@@ -1,5 +1,8 @@
 ######### Utils for Gramatic ###########
 import compilacion.variables
+from compilacion.virtualMemory import virtualMemory
+from directions.virtualMemoryAssignation import setLetIDToVirtualMemory
+from directions.virtualMemoryGetters import getVirtualMemoryAddressValue
 
 
 def generateQuad(sign, left, right, letTarget):
@@ -10,8 +13,10 @@ def generateQuad(sign, left, right, letTarget):
 def generateAssignQuad():
     rightOperand = compilacion.variables.variables['operands'].pop()
     leftOperand = compilacion.variables.variables['operands'].pop()
+    rightAddress = getVirtualMemoryAddressValue(rightOperand, 'local', compilacion.variables.variables['currentFunc'])
+    leftAddress = getVirtualMemoryAddressValue(leftOperand, 'local', compilacion.variables.variables['currentFunc'])
     equalSign = compilacion.variables.variables['operators'].pop()
-    quad = generateQuad(equalSign, rightOperand, '', leftOperand)
+    quad = generateQuad(equalSign, rightAddress, '', leftAddress)
     compilacion.variables.variables['quads'].append(quad)
     print(compilacion.variables.variables['quads'])
 
@@ -19,12 +24,24 @@ def generateAssignQuad():
 
 def generateOperationQuad(conditional = False):
     rightOperand = compilacion.variables.variables['operands'].pop()
-    if (conditional): leftOperand = compilacion.variables.variables['operands'].pop()
-    else: leftOperand = compilacion.variables.variables['operands'].pop()
+    leftOperand = compilacion.variables.variables['operands'].pop()
+    rightAddress = getVirtualMemoryAddressValue(rightOperand, 'local', compilacion.variables.variables['currentFunc'])
+    leftAddress = getVirtualMemoryAddressValue(leftOperand, 'local', compilacion.variables.variables['currentFunc'])
     sign = compilacion.variables.variables['operators'].pop()
-    quad = generateQuad(sign, leftOperand, rightOperand, 'temp' + str(compilacion.variables.variables['tempCount']))
-    if (conditional): compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
-    else: compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
+    tempAddress = setLetIDToVirtualMemory('temp' + str(compilacion.variables.variables['tempCount']),
+                                          compilacion.variables.variables['currentType'], 'temporal',
+                                          compilacion.variables.variables['currentFunc'])
+    quad = generateQuad(sign, leftAddress, rightAddress, tempAddress)
+    if (conditional):
+        setLetIDToVirtualMemory('temp' + str(compilacion.variables.variables['tempCount']),
+                                compilacion.variables.variables['currentType'], 'temporal',
+                                compilacion.variables.variables['currentFunc'])
+        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
+    else:
+        setLetIDToVirtualMemory('temp' + str(compilacion.variables.variables['tempCount']),
+                                compilacion.variables.variables['currentType'], 'temporal',
+                                compilacion.variables.variables['currentFunc'])
+        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
     compilacion.variables.variables['tempCount'] += 1
     compilacion.variables.variables['quads'].append(quad)
     print(compilacion.variables.variables['quads'])
@@ -33,9 +50,13 @@ def generateOperationQuad(conditional = False):
 
 def generateJumpQuad(jumpType):
     if (jumpType == 'GOTO'):
+        setLetIDToVirtualMemory('temp' + str(compilacion.variables.variables['tempCount']),
+                                compilacion.variables.variables['currentType'], 'temporal',
+                                compilacion.variables.variables['currentFunc'])
         compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
         compilacion.variables.variables['tempCount'] += 1
     result = compilacion.variables.variables['operands'].pop()
+
     quad = generateQuad(jumpType, result, '', '')
     compilacion.variables.variables['quads'].append(quad)
     compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'])
@@ -46,7 +67,6 @@ def generateJumpQuad(jumpType):
 def completeJumpQuadruple():
     quadToJump = compilacion.variables.variables['quadCount']
     quadToComplete = compilacion.variables.variables['jumps'].pop()
-    print('JOHNNNN CENA', quadToJump , quadToJump)
     compilacion.variables.variables['quads'][quadToComplete][2] = quadToJump
 
 
@@ -80,7 +100,7 @@ def generateEndFuncQuad():
     compilacion.variables.variables['tempCount'] = 1
     quad = generateQuad('ENDFUNC', '', '', '')
     compilacion.variables.variables['quads'].append(quad)
-    print(compilacion.variables.variables['quads'])
+    print(compilacion.variables.variables['quads'], virtualMemory)
 
 def generateWriteQuad():
     valueToPrint = compilacion.variables.variables['operands'].pop()
