@@ -87,11 +87,11 @@ def setLetIDToVirtualMemory(let_ID, type, scope, func):
 
     assignedAddress = setNewMatch(scope, type)
     if scope != 'global':
-        if func in virtualMemory[scope]:
-            virtualMemory[scope][func][let_ID] = assignedAddress
+        if func in virtualMemory['local']:
+            virtualMemory['local'][func][let_ID] = assignedAddress
         else:
-            virtualMemory[scope][func] = {let_ID: None}
-            virtualMemory[scope][func][let_ID] = assignedAddress
+            virtualMemory['local'][func] = {let_ID: None}
+            virtualMemory['local'][func][let_ID] = assignedAddress
     else:
         virtualMemory[scope][let_ID] = assignedAddress
     return assignedAddress

@@ -1,4 +1,5 @@
 import compilacion.variables
+from compilacion.excecutionMemory import excecutionMemory
 from compilacion.virtualMemory import virtualMemory
 
 
@@ -14,3 +15,6 @@ def printAllResults():
         # Again iterate over the nested dictionary
         for subject, score in value.items():
             print(subject, ' : ', score)
+
+    print('Execution Memory')
+    print(excecutionMemory)
