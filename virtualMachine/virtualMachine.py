@@ -1,7 +1,7 @@
 from compilacion.excecutionMemory import excecutionMemory
 from directions.excecutionMemoryAssignation import initVirtualMemory, jumpExcectuionPointer, advanceExcectuionPointer, \
     setVariableValue
-from directions.excecutionMemoryGetter import getExectuionMemoryValue, isAddress
+from directions.excecutionMemoryGetter import getExectuionMemoryValue
 
 
 def virutalMachineRun(quads):
