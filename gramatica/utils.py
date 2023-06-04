@@ -45,25 +45,29 @@ def generateOperationQuad(conditional = False):
 
 
 
-def generateJumpQuad(jumpType):
-    if (jumpType == 'GOTO'):
-        setLetIDToVirtualMemory('temp' + str(compilacion.variables.variables['tempCount']),
-                                compilacion.variables.variables['currentType'], 'temporal',
-                                compilacion.variables.variables['currentFunc'])
-        compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
-        compilacion.variables.variables['tempCount'] += 1
-    result = compilacion.variables.variables['operands'].pop()
-
-    quad = generateQuad(jumpType, result, '', '')
+def generateFalseJumpQuad():
+    conditionVariable = compilacion.variables.variables['operands'].pop()
+    quad = generateQuad('GOTOF', conditionVariable, '', '')
     compilacion.variables.variables['quads'].append(quad)
-    compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'])
+    compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'] - 1)
 
 
+def generateElseJumpQuad():
+    quad = generateQuad('GOTO', '', '', '')
+    falseJump = compilacion.variables.variables['jumps'].pop()
+    compilacion.variables.variables['quads'].append(quad)
+    compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'] - 1)
+    completeJumpQuadruple(falseJump)
 
-def completeJumpQuadruple():
-    quadToJump = compilacion.variables.variables['quadCount']
-    quadToComplete = compilacion.variables.variables['jumps'].pop()
-    compilacion.variables.variables['quads'][quadToComplete][2] = quadToJump
+def generationWhileEndJumpQuad():
+    endJump = compilacion.variables.variables['jumps'].pop()
+    returnJump = compilacion.variables.variables['jumps'].pop()
+    quad = generateQuad('GOTO', '','', returnJump)
+    compilacion.variables.variables['quads'].append(quad)
+    completeJumpQuadruple(endJump)
+
+def completeJumpQuadruple(toFill):
+    compilacion.variables.variables['quads'][toFill - 1][3] = compilacion.variables.variables['quadCount']
 
 
 def callFuncQuadruple(funcName):

@@ -6,6 +6,7 @@ from directions.excecutionMemoryGetter import getExectuionMemoryValue
 
 def virutalMachineRun(quads):
     initVirtualMemory()
+    print(quads)
     for quad in quads:
         if quad[0] == 'GOTO':
             jumpExcectuionPointer(quad[3])
@@ -20,6 +21,7 @@ def virutalMachineRun(quads):
             print(getExectuionMemoryValue(quad[4]))
 
         elif quad[0] == '=':
+            print(quad)
             setVariableValue(quad[3], getExectuionMemoryValue(quad[1]))
 
         elif quad[0] == '>':

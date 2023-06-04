@@ -2,9 +2,9 @@
 import compilacion.variables
 from directions.virtualMemoryAssignation import setLetIDToVirtualMemory, setConstantIDToVirtualMemory, \
     resetLocalVirtualMemory
-from gramatica.utils import generateQuad, generateAssignQuad, generateOperationQuad, generateJumpQuad, \
+from gramatica.utils import generateQuad, generateAssignQuad, generateOperationQuad, generateFalseJumpQuad, \
     completeJumpQuadruple, callFuncQuadruple, paramaterQuad, restartFuncCalled, generateEndFuncQuad, generateWriteQuad, \
-    generateReturnQuad
+    generateReturnQuad, generateElseJumpQuad, generationWhileEndJumpQuad
 from semantica import regex
 from semantica.utils import validate_set_type
 
@@ -104,6 +104,8 @@ def p_seen_func_name(p):
             compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']][
                 'letsTable'] = {}
             setLetIDToVirtualMemory(p[-1], compilacion.variables.variables['currentType'], 'global', compilacion.variables.variables['progName'])
+    if p[-1] == 'main':
+        completeJumpQuadruple(1)
 
 
 
@@ -273,8 +275,14 @@ def p_add_parameter(p):
 
 def p_while(p):
     """
-        while : WHILE while_appear LEFTPARENT condition_expresion right_parent_condition RIGHTPARENT condition_code end_cond
+        while : WHILE while_appear LEFTPARENT condition_expresion right_parent_condition RIGHTPARENT condition_code while_end
     """
+
+def p_while_end(p):
+    """
+        while_end :
+    """
+    generationWhileEndJumpQuad()
 
 def p_while_appear(p):
     """
@@ -297,12 +305,19 @@ def p_condtion_appear(p):
 
     if len(compilacion.variables.variables['operators']) and (compilacion.variables.variables['operators'][-1] == '>' or compilacion.variables.variables['operators'][-1] == '<' or compilacion.variables.variables['operators'][-1] == '==' or compilacion.variables.variables['operators'][-1] == '!='):
         generateOperationQuad(True)
+    generateFalseJumpQuad()
 
 def p_condition_end_check(p):
     """
         condition_end_check : ELSE condition_code end_condition
                               | end_condition
     """
+
+def p_else_appear(p):
+    """
+        else_appear :
+    """
+    generateElseJumpQuad()
 
 def p_condition_code(p):
     """
@@ -320,9 +335,7 @@ def p_end_cond(p):
     """
         end_cond :
     """
-    completeJumpQuadruple()
-    generateJumpQuad('GOTO')
-    completeJumpQuadruple()
+    generateFalseJumpQuad('GOTO')
 
 
 def p_condition_signs(p):
@@ -396,7 +409,7 @@ def p_right_parent_condition(p):
         right_parent_condition :
     """
 
-    generateJumpQuad('GOTOF')
+    generateFalseJumpQuad()
 
 def p_found_init_parent(p):
     """

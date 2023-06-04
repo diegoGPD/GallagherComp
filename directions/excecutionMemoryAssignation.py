@@ -15,7 +15,6 @@ def initVirtualMemory():
         excecutionMemory['constant'][constVarial] = constVarialKeys[constVarialKeysCounter]
         constVarialKeysCounter += 1
 
-
 def addFuncVirtualMemory(funcName):
     funcObject = {}
     for funcVarial in virtualMemory['local'][funcName]:
@@ -26,13 +25,16 @@ def setGlobalVariableValue(letAddress, letVal):
     excecutionMemory['global'][letAddress] = letVal
 
 def setFunctionVariableValue(letAddress, letVal):
+    print('goku')
     excecutionMemory['local'][excecutionMemory['localPointer']][letAddress] = letVal
 
 def setVariableValue(letAddress, letVal):
+    print(letAddress, excecutionMemory['local'][excecutionMemory['localPointer']], virtualMemory)
     if letAddress in excecutionMemory['local'][excecutionMemory['localPointer']]:
         setFunctionVariableValue(letAddress, letVal)
     else:
         excecutionMemory['global'][letAddress] = letVal
+        setGlobalVariableValue(letAddress, letVal)
 
 def finishFunctionRun():
     excecutionMemory['localPointer'] -= 1

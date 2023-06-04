@@ -3,7 +3,6 @@ from ply import yacc, lex
 
 import compilacion.variables
 from GeneralUtils.printUtils import printAllResults
-from directions.excecutionMemoryAssignation import initVirtualMemory
 from gramatica import reglas
 from gramatica.tests import parser
 from semantica import regex

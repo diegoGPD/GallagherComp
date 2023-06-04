@@ -76,6 +76,8 @@ def resetLocalVirtualMemory():
 
 
 def setConstantIDToVirtualMemory(let_constant_ID):
+    if let_constant_ID in list(virtualMemory["constant"].keys()):
+        return virtualMemory["constant"][let_constant_ID]
     assignedAddress = setNewMatch("constant")
     virtualMemory["constant"][let_constant_ID] = assignedAddress
     return assignedAddress
@@ -84,14 +86,13 @@ def setConstantIDToVirtualMemory(let_constant_ID):
 def setLetIDToVirtualMemory(let_ID, type, scope, func):
     if let_ID in virtualMemory['constant']:
         return
-
     assignedAddress = setNewMatch(scope, type)
     if scope != 'global':
-        if func in virtualMemory['local']:
+        if func in virtualMemory['local'] and let_ID not in virtualMemory['local'][func]:
             virtualMemory['local'][func][let_ID] = assignedAddress
-        else:
+        elif func not in virtualMemory['local']:
             virtualMemory['local'][func] = {let_ID: None}
             virtualMemory['local'][func][let_ID] = assignedAddress
     else:
-        virtualMemory[scope][let_ID] = assignedAddress
+        virtualMemory['global'][let_ID] = assignedAddress
     return assignedAddress

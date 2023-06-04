@@ -2,8 +2,8 @@ from compilacion.excecutionMemory import excecutionMemory
 
 
 def getExectuionMemoryValue(letAddress):
-    if letAddress in excecutionMemory['local'][excecutionMemory['excectuionPointer']]:
-        return excecutionMemory['local'][excecutionMemory['excectuionPointer']][letAddress]
+    if letAddress in excecutionMemory['local'][excecutionMemory['localPointer']]:
+        return excecutionMemory['local'][excecutionMemory['localPointer']][letAddress]
     elif letAddress in excecutionMemory['global']:
         excecutionMemory['global'][letAddress]
     else:
