@@ -25,6 +25,8 @@ t_RIGHTKEY = r'\}'
 t_LESSTN = r'\<'
 t_GREATERTN = r'\>'
 t_NOTSAME = r'\!='
+t_LESSSAME = r'\<='
+t_MORESAME = r'\>='
 t_AT = r'\@'
 
 ########### FUNCTION REGEX #################

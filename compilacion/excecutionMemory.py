@@ -2,6 +2,7 @@ excecutionMemory = {
     "global": {},
     "local": [],
     "constant": {},
-    "excectuionPointer": 0,
-    "localPointer": 0
+    "excectuionPointer": 1,
+    "localPointer": 0,
+    'endFuncPointer': [],
 }

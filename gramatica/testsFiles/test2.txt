@@ -2,10 +2,11 @@ Programa patito;
 
 let int a;
 
+func test(): int : {
+    return 4;
+}
+
 func main(): int : {
-    let int b, c;
-    a = 3;
-    b = 4;
-    c = 5;
-    printG(a + b + c);
+    a = @test();
+    printG(a);
 }

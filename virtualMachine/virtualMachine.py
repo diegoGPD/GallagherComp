@@ -1,27 +1,46 @@
+import compilacion.variables
 from compilacion.excecutionMemory import excecutionMemory
 from directions.excecutionMemoryAssignation import initVirtualMemory, jumpExcectuionPointer, advanceExcectuionPointer, \
-    setVariableValue
+    setVariableValue, updateLocalPointer, advacneLocalPointer, addFuncVirtualMemory, setParamter, finishFunctionRun
 from directions.excecutionMemoryGetter import getExectuionMemoryValue
 
 
-def virutalMachineRun(quads):
+def virutalMachineRun():
     initVirtualMemory()
-    print(quads)
-    for quad in quads:
+    quads = compilacion.variables.variables['quads']
+    run = True
+    while run:
+        quad = quads[excecutionMemory['excectuionPointer']]
         if quad[0] == 'GOTO':
             jumpExcectuionPointer(quad[3])
 
         elif quad[0] == 'GOTOF':
-            if (quad[1] == False):
+            if getExectuionMemoryValue(quad[1]) == False:
                 jumpExcectuionPointer(quad[3])
             else:
                 advanceExcectuionPointer()
 
+        elif quad[0] == 'GOTOFUNC':
+            excecutionMemory['endFuncPointer'].append(excecutionMemory['excectuionPointer'])
+            advacneLocalPointer()
+            jumpExcectuionPointer(quad[3])
+
+        elif quad[0] == 'ERA':
+            addFuncVirtualMemory(quad[3])
+
+
+        elif quad[0] == 'PARAMATER':
+            setParamter(quad[1], quad[3])
+
+        elif quad[0] == 'ENDFUNC':
+            finishFunctionRun()
+
         elif quad[0] == 'PRINTG':
-            print(getExectuionMemoryValue(quad[4]))
+            a = getExectuionMemoryValue(quad[3])
+            print(a)
+            advanceExcectuionPointer()
 
         elif quad[0] == '=':
-            print(quad)
             setVariableValue(quad[3], getExectuionMemoryValue(quad[1]))
 
         elif quad[0] == '>':
@@ -30,6 +49,14 @@ def virutalMachineRun(quads):
 
         elif quad[0] == '<':
             expresionValue = getExectuionMemoryValue(quad[1]) < getExectuionMemoryValue(quad[2])
+            setVariableValue(quad[3], expresionValue)
+
+        elif quad[0] == '<=':
+            expresionValue = getExectuionMemoryValue(quad[1]) <= getExectuionMemoryValue(quad[2])
+            setVariableValue(quad[3], expresionValue)
+
+        elif quad[0] == '>=':
+            expresionValue = getExectuionMemoryValue(quad[1]) >= getExectuionMemoryValue(quad[2])
             setVariableValue(quad[3], expresionValue)
 
         elif quad[0] == '!=':
@@ -59,5 +86,9 @@ def virutalMachineRun(quads):
         elif quad[0] == '^':
             expresionValue = getExectuionMemoryValue(quad[1]) ** getExectuionMemoryValue(quad[2])
             setVariableValue(quad[3], expresionValue)
+
+        elif quad[0] == 'ENDALL':
+            run = False
+
 
 

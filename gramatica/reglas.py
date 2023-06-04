@@ -97,13 +97,16 @@ def p_seen_func_name(p):
         seen_func_name :
     """
     compilacion.variables.variables['currentFunc'] = p[-1]
-    compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'])
-    compilacion.variables.variables['funciones'][p[-1]] = {'type': ''}
+    compilacion.variables.variables['funciones'][p[-1]] = {'type': '', 'quadStart': compilacion.variables.variables['quadCount'] + 1}
     if not ('letsTable' in compilacion.variables.variables['funciones'][
             compilacion.variables.variables['currentFunc']]):
             compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']][
                 'letsTable'] = {}
             setLetIDToVirtualMemory(p[-1], compilacion.variables.variables['currentType'], 'global', compilacion.variables.variables['progName'])
+            compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'][compilacion.variables.variables['currentFunc']] = {
+                'type': 'test',
+                'value': None
+            }
     if p[-1] == 'main':
         completeJumpQuadruple(1)
 
@@ -152,7 +155,7 @@ def p_void_detect(p):
 
 def p_func_code(p):
     """
-        func_code : LEFTKEY lets func_code_aux RIGHTKEY end_func
+        func_code : LEFTKEY func_code_start lets func_code_aux RIGHTKEY end_func
     """
 
 def p_end_func(p):
@@ -183,13 +186,13 @@ def p_action(p):
 def p_return(p):
     """
         return : RETURN expresion_line return_aux DOTCOMMA
+                |
     """
 
 def p_return_aux(p):
     """
         return_aux :
     """
-
     generateReturnQuad()
 
 
@@ -242,7 +245,7 @@ def p_func_call_ID(p):
     """
         func_call_ID :
     """
-    print(p[-1])
+
     callFuncQuadruple(p[-1])
 
 def p_end_func_call(p):
@@ -275,7 +278,7 @@ def p_add_parameter(p):
 
 def p_while(p):
     """
-        while : WHILE while_appear LEFTPARENT condition_expresion right_parent_condition RIGHTPARENT condition_code while_end
+        while : WHILE while_appear LEFTPARENT condition_expresion RIGHTPARENT right_parent_condition condition_code while_end
     """
 
 def p_while_end(p):
@@ -294,7 +297,7 @@ def p_while_appear(p):
 
 def p_condition(p):
     """
-        condition : IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT  condition_code end_cond condition_end_check
+        condition : IF LEFTPARENT found_init_parent condition_expresion right_parent_condition RIGHTPARENT  condition_code condition_end_check
     """
 
 
@@ -303,13 +306,12 @@ def p_condtion_appear(p):
         condtion_appear :
     """
 
-    if len(compilacion.variables.variables['operators']) and (compilacion.variables.variables['operators'][-1] == '>' or compilacion.variables.variables['operators'][-1] == '<' or compilacion.variables.variables['operators'][-1] == '==' or compilacion.variables.variables['operators'][-1] == '!='):
+    if len(compilacion.variables.variables['operators']) and (compilacion.variables.variables['operators'][-1] == '>' or compilacion.variables.variables['operators'][-1] == '<' or compilacion.variables.variables['operators'][-1] == '==' or compilacion.variables.variables['operators'][-1] == '!=' or compilacion.variables.variables['operators'][-1] == '<=' or compilacion.variables.variables['operators'][-1] == '>='):
         generateOperationQuad(True)
-    generateFalseJumpQuad()
 
 def p_condition_end_check(p):
     """
-        condition_end_check : ELSE condition_code end_condition
+        condition_end_check : ELSE else_appear condition_code end_condition
                               | end_condition
     """
 
@@ -324,18 +326,18 @@ def p_condition_code(p):
         condition_code : LEFTKEY lets func_code_aux RIGHTKEY
     """
 
+def p_func_code_start(p):
+    """
+        func_code_start :
+    """
+
+    compilacion.variables.variables["currentFuncQuadStart"] = compilacion.variables.variables['quadCount'] + 1
 def p_end_condition(p):
     """
         end_condition :
     """
-    completeJumpQuadruple()
+    completeJumpQuadruple(compilacion.variables.variables['jumps'].pop())
 
-
-def p_end_cond(p):
-    """
-        end_cond :
-    """
-    generateFalseJumpQuad('GOTO')
 
 
 def p_condition_signs(p):
@@ -344,13 +346,14 @@ def p_condition_signs(p):
                         | LESSTN add_operator
                         | SAME add_operator
                         | NOTSAME add_operator
-                        |
+                        | LESSSAME add_operator
+                        | MORESAME add_operator
     """
 
 def p_condition_expresion(p):
     """
-        condition_expresion : expresion_line condtion_appear
-                    | expresion_line condition_signs expresion_line condtion_appear
+        condition_expresion :  expresion_line condition_signs expresion_line condtion_appear
+                    | expresion_line condtion_appear
 
     """
 
@@ -395,6 +398,7 @@ def p_expo(p):
         expo :  parent_aux
                | call_lets
                | call_let
+               | func_call
     """
 
 
@@ -408,7 +412,6 @@ def p_right_parent_condition(p):
     """
         right_parent_condition :
     """
-
     generateFalseJumpQuad()
 
 def p_found_init_parent(p):
@@ -441,7 +444,6 @@ def p_assign(p):
     """
         assign : call_let set_appear SET set_value
                 | call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA
-                | call_let set_appear SET func_call DOTCOMMA
     """
 
 
@@ -467,7 +469,6 @@ def p_add_operator(p):
     """
         add_operator :
     """
-
     compilacion.variables.variables['operators'].append(p[-1])
 
 
@@ -486,6 +487,7 @@ def p_term_appear(p):
     if len(compilacion.variables.variables['operators']) > 0 and (
             compilacion.variables.variables['operators'][-1] == '+' or compilacion.variables.variables['operators'][
         -1] == '-'):
+
         generateOperationQuad()
     else:
         return
@@ -548,6 +550,7 @@ def p_call_lets(p):
        call_lets : INI_INT check_global_const_exists
                     | INI_FLOAT check_global_const_exists
     """
+
 
 
 def p_check_global_const_exists(p):

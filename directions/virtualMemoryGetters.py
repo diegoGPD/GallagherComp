@@ -2,7 +2,6 @@ from compilacion.virtualMemory import virtualMemory
 
 
 def getVirtualMemoryAddressValue(let_ID, scope, func = ''):
-    print(virtualMemory)
     if (let_ID in virtualMemory['constant']):
         return virtualMemory['constant'][let_ID]
     if (scope != 'global'):

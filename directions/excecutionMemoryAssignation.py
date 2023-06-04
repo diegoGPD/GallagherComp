@@ -1,5 +1,6 @@
 from compilacion.excecutionMemory import excecutionMemory
 from compilacion.virtualMemory import virtualMemory
+from directions.excecutionMemoryGetter import getExectuionMemoryValue
 
 
 def initVirtualMemory():
@@ -15,41 +16,54 @@ def initVirtualMemory():
         excecutionMemory['constant'][constVarial] = constVarialKeys[constVarialKeysCounter]
         constVarialKeysCounter += 1
 
+
 def addFuncVirtualMemory(funcName):
     funcObject = {}
     for funcVarial in virtualMemory['local'][funcName]:
         funcObject[virtualMemory['local'][funcName][funcVarial]] = None
     excecutionMemory['local'].append(funcObject)
+    advanceExcectuionPointer()
+
+
+def setParamter(value, parameterNumber):
+    parameters = list((excecutionMemory['local'][-1].keys()))
+    excecutionMemory['local'][-1][parameters[parameterNumber]] = getExectuionMemoryValue(value)
+    advanceExcectuionPointer()
 
 def setGlobalVariableValue(letAddress, letVal):
     excecutionMemory['global'][letAddress] = letVal
 
+
 def setFunctionVariableValue(letAddress, letVal):
-    print('goku')
     excecutionMemory['local'][excecutionMemory['localPointer']][letAddress] = letVal
 
+
 def setVariableValue(letAddress, letVal):
-    print(letAddress, excecutionMemory['local'][excecutionMemory['localPointer']], virtualMemory)
     if letAddress in excecutionMemory['local'][excecutionMemory['localPointer']]:
         setFunctionVariableValue(letAddress, letVal)
     else:
         excecutionMemory['global'][letAddress] = letVal
         setGlobalVariableValue(letAddress, letVal)
+    advanceExcectuionPointer()
+
 
 def finishFunctionRun():
-    excecutionMemory['localPointer'] -= 1
     excecutionMemory['local'].pop()
+    excecutionMemory['localPointer'] -= 1
+    jumptTo = excecutionMemory['endFuncPointer'].pop() + 1
+    jumpExcectuionPointer(jumptTo)
 
 def jumpExcectuionPointer(quadNumber):
     excecutionMemory['excectuionPointer'] = quadNumber
 
+
 def updateLocalPointer(localToUse):
     excecutionMemory['localPointer'] = localToUse
 
+
+def advacneLocalPointer():
+    excecutionMemory['localPointer'] = len(excecutionMemory['local']) - 1
+
+
 def advanceExcectuionPointer():
     excecutionMemory['excectuionPointer'] += 1
-
-
-
-
-
