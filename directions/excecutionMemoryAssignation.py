@@ -38,6 +38,7 @@ def setFunctionVariableValue(letAddress, letVal):
     excecutionMemory['local'][excecutionMemory['localPointer']][letAddress] = letVal
 
 
+
 def setVariableValue(letAddress, letVal):
     if letAddress in excecutionMemory['local'][excecutionMemory['localPointer']]:
         setFunctionVariableValue(letAddress, letVal)

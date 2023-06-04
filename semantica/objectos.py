@@ -107,32 +107,215 @@ cuboSemantico = {
             'bool': 'bool'
         },
     },
-    '=': {
+    '^': {
+        'int': {
+            'int': 'int',
+            'float': 'float',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'float': {
+            'int': 'float',
+            'float': 'float',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'string': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'bool': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+    },
+    '>': {
             'int': {
-                'int': 'int',
-                'float': 'error',
+                'int': 'bool',
+                'float': 'bool',
                 'string': 'error',
                 'bool': 'error'
             },
             'float': {
-                'int': 'error',
-                'float': 'float',
+                'int': 'bool',
+                'float': 'bool',
                 'string': 'error',
                 'bool': 'error'
             },
             'string': {
                 'int': 'error',
                 'float': 'error',
-                'string': 'string',
+                'string': 'error',
                 'bool': 'error'
             },
             'bool': {
                 'int': 'error',
                 'float': 'error',
                 'string': 'error',
-                'bool': 'bool'
+                'bool': 'error'
             },
-        }
+        },
+    '<': {
+        'int': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'float': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'string': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'bool': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+    },
+    '<=': {
+        'int': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'float': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'string': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'bool': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+    },
+    '>': {
+        'int': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'float': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'string': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'bool': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+    },
+    '>=': {
+        'int': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'float': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'string': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'bool': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+    },
+    '!=': {
+        'int': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'float': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'string': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'bool': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+    },
+    '==': {
+        'int': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'float': {
+            'int': 'bool',
+            'float': 'bool',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'string': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+        'bool': {
+            'int': 'error',
+            'float': 'error',
+            'string': 'error',
+            'bool': 'error'
+        },
+    }
+
 }
 
 ########## Tokens ###################

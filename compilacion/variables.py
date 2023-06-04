@@ -20,4 +20,9 @@ variables = {
     'types': [],
     'jumps': [],
     'funcCalls': [],
+    #Arrays
+    'arrayDeclaration': False,
+    'dimensions': 1,
+    'arrayR': 1,
+    'arrayK': 1
 }

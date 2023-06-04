@@ -4,7 +4,7 @@ from directions.virtualMemoryAssignation import setLetIDToVirtualMemory, setCons
     resetLocalVirtualMemory
 from gramatica.utils import generateQuad, generateAssignQuad, generateOperationQuad, generateFalseJumpQuad, \
     completeJumpQuadruple, callFuncQuadruple, paramaterQuad, restartFuncCalled, generateEndFuncQuad, generateWriteQuad, \
-    generateReturnQuad, generateElseJumpQuad, generationWhileEndJumpQuad
+    generateReturnQuad, generateElseJumpQuad, generationWhileEndJumpQuad, endArrayDec, calculateArrayR
 from semantica import regex
 from semantica.utils import validate_set_type
 
@@ -16,6 +16,8 @@ def p_compile(p):
       compile : PROG ID seen_program DOTCOMMA lets modules
                 |
     """
+
+
 
 
 def p_modules(p):
@@ -35,7 +37,8 @@ def p_seen_program(p):
 
 def p_lets(p):
     """ lets : LET seen_lets type ID seen_ID_let aux_let DOTCOMMA lets
-                | empty
+              | LET seen_lets type ID seen_ID_let LEFTBRACK left_bracket_array add_dimension RIGHTBRACK end_array_init DOTCOMMA lets
+              | empty
     """
 
 
@@ -515,6 +518,47 @@ def p_expo_appear(p):
     else:
         return
 
+def p_bracket_array(p):
+    """
+        left_bracket_array :
+    """
+    compilacion.variables.variables['currentLet'] = p[-3]
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'] = [{}]
+    compilacion.variables.variables['arrayDeclaration'] = True
+
+def p_extra_dimension_found(p):
+    """
+        extra_dimension_found :
+    """
+    compilacion.variables.variables['dimensions'] += 1
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'].append({})
+
+
+def p_add_dimension(p):
+    """
+        add_dimension : INI_INT array_start INI_INT array_end
+                      | INI_INT array_start INI_INT array_end COMMA extra_dimension_found add_dimension
+    """
+
+def p_array_start(p):
+    """
+        array_start :
+    """
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'][compilacion.variables.variables['dimensions'] - 1]['arrayStart'] = p[-1]
+
+def p_array_end(p):
+    """
+        array_end :
+    """
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'][compilacion.variables.variables['dimensions'] - 1]['arrayEnd'] = p[-1]
+    calculateArrayR()
+
+
+def p_end_array_init(p):
+    """
+        end_array_init :
+    """
+    endArrayDec()
 
 def p_call_let(p):
     """
@@ -577,9 +621,8 @@ def p_check_let_exists(p):
     """
         check_let_exists :
     """
-
     compilacion.variables.variables['currentLet'] = p[-1]
-
+    print('cuasdfasdfasfsadf')
     if compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'].get(
             p[-1]) is None and \
             compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'].get(

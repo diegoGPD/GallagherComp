@@ -1,0 +1,8 @@
+Programa Arrays;
+let int a;
+
+
+
+func main(): int : {
+    let int una [1 4, 3 5];
+}

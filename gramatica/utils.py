@@ -1,6 +1,6 @@
 ######### Utils for Gramatic ###########
 import compilacion.variables
-from directions.virtualMemoryAssignation import setLetIDToVirtualMemory
+from directions.virtualMemoryAssignation import setLetIDToVirtualMemory, setNewMatch, setArrayDirectsToVirtualMemory
 from directions.virtualMemoryGetters import getVirtualMemoryAddressValue
 
 
@@ -91,7 +91,7 @@ def restartFuncCalled():
                                           compilacion.variables.variables['currentFunc'])
     compilacion.variables.variables['operands'].append('temp' + str(compilacion.variables.variables['tempCount']))
     compilacion.variables.variables['tempCount'] += 1
-    quad = generateQuad('=', getVirtualMemoryAddressValue(functionCalled,'global'), '', tempAddress)
+    quad = generateQuad('=', getVirtualMemoryAddressValue(functionCalled, 'global'), '', tempAddress)
     compilacion.variables.variables['quads'].append(quad)
 
     if compilacion.variables.variables['operators'][-1] == '(':
@@ -120,5 +120,58 @@ def generateWriteQuad():
 def generateReturnQuad():
     result = compilacion.variables.variables['operands'].pop()
     resultAddress = getVirtualMemoryAddressValue(compilacion.variables.variables['currentFunc'], 'global')
-    quad = generateQuad('=', getVirtualMemoryAddressValue(result, 'local', compilacion.variables.variables['currentFunc']), '', resultAddress)
+    quad = generateQuad('=',
+                        getVirtualMemoryAddressValue(result, 'local', compilacion.variables.variables['currentFunc']),
+                        '', resultAddress)
     compilacion.variables.variables['quads'].append(quad)
+
+
+def calculateArrayR():
+    arrayStart = \
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
+        compilacion.variables.variables['currentLet']]['dimensionsNodes'][
+        compilacion.variables.variables['dimensions'] - 1]['arrayStart'] or 0
+    arrayEnd = \
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
+        compilacion.variables.variables['currentLet']]['dimensionsNodes'][
+        compilacion.variables.variables['dimensions'] - 1]['arrayEnd']
+
+    compilacion.variables.variables['arrayR'] = (arrayEnd - arrayStart + 1) * compilacion.variables.variables['arrayR']
+
+
+def endArrayDec():
+    compilacion.variables.variables['dimensions'] = 1
+    offset = 0
+    arrayTotalSize = compilacion.variables.variables['arrayR']
+    arrayDimensions = \
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
+        compilacion.variables.variables['currentLet']]['dimensionsNodes']
+
+    for dimension in arrayDimensions:
+        arrayStart = dimension['arrayStart'] or 0
+        arrayEnd = dimension['arrayEnd']
+
+        m = compilacion.variables.variables['arrayR'] / (arrayEnd - arrayStart + 1)
+        compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
+            compilacion.variables.variables['currentLet']]['dimensionsNodes'][
+            compilacion.variables.variables['dimensions']]['m'] = m
+        compilacion.variables.variables['arrayR'] = m
+        offset += arrayStart * m
+        compilacion.variables.variables['dimensions'] -= 1
+
+    compilacion.variables.variables['arrayK'] = offset
+
+    allArrayAddress(arrayTotalSize)
+
+
+def allArrayAddress(size, type = 'int'):
+    print('compa')
+    addresses = []
+    for a in range(size):
+        if compilacion.variables.variables['currentFunc'] != compilacion.variables.variables['progName']:
+            addresses.append(setNewMatch('local', type))
+        else:
+            addresses.append(setNewMatch('global', type))
+    print(addresses)
+    setArrayDirectsToVirtualMemory(compilacion.variables.variables['currentLet'], compilacion.variables.variables['currentFunc'], addresses)
+

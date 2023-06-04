@@ -13,7 +13,7 @@ parser = yacc.yacc(module=reglas)
 
 
 def main():
-    file = open("/Users/chuca/PycharmProjects/compiladorSL/gramatica/testsFiles/fibonacci.txt").read()
+    file = open("/Users/chuca/PycharmProjects/compiladorSL/gramatica/testsFiles/arrays.txt").read()
     parser.parse(file)
     virutalMachineRun()
 
