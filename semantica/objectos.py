@@ -354,7 +354,8 @@ tokens = [
     'ENDALL',
     'AT',
     'LESSSAME',
-    'MORESAME'
+    'MORESAME',
+    'VERIFY',
 ]
 
 ######### PALABRAS RESERVADAS #############

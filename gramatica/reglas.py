@@ -4,7 +4,8 @@ from directions.virtualMemoryAssignation import setLetIDToVirtualMemory, setCons
     resetLocalVirtualMemory
 from gramatica.utils import generateQuad, generateAssignQuad, generateOperationQuad, generateFalseJumpQuad, \
     completeJumpQuadruple, callFuncQuadruple, paramaterQuad, restartFuncCalled, generateEndFuncQuad, generateWriteQuad, \
-    generateReturnQuad, generateElseJumpQuad, generationWhileEndJumpQuad, endArrayDec, calculateArrayR
+    generateReturnQuad, generateElseJumpQuad, generationWhileEndJumpQuad, endArrayDec, calculateArrayR, \
+    foundArrayAccess, arrayExpresionHelper, endArrayAccess
 from semantica import regex
 from semantica.utils import validate_set_type
 
@@ -81,6 +82,44 @@ def p_seen_ID_let(p):
     else:
         setLetIDToVirtualMemory(p[-1], compilacion.variables.variables['currentType'], 'global', compilacion.variables.variables['currentFunc'])
 
+
+def p_access_array(p):
+    """
+        access_array : ID  LEFTBRACK access_array_found array_expresion RIGHTBRACK end_array_access
+    """
+
+def p_access_array_found(p):
+    """
+        access_array_found :
+    """
+    foundArrayAccess(p[-2])
+
+def p_end_array_access(p):
+    """
+        end_array_access :
+    """
+
+    endArrayAccess()
+
+def p_array_expresion(p):
+    """
+        array_expresion : expresion_line array_expresion_helper
+                         | expresion_line array_expresion_helper COMMA array_comma_access array_expresion
+    """
+
+
+
+def p_array_expresion_helper(p):
+    """
+        array_expresion_helper :
+    """
+    arrayExpresionHelper()
+
+def p_array_comma_access(p):
+    """
+        array_comma_access :
+    """
+    compilacion.variables.variables['dimensionStacks'][-1]['dimension'] += 1
 
 def p_aux_let(p):
     """
@@ -402,6 +441,7 @@ def p_expo(p):
                | call_lets
                | call_let
                | func_call
+               | access_array
     """
 
 
@@ -447,6 +487,7 @@ def p_assign(p):
     """
         assign : call_let set_appear SET set_value
                 | call_let set_appear SET expresion_line seen_final_asignacion DOTCOMMA
+                | access_array set_appear SET expresion_line seen_final_asignacion DOTCOMMA
     """
 
 
@@ -551,6 +592,7 @@ def p_array_end(p):
         array_end :
     """
     compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'][compilacion.variables.variables['dimensions'] - 1]['arrayEnd'] = p[-1]
+
     calculateArrayR()
 
 
@@ -573,14 +615,10 @@ def p_call_let(p):
             'letsTable'].get(p[1])
         # probar si falla sin esto al
         compilacion.variables.variables['currentType'] = \
-            compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'][
-                p[1]][
-                'type']
+            compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'][p[1]]['type']
     else:
         compilacion.variables.variables['currentType'] = \
-            compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
-                p[1]][
-                'type']
+            compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][p[1]]['type']
 
     if (compilacion.variables.variables['currentFunc'] != compilacion.variables.variables['progName']):
         setLetIDToVirtualMemory(p[1], compilacion.variables.variables['currentType'], 'local', compilacion.variables.variables['currentFunc'])
@@ -622,7 +660,6 @@ def p_check_let_exists(p):
         check_let_exists :
     """
     compilacion.variables.variables['currentLet'] = p[-1]
-    print('cuasdfasdfasfsadf')
     if compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'].get(
             p[-1]) is None and \
             compilacion.variables.variables['funciones'][compilacion.variables.variables['progName']]['letsTable'].get(

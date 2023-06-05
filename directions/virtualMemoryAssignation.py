@@ -97,10 +97,7 @@ def setLetIDToVirtualMemory(let_ID, type, scope, func):
         virtualMemory['global'][let_ID] = assignedAddress
     return assignedAddress
 
-
 def setArrayDirectsToVirtualMemory(let_ID, func, addresses):
-    print(let_ID, func, addresses)
-    print(virtualMemory)
     if func in virtualMemory['local'] and let_ID not in virtualMemory['local'][func]:
         virtualMemory['local'][func][let_ID] = addresses
     elif func not in virtualMemory['local']:

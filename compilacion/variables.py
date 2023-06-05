@@ -24,5 +24,5 @@ variables = {
     'arrayDeclaration': False,
     'dimensions': 1,
     'arrayR': 1,
-    'arrayK': 1
+    'dimensionStacks': []
 }

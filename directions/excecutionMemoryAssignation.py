@@ -40,6 +40,12 @@ def setFunctionVariableValue(letAddress, letVal):
 
 
 def setVariableValue(letAddress, letVal):
+    if str(letAddress).startswith('*'):
+        letAddress = int(str(letAddress)[1:])
+        print('John cena', letVal, letAddress)
+        if not letVal in excecutionMemory['local'][excecutionMemory['localPointer']]:
+            excecutionMemory['local'][excecutionMemory['localPointer']][letVal] = None
+        setFunctionVariableValue(letAddress, letVal)
     if letAddress in excecutionMemory['local'][excecutionMemory['localPointer']]:
         setFunctionVariableValue(letAddress, letVal)
     else:
