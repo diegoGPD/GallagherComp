@@ -1,4 +1,4 @@
-Programa patito;
+Programa modulo;
 
 let int a;
 

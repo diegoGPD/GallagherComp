@@ -21,4 +21,5 @@ def main():
     parser.parse(openFile)
     virutalMachineRun()
 
+    printAllResults()
 main()

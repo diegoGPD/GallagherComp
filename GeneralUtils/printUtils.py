@@ -6,8 +6,7 @@ from compilacion.virtualMemory import virtualMemory
 def printAllResults():
     print('CUADRUPLOS')
     print('SIGN |  LEFT  | RIGHT |  RESULT')
-    for qu in compilacion.variables.variables['quads']:
-        print(qu[0], ' |', qu[1], ' |', qu[2], ' |', qu[3])
+    print(compilacion.variables.variables['quads'])
 
     print('Virtual Memory')
     for key, value in virtualMemory.items():
@@ -18,3 +17,4 @@ def printAllResults():
 
     print('Execution Memory')
     print(excecutionMemory)
+    print(compilacion.variables.variables)
