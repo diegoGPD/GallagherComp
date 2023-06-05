@@ -1,7 +1,6 @@
 #################COMPILADOR########################
 from ply import yacc, lex
 
-import compilacion.variables
 from GeneralUtils.printUtils import printAllResults
 from gramatica import reglas
 from semantica import regex
