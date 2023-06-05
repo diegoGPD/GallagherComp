@@ -8,12 +8,10 @@ from directions.excecutionMemoryGetter import getExectuionMemoryValue
 def virutalMachineRun():
     initVirtualMemory()
     quads = compilacion.variables.variables['quads']
-    print(quads)
     run = True
     while run:
         quad = quads[excecutionMemory['excectuionPointer']]
         if quad[0] == 'GOTO':
-            print(excecutionMemory)
             jumpExcectuionPointer(quad[3])
 
         elif quad[0] == 'GOTOF':
@@ -38,9 +36,13 @@ def virutalMachineRun():
             finishFunctionRun()
 
         elif quad[0] == 'PRINTG':
-            print(quad[3], excecutionMemory)
-            a = getExectuionMemoryValue(quad[3])
-
+            toAssign = quad[3]
+            if str(quad[3]).startswith('*'):
+                toAssign = int(str(quad[3])[1:])
+                a = getExectuionMemoryValue(getExectuionMemoryValue(toAssign))
+            else:
+                a = getExectuionMemoryValue(toAssign)
+            print(a)
             advanceExcectuionPointer()
 
         elif quad[0] == "VERIFY":
@@ -51,8 +53,6 @@ def virutalMachineRun():
                 run = False
 
         elif quad[0] == '=':
-            print(quad,'asifjoiasfmiosd')
-            print(quad[3], getExectuionMemoryValue(quad[1]), 'goku')
             setVariableValue(quad[3], getExectuionMemoryValue(quad[1]))
 
         elif quad[0] == '>':

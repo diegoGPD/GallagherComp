@@ -563,8 +563,9 @@ def p_bracket_array(p):
     """
         left_bracket_array :
     """
-    compilacion.variables.variables['currentLet'] = p[-3]
-    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'] = [{}]
+    print(p[-3])
+    compilacion.variables.variables['currentArray'] = p[-3]
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentArray']]['dimensionsNodes'] = [{}]
     compilacion.variables.variables['arrayDeclaration'] = True
 
 def p_extra_dimension_found(p):
@@ -572,7 +573,7 @@ def p_extra_dimension_found(p):
         extra_dimension_found :
     """
     compilacion.variables.variables['dimensions'] += 1
-    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'].append({})
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentArray']]['dimensionsNodes'].append({})
 
 
 def p_add_dimension(p):
@@ -585,13 +586,14 @@ def p_array_start(p):
     """
         array_start :
     """
-    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'][compilacion.variables.variables['dimensions'] - 1]['arrayStart'] = p[-1]
+    print(p[-1])
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentArray']]['dimensionsNodes'][compilacion.variables.variables['dimensions'] - 1]['arrayStart'] = p[-1]
 
 def p_array_end(p):
     """
         array_end :
     """
-    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'][compilacion.variables.variables['dimensions'] - 1]['arrayEnd'] = p[-1]
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentArray']]['dimensionsNodes'][compilacion.variables.variables['dimensions'] - 1]['arrayEnd'] = p[-1]
 
     calculateArrayR()
 
@@ -600,6 +602,7 @@ def p_end_array_init(p):
     """
         end_array_init :
     """
+    print('saoidfjoisadfj')
     endArrayDec()
 
 def p_call_let(p):

@@ -4,6 +4,7 @@ variables = {
     'currentFunc': '',
     'currentType': '',
     'currentLet': '',
+    'currentArray' : '',
     'currentSign': '',
     'currentFuncCalled':'',
     'currentFuncQuadStart': 0,

@@ -8,7 +8,8 @@ def initVirtualMemory():
     for globalVarial in virtualMemory['global']:
         excecutionMemory['global'][virtualMemory['global'][globalVarial]] = None
     for mainVarial in virtualMemory['local']['main']:
-        mainObject[virtualMemory['local']['main'][mainVarial]] = None
+        if (mainVarial):
+            mainObject[virtualMemory['local']['main'][mainVarial]] = None
     excecutionMemory['local'].append(mainObject)
     constVarialKeys = list(virtualMemory['constant'].keys())
     constVarialKeysCounter = 0
@@ -42,10 +43,9 @@ def setFunctionVariableValue(letAddress, letVal):
 def setVariableValue(letAddress, letVal):
     if str(letAddress).startswith('*'):
         letAddress = int(str(letAddress)[1:])
-        print('John cena', letVal, letAddress)
         if not letVal in excecutionMemory['local'][excecutionMemory['localPointer']]:
             excecutionMemory['local'][excecutionMemory['localPointer']][letVal] = None
-        setFunctionVariableValue(letAddress, letVal)
+        setFunctionVariableValue(getExectuionMemoryValue(letAddress), letVal)
     if letAddress in excecutionMemory['local'][excecutionMemory['localPointer']]:
         setFunctionVariableValue(letAddress, letVal)
     else:

@@ -4,7 +4,7 @@ from directions.virtualMemoryAssignation import setConstantIDToVirtualMemory
 
 def getVirtualMemoryAddressValue(let_ID, scope, func = ''):
     if str(let_ID).startswith('*'):
-        return int(str(let_ID)[1:])
+        return let_ID
     if (let_ID in virtualMemory['constant']):
         return virtualMemory['constant'][let_ID]
     if (scope != 'global'):

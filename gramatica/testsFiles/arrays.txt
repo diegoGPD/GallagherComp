@@ -4,7 +4,9 @@ let int a;
 
 
 func main(): int : {
+    let int b;
     let int una [1 5, 1 4];
-    una[2,4]  = 1;
+    b = 3;
+    una[2,4] = 1 + b;
     printG(una[2,4]);
 }

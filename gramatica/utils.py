@@ -131,11 +131,11 @@ def generateReturnQuad():
 def calculateArrayR():
     arrayStart = \
         compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
-            compilacion.variables.variables['currentLet']]['dimensionsNodes'][
+            compilacion.variables.variables['currentArray']]['dimensionsNodes'][
             compilacion.variables.variables['dimensions'] - 1]['arrayStart'] or 0
     arrayEnd = \
         compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
-            compilacion.variables.variables['currentLet']]['dimensionsNodes'][
+            compilacion.variables.variables['currentArray']]['dimensionsNodes'][
             compilacion.variables.variables['dimensions'] - 1]['arrayEnd']
 
     compilacion.variables.variables['arrayR'] = (arrayEnd - arrayStart + 1) * compilacion.variables.variables['arrayR']
@@ -147,20 +147,20 @@ def endArrayDec():
     arrayTotalSize = compilacion.variables.variables['arrayR']
     arrayDimensions = \
         compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
-            compilacion.variables.variables['currentLet']]['dimensionsNodes']
+            compilacion.variables.variables['currentArray']]['dimensionsNodes']
 
     for dimension in arrayDimensions:
         arrayStart = dimension['arrayStart'] or 0
         arrayEnd = dimension['arrayEnd']
         m = compilacion.variables.variables['arrayR'] / (arrayEnd - arrayStart + 1)
         compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
-            compilacion.variables.variables['currentLet']]['dimensionsNodes'][
+            compilacion.variables.variables['currentArray']]['dimensionsNodes'][
             compilacion.variables.variables['dimensions'] - 1]['m'] = m
         compilacion.variables.variables['arrayR'] = m
         offset += arrayStart * m
         compilacion.variables.variables['dimensions'] -= 1
 
-    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentLet']]['dimensionsNodes'][-1]['k'] = offset
+    compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentArray']]['dimensionsNodes'][-1]['k'] = offset
     allArrayAddress(arrayTotalSize)
 
 
@@ -221,7 +221,7 @@ def arrayExpresionHelper():
 def endArrayAccess():
     currentArrayLet = compilacion.variables.variables['dimensionStacks'][-1]['letId']
     K = compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][
-            compilacion.variables.variables['currentLet']]['dimensionsNodes'][-1]['k']
+            compilacion.variables.variables['currentArray']]['dimensionsNodes'][-1]['k']
     pastTemp = compilacion.variables.variables['operands'].pop()
     temp1 = tempResult = setLetIDToVirtualMemory('temp' + str(compilacion.variables.variables['tempCount']),
                                               compilacion.variables.variables['currentType'], 'temporal',
