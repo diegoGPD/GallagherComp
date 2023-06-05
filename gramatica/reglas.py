@@ -334,7 +334,7 @@ def p_while_appear(p):
         while_appear :
     """
 
-    compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount']);
+    compilacion.variables.variables['jumps'].append(compilacion.variables.variables['quadCount'] - 1);
 
 
 def p_condition(p):
@@ -563,7 +563,6 @@ def p_bracket_array(p):
     """
         left_bracket_array :
     """
-    print(p[-3])
     compilacion.variables.variables['currentArray'] = p[-3]
     compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentArray']]['dimensionsNodes'] = [{}]
     compilacion.variables.variables['arrayDeclaration'] = True
@@ -586,7 +585,6 @@ def p_array_start(p):
     """
         array_start :
     """
-    print(p[-1])
     compilacion.variables.variables['funciones'][compilacion.variables.variables['currentFunc']]['letsTable'][compilacion.variables.variables['currentArray']]['dimensionsNodes'][compilacion.variables.variables['dimensions'] - 1]['arrayStart'] = p[-1]
 
 def p_array_end(p):
@@ -602,7 +600,6 @@ def p_end_array_init(p):
     """
         end_array_init :
     """
-    print('saoidfjoisadfj')
     endArrayDec()
 
 def p_call_let(p):

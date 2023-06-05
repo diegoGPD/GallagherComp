@@ -11,10 +11,14 @@ lexer = lex.lex(module=regex)
 
 parser = yacc.yacc(module=reglas)
 
-
+#"/Users/chuca/PycharmProjects/compiladorSL/gramatica/testsFiles/arrays.txt"
 def main():
-    file = open("/Users/chuca/PycharmProjects/compiladorSL/gramatica/testsFiles/arrays.txt").read()
-    parser.parse(file)
+    print('Hi Welcome to Gallagher compiler')
+    print('To start enter the path to your text file with your Gallagher code to start')
+    print('#Pss rembmer to enter the full path, like this : /Users/chuca/PycharmProjects/compiladorSL/gramatica/testsFiles/arrays.txt')
+    file = input("Your file path: ")
+    openFile = open(file).read()
+    parser.parse(openFile)
     virutalMachineRun()
 
 main()
