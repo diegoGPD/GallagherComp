@@ -1,0 +1,6 @@
+
+virtualMemory = {
+    "global": {},
+    "constant": {},
+    "local": {},
+}

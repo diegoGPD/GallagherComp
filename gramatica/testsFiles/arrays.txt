@@ -1,0 +1,29 @@
+Programa Arrays;
+let int a;
+
+func aVer(): int : {
+    let int j;
+    j = 1;
+    return j;
+}
+
+func main(): int : {
+    let int b;
+    let int dos [1 10, 1 10];
+    let int uno [1 10];
+    let int contador, test;
+    contador = 1;
+    test = 5;
+    b = 2;
+    while(contador < 9){
+        dos[1, contador] = contador + 2;
+        contador = contador + 1;
+    }
+    uno[test] = 4;
+    dos[b, 8] = 3;
+    b = @aVer() + 1;
+    printG(dos[@aVer() * 2, 7 + 1]);
+    printG(dos[b + 3 - 2 + 4 - 6, 2]);
+    printG(b);
+    printG(uno[4 + 1] + 3);
+}

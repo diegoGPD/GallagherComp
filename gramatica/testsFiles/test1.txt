@@ -1,0 +1,18 @@
+Programa patito;
+let int a;
+func pelos (int a): int : {
+    let int re;
+    return a * 2;
+}
+
+func dos (int b): int : {
+    let int re;
+    return @pelos(b * 2) + 2;
+}
+
+func main(): int : {
+    let int b;
+    b = 3;
+    printG(@dos(b));
+    return 0;
+}

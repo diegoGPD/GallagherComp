@@ -1,0 +1,12 @@
+Programa modulo;
+
+let int a;
+
+func test(): int : {
+    return 4;
+}
+
+func main(): int : {
+    a = @test();
+    printG(a);
+}

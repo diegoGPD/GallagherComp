@@ -1,0 +1,21 @@
+Programa fibonacci;
+let int i;
+
+func fib(int n): int :{
+    let int value;
+    if(n <= 1){
+        value = n;
+    }else{
+        value = @fib(n - 1)  + @fib(n - 2);
+    }
+    return value;
+}
+
+
+func main(): int : {
+    let int a;
+    a = @fib(3);
+        printG(@fib(@fib(6)));
+    printG(a);
+    return 0;
+}

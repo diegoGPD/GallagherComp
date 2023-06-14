@@ -1,0 +1,22 @@
+Programa FindVal;
+let int a;
+
+func main(): int : {
+    let int contador2;
+    let int contador, found;
+    let int array [1 10];
+    contador2 = 1;
+    while(contador2 < 9){
+        array[contador2] = 3;
+        contador2 = contador2 + 1;
+    }
+    contador = 1;
+    found = 0;
+    while(contador < 10){
+        if(array[contador] == 4){
+            found = 1;
+        }
+        contador = contador + 1;
+    }
+    printG(found);
+}
