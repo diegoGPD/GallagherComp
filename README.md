@@ -107,3 +107,5 @@ func main(): int : {
 Main sera lo que se ejecute en tu programa, aqui puedes tener sumas restas, llamadas a funciones impresiones condicionales lo que gustes sin problema
 
 Disfruta de Gallagher!
+
+LINK A DEMO https://youtu.be/wT_WjcPhBSA

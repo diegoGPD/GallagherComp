@@ -15,7 +15,7 @@ func fib(int n): int :{
 func main(): int : {
     let int a;
     a = @fib(3);
-        printG(@fib(@fib(6)));
+    printG(@fib(@fib(6)));
     printG(a);
     return 0;
 }
