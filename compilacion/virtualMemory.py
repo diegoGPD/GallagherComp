@@ -1,6 +1,0 @@
-
-virtualMemory = {
-    "global": {},
-    "constant": {},
-    "local": {},
-}
